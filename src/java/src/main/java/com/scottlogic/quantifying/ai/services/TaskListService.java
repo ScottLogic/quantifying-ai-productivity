@@ -64,7 +64,7 @@ public class TaskListService {
     /**
      * Marks the ToDoTask with the given uuid as complete.
      * If no task is found with the given uuid then the ToDoTask.UNKNOWN_TASK is returned.
-     * @param uuid
+     * @param toDoTask
      */
     public void completeToDoTask(ToDoTask toDoTask) {
         if(toDoTask != ToDoTask.UNKNOWN_TASK) {
