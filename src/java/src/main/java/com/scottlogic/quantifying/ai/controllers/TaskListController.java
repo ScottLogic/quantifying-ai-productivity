@@ -3,6 +3,7 @@ package com.scottlogic.quantifying.ai.controllers;
 import com.scottlogic.quantifying.ai.model.web.*;
 import com.scottlogic.quantifying.ai.services.TaskListService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.CommandLinePropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,32 +29,18 @@ public class TaskListController {
 
     @PutMapping("/completed/{uuid}")
     public ResponseEntity<CompletionResponse> markTaskAsCompleted(@PathVariable UUID uuid) {
-        ToDoTask toDoTask = taskListService.getToDoTaskById(uuid);
+        CompletionResponse response = taskListService.completeToDoTask(uuid);
 
-        if (Objects.nonNull(toDoTask)) {
-            if (toDoTask == ToDoTask.UNKNOWN_TASK) {
-                CompletionResponse response = new CompletionResponse(false, "Task not found.");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-            } else if (toDoTask.isComplete()) {
-                CompletionResponse response = new CompletionResponse(false, "Task already marked complete.");
-                return ResponseEntity.ok(response);
-            }
-
-            taskListService.completeToDoTask(toDoTask);
-            CompletionResponse response = new CompletionResponse(true, "This task has now been completed.");
-            return ResponseEntity.ok(response);
+        if (response.isSuccess()) {
+            return ResponseEntity.ok().body(response);
         }
 
-        CompletionResponse response = new CompletionResponse(false, "Unexpected error.");
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.badRequest().body(response);
     }
 
     @PostMapping("/addTask")
     public ResponseEntity<AddTaskResponse> addTask(@RequestParam() String name, @RequestParam String description) {
-        ToDoTask newTask = new ToDoTask(name, description);
-        taskListService.addTask(newTask);
-        AddTaskResponse response = new AddTaskResponse(newTask.getUuid(), "Task " + newTask.getName() + " added successfully.");
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(taskListService.addTask(name, description));
     }
 
 }
