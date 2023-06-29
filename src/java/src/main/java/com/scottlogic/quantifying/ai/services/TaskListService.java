@@ -20,10 +20,6 @@ import java.util.stream.Collectors;
 public class TaskListService {
     List<ToDoTask> toDoTaskList = new ArrayList<>();
 
-    public TaskListService() {
-        // Default constructor.
-    }
-
     @PostConstruct
     private void loadToDoList() {
         try {
@@ -64,4 +60,16 @@ public class TaskListService {
     public void addTask(ToDoTask newTask) {
         toDoTaskList.add(newTask);
     }
+
+    /**
+     * Marks the ToDoTask with the given uuid as complete.
+     * If no task is found with the given uuid then the ToDoTask.UNKNOWN_TASK is returned.
+     * @param toDoTask
+     */
+    public void completeToDoTask(ToDoTask toDoTask) {
+        if(toDoTask != ToDoTask.UNKNOWN_TASK) {
+            toDoTask.setComplete(true);
+        }
+    }
+
 }

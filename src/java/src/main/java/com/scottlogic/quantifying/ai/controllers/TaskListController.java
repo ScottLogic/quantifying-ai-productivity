@@ -39,7 +39,7 @@ public class TaskListController {
                 return ResponseEntity.ok(response);
             }
 
-            toDoTask.setComplete(true);
+            taskListService.completeToDoTask(toDoTask);
             CompletionResponse response = new CompletionResponse(true, "This task has now been completed.");
             return ResponseEntity.ok(response);
         }
