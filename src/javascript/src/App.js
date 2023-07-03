@@ -4,7 +4,7 @@ const { v4: uuidv4, validate: uuidValidate} = require('uuid');
 const app = express();
 app.use(express.json());
 
-let tasks = [
+const tasks = [
     {
       uuid: "f360ba09-4682-448b-b32f-0a9e538502fa",
       name: "Walk the dog",
@@ -31,7 +31,7 @@ let tasks = [
     }
  ];
 
- let UNKNOWN_TASK = {
+ const UNKNOWN_TASK = {
     uuid: "00000000-0000-0000-0000-000000000000", 
     name: "Unknown Task",
     description: "Unknown Task",
@@ -56,17 +56,19 @@ app.get('/todo', (req, res) => {
 
 // Get a specific task based on the given uuid
 app.get('/todo/:taskId', (req, res) => {
-    const { uuid: taskId } = req.params;
-    
+    const { taskId } = req.params;
+
+    // Invalid uuid.
     if (!uuidValidate(taskId)) {
         res.status(400).json(badRequest(req.url));
         return;
     }
 
-    const taskIndex = tasks.findIndex((task) => task.uuid === taskId);
+    const task = tasks.find((task) => task.uuid === taskId);
 
-    if (taskIndex !== -1) {
-        res.json(tasks[taskIndex]);
+    // If the task is found return it, otherwise return UNKNOWN_TASK.
+    if (task) {
+        res.json(task);
     } else {
         res.json(UNKNOWN_TASK)
     }
@@ -76,24 +78,38 @@ app.get('/todo/:taskId', (req, res) => {
 app.put('/todo/completed/:taskId', (req, res) => {
     const { taskId } = req.params;
         
+    // Invalid uuid.
     if (!uuidValidate(taskId)) {
         res.status(400).json(badRequest(req.url));
         return;
     }
 
-    const taskIndex = tasks.findIndex((task) => task.uuid === taskId);
+    const task = tasks.find((task) => task.uuid === taskId);
 
-    if (taskIndex !== -1) {
-        if (tasks[taskIndex].complete === false) {
-            tasks[taskIndex].completed = new Date().toISOString();
-            tasks[taskIndex].complete = true;
-            res.json({ success: true, message: 'This task has now been completed.' });
-        } else {
-            res.status(400).json({ success: false, message: 'Task already marked complete.' });
-        }
-    } else {
-        res.status(400).json({ success: false, message: 'Task not found.' });
+    // If the task is not found return BAD_REQUEST.
+    if (!task) {
+        res.status(400).json({ 
+            success: false, 
+            message: "Task not found." });
+        return;
     }
+
+    // If the task is already complete return BAD_REQUEST.
+    if (task.complete) {
+        res.status(400).json({
+            success: false,
+            message: "Task already marked complete.",
+        });
+        return;
+    }
+
+    // Mark the task as complete and return success.
+    task.completed = new Date().toISOString();
+    task.complete = true;
+    res.json({ 
+        success: true, 
+        message: 'This task has now been completed.' 
+    });
 });
 
 // Add a new task
@@ -115,18 +131,17 @@ app.post('/todo/addTask', (req, res) => {
         complete: false,
     };
     tasks.push(newTask);
-    res.status(201).json({ taskId, message: 'Task ' + newTask.name + ' added successfully.' });
+    res.status(201).json({ 
+        taskId, 
+        message: `Task ${newTask.name} added successfully.` 
+    });
 });
 
-app.listen(8080, function () {
-    console.log('Example app listening on port 8080!');
-});
+app.listen(8080, () => console.log('Example app listening on port 8080!'));
 
-function badRequest(url) {
-    return {
-        "timestamp": new Date().toISOString(),
-        "status": 400,
-        "error": "Bad Request",
-        "path": url
-    };
-}
+const badRequest = (url) => ({
+    timestamp: new Date().toISOString(),
+    status: 400,
+    error: "Bad Request",
+    path: url
+});

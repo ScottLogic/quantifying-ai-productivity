@@ -4,6 +4,7 @@
   "description": "ToDoTask list webserver application",
   "main": "App.js",
   "scripts": {
+    "start": "node ./src/App.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
