@@ -86,17 +86,17 @@ app.put('/todo/completed/:taskId', (req, res) => {
 
     const task = tasks.find((task) => task.uuid === taskId);
 
-    // If the task is not found return BAD_REQUEST.
+    // If the task is not found return NO_CONTENT.
     if (!task) {
-        res.status(400).json({ 
+        res.status(204).json({ 
             success: false, 
             message: "Task not found." });
         return;
     }
 
-    // If the task is already complete return BAD_REQUEST.
+    // If the task is already complete return an error message and SUCCESS.
     if (task.complete) {
-        res.status(400).json({
+        res.json({
             success: false,
             message: "Task already marked complete.",
         });
