@@ -8,14 +8,11 @@ import com.scottlogic.quantifying.ai.model.web.CompletionResponse;
 import com.scottlogic.quantifying.ai.model.web.ToDoTask;
 import jakarta.annotation.PostConstruct;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class TaskListService {
@@ -37,7 +34,7 @@ public class TaskListService {
         if (completed.isPresent()) {
             return toDoTaskList.stream()
                     .filter(t -> t.isComplete() == completed.get())
-                    .collect(Collectors.toList());
+                    .toList();
         }
         return toDoTaskList;
     }
