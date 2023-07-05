@@ -1,20 +1,30 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 public class ToDoModel
 {
     [Required]
+    [JsonPropertyName("uuid")]
     public Guid uuid { get; set; }
 
     [Required]
     [StringLength(64, MinimumLength = 1)]
+    [JsonPropertyName("name")]
     public string taskName { get; set; }
 
     [Required]
     [StringLength(256, MinimumLength = 1)]
+    [JsonPropertyName("description")]
     public string taskDescription { get; set; }
+
+    [JsonPropertyName("created")]
     public DateTime creationDate { get; set; } = DateTime.Now;
+
+    [JsonPropertyName("completed")]
     public DateTime? completionDate { get; set; }
+
+    [JsonPropertyName("complete")]
     public bool completedFlag { get; set; }
 
     public static string ToJson(List<ToDoModel> models) => JsonSerializer.Serialize(models);
