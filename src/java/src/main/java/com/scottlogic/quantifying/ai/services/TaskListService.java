@@ -26,7 +26,7 @@ public class TaskListService {
             ObjectMapper objectMapper = JsonMapper.builder().findAndAddModules().build();
             ClassPathResource resource = new ClassPathResource("static/data/ToDoTasks.json");
             InputStream inputStream = resource.getInputStream();
-            toDoTaskList = objectMapper.readValue(inputStream, new TypeReference<List<ToDoTask>>() {});
+            toDoTaskList = objectMapper.readValue(inputStream, new TypeReference<>() {});
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -44,7 +44,7 @@ public class TaskListService {
     /**
      * Returns the ToDoTask with the given uuid.
      * If no task is found with the given uuid then the ToDoTask.UNKNOWN_TASK is returned.
-     * @param uuid
+     * @param uuid The supplied uuid.
      * @return The ToDoTask with the given uuid, if found, otherwise ToDoTask.UNKNOWN_TASK is returned.
      */
     public ToDoTask getToDoTaskById(UUID uuid) {

@@ -2,7 +2,6 @@ package com.scottlogic.quantifying.ai.controllers;
 
 import com.scottlogic.quantifying.ai.model.web.*;
 import com.scottlogic.quantifying.ai.services.TaskListService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
