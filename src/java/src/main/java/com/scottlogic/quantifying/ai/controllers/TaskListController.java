@@ -30,18 +30,12 @@ public class TaskListController {
 
     @PutMapping("/completed/{uuid}")
     public ResponseEntity<CompletionResponse> markTaskAsCompleted(@PathVariable UUID uuid) {
-        CompletionResponse response = taskListService.completeToDoTask(uuid);
-
-        if (response.isSuccess()) {
-            return ResponseEntity.ok().body(response);
-        }
-
-        return ResponseEntity.badRequest().body(response);
+        return taskListService.completeToDoTask(uuid);
     }
 
     @PostMapping("/addTask")
     public ResponseEntity<AddTaskResponse> addTask(@RequestParam() String name, @RequestParam String description) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(taskListService.addTask(name, description));
+        return taskListService.addTask(name, description);
     }
 
 }
