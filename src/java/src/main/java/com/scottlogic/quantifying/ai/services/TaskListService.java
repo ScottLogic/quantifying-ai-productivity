@@ -8,6 +8,8 @@ import com.scottlogic.quantifying.ai.model.web.CompletionResponse;
 import com.scottlogic.quantifying.ai.model.web.ToDoTask;
 import jakarta.annotation.PostConstruct;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -24,7 +26,7 @@ public class TaskListService {
             ObjectMapper objectMapper = JsonMapper.builder().findAndAddModules().build();
             ClassPathResource resource = new ClassPathResource("static/data/ToDoTasks.json");
             InputStream inputStream = resource.getInputStream();
-            toDoTaskList = objectMapper.readValue(inputStream, new TypeReference<List<ToDoTask>>() {});
+            toDoTaskList = objectMapper.readValue(inputStream, new TypeReference<>() {});
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -42,7 +44,7 @@ public class TaskListService {
     /**
      * Returns the ToDoTask with the given uuid.
      * If no task is found with the given uuid then the ToDoTask.UNKNOWN_TASK is returned.
-     * @param uuid
+     * @param uuid The supplied uuid.
      * @return The ToDoTask with the given uuid, if found, otherwise ToDoTask.UNKNOWN_TASK is returned.
      */
     public ToDoTask getToDoTaskById(UUID uuid) {
@@ -56,10 +58,11 @@ public class TaskListService {
      * @param name The name for the new task.
      * @param description The description for the new task.
      */
-    public AddTaskResponse addTask(String name, String description) {
+    public ResponseEntity<AddTaskResponse> addTask(String name, String description) {
         ToDoTask newTask = new ToDoTask(name, description);
         toDoTaskList.add(newTask);
-        return new AddTaskResponse(newTask.getUuid(), "Task " + newTask.getName() + " added successfully.");
+        return ResponseEntity.ok().body(new AddTaskResponse(newTask.getUuid(),
+                "Task " + newTask.getName() + " added successfully."));
     }
 
     /**
@@ -68,21 +71,21 @@ public class TaskListService {
      * If the task is found and is already marked complete then "Task already marked complete." is returned.
      * @param uuid The uuid of the task to be marked complete.
      */
-    public CompletionResponse completeToDoTask(UUID uuid) {
+    public ResponseEntity<CompletionResponse> completeToDoTask(UUID uuid) {
         ToDoTask toDoTask = getToDoTaskById(uuid);
 
         if (Objects.nonNull(toDoTask)) {
             if (toDoTask == ToDoTask.UNKNOWN_TASK) {
-                return new CompletionResponse(false, "Task not found.");
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new CompletionResponse(false, "Task not found."));
             } else if (toDoTask.isComplete()) {
-                return new CompletionResponse(false, "Task already marked complete.");
+                return ResponseEntity.ok().body(new CompletionResponse(false, "Task already marked complete."));
             }
 
             toDoTask.setComplete(true);
-            return new CompletionResponse(true, "This task has now been completed.");
+            return ResponseEntity.ok().body(new CompletionResponse(true, "This task has now been completed."));
         }
 
-        return new CompletionResponse(false, "Unexpected error.");
+        return ResponseEntity.badRequest().body(new CompletionResponse(false, "Unexpected error."));
     }
 
 }
