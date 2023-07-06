@@ -34,8 +34,6 @@ public class ToDoTaskModel
     public static IEnumerable<ToDoTaskModel> FromJson(string json) =>
         JsonSerializer.Deserialize<IEnumerable<ToDoTaskModel>>(json);
 
-    public ToDoTaskModel() { }
-
     public static ToDoTaskModel GetUnknownTask()
     {
         return new ToDoTaskModel()
