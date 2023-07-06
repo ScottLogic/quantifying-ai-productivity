@@ -1,9 +1,12 @@
+using ToDoListAPI.Repositories;
+using ToDoListAPI.Interfaces;
+
 var builder = WebApplication.CreateBuilder(args);
 
 /// <summary>
 /// YB - Pair interfaces with service class
 /// </summary>
-builder.Services.AddTransient<IToDoService, ToDoService>();
+builder.Services.AddTransient<IToDoRepository, ToDoRepository>();
 
 // Add services to the container.
 

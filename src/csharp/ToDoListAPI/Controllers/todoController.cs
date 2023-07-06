@@ -1,75 +1,66 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+using ToDoListAPI.Interfaces;
+using ToDoListAPI.Models;
 
 namespace ToDoListAPI.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class todoController : ControllerBase
+public class TodoController : ControllerBase
 {
-    private readonly IToDoService _todoService;
-    static List<ToDoModel> todoList = null;
+    private readonly IToDoRepository _todoRepository;
 
-    public todoController(IToDoService todoService)
+    public TodoController(IToDoRepository todoRepository)
     {
-        _todoService = todoService;
-        if (todoList == null)
-        {
-            todoList = _todoService.ReadToDoFile();
-        }
+        _todoRepository = todoRepository ?? throw new ArgumentNullException(nameof(todoRepository));
     }
 
     [HttpGet]
-    public List<ToDoModel> GetAllTasks(bool? complete = null)
+    public IEnumerable<ToDoTaskModel> GetAllTasks(bool? complete = null)
     {
-        return _todoService.GetAllTasks(complete);
+        return _todoRepository.GetAllTasks(complete);
     }
 
-    [HttpGet("{uuid}")]
-    public ToDoModel GetTasksByUUID(Guid uuid)
+    [HttpGet("{id}")]
+    public ToDoTaskModel GetTasksById(Guid id)
     {
-        return _todoService.GetTasksByUUID(uuid);
+        return _todoRepository.GetTasksById(id);
     }
 
     [HttpPost("addtask")]
     public IActionResult AddTask(string name, string description)
     {
-        if (String.IsNullOrEmpty(name) || String.IsNullOrEmpty(description))
+        if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(description))
         {
-            return StatusCode(400, ToDoModel.GetUnknownTask());
+            return StatusCode((int)HttpStatusCode.BadRequest, ToDoTaskModel.GetUnknownTask());
         }
-        return StatusCode(
-            200,
-            _todoService.AddTask(new ToDoModel() { taskName = name, taskDescription = description })
+        var newTodoTask = _todoRepository.AddTask(
+            new ToDoTaskModel() { taskName = name, taskDescription = description }
         );
+        if (newTodoTask == null)
+        {
+            return StatusCode((int)HttpStatusCode.BadRequest, "Could not create the task");
+        }
+        return StatusCode((int)HttpStatusCode.OK, newTodoTask);
     }
 
-    [HttpPut("completed/{uuid}")]
-    public IActionResult CompleteTask(Guid uuid)
+    [HttpPut("completed/{id}")]
+    public IActionResult CompleteTask(Guid id)
     {
-        var task = _todoService.GetTasksByUUID(uuid);
-        if (task != null && task.uuid != Guid.Empty)
+        var todoItem = _todoRepository.GetTasksById(id);
+        if (todoItem == null || todoItem.uuid == Guid.Empty)
         {
-            if (!task.completedFlag)
-            {
-                return StatusCode(
-                    200,
-                    _todoService.CompleteTask(uuid)
-                        ? new { Message = "This task has now been completed", Updated = true }
-                        : new { Message = "This task cannot be completed", Updated = false }
-                );
-            }
-            else
-            {
-                return StatusCode(
-                    204,
-                    new { Message = "Task already marked complete.", Updated = false }
-                );
-            }
+            return StatusCode((int)HttpStatusCode.NoContent, ToDoTaskModel.GetUnknownTask());
         }
-        else
+        if (todoItem.completedFlag)
         {
-            return StatusCode(204, ToDoModel.GetUnknownTask());
+            return StatusCode((int)HttpStatusCode.NoContent, "Task already marked complete.");
         }
+        if (!_todoRepository.CompleteTask(id))
+        {
+            return StatusCode((int)HttpStatusCode.BadRequest, "This task cannot be completed");
+        }
+        return StatusCode((int)HttpStatusCode.OK, "This task has now been completed");
     }
 }
