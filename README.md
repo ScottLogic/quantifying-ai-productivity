@@ -10,7 +10,7 @@ The development task is to implement a web service that provides endpoints to ma
 
 The server data will be initialised with a list containing three tasks:
 
-[
+'''[
     {
         "uuid": "f360ba09-4682-448b-b32f-0a9e538502fa",
         "name": "Walk the dog",
@@ -35,7 +35,7 @@ The server data will be initialised with a list containing three tasks:
         "completed": null,
         "complete": false
     }
-]
+]'''
 
 The intial GET endpoint returns the list of tasks held by the server. If you are starting from scratch you need to implement this endpoint before continuing.
 
