@@ -1,3 +1,4 @@
+using System.Text.Json;
 using ToDoListAPI.Interfaces;
 using ToDoListAPI.Models;
 
@@ -71,12 +72,12 @@ public class ToDoRepository : IToDoRepository
 
     public IEnumerable<ToDoTaskModel> ReadToDoFile()
     {
-        List<ToDoTaskModel> readToDoList = null;
+        IEnumerable<ToDoTaskModel> readToDoList = null;
         string jsonString = File.ReadAllText(_fileName);
         if (!String.IsNullOrEmpty(jsonString))
         {
-            readToDoList = ToDoTaskModel.FromJson(jsonString).ToList();
+            readToDoList = JsonSerializer.Deserialize<IEnumerable<ToDoTaskModel>>(jsonString);
         }
-        return readToDoList.AsEnumerable();
+        return readToDoList;
     }
 }

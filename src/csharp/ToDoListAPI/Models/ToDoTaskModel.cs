@@ -29,11 +29,6 @@ public class ToDoTaskModel
     [JsonPropertyName("complete")]
     public bool completedFlag { get; set; }
 
-    public static string ToJson(IEnumerable<ToDoTaskModel> models) => JsonSerializer.Serialize(models);
-
-    public static IEnumerable<ToDoTaskModel> FromJson(string json) =>
-        JsonSerializer.Deserialize<IEnumerable<ToDoTaskModel>>(json);
-
     public static ToDoTaskModel GetUnknownTask()
     {
         return new ToDoTaskModel()
