@@ -11,7 +11,7 @@ public class TodoControllerTest_AddTask
         var taskDescription = "This task is a mission impossible";
         mockToDoRepo
             .Setup(x => x.AddTask(It.IsAny<ToDoTaskModel>()))
-            .Returns(new ToDoTaskModel() { taskName = taskName, taskDescription = taskDescription });
+            .Returns(new ToDoTaskModel() { TaskName = taskName, TaskDescription = taskDescription });
         var controller = new TodoController(mockToDoRepo.Object);
 
         // Act
@@ -22,7 +22,7 @@ public class TodoControllerTest_AddTask
         Assert.Equal(200, objResult.StatusCode);
         Assert.IsType<ToDoTaskModel>(objResult.Value);
         ToDoTaskModel item = (ToDoTaskModel)objResult.Value;
-        Assert.Equal(taskName, item.taskName);
-        Assert.Equal(taskDescription, item.taskDescription);
+        Assert.Equal(taskName, item.TaskName);
+        Assert.Equal(taskDescription, item.TaskDescription);
     }
 }

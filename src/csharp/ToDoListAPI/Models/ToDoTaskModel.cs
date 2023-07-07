@@ -8,35 +8,35 @@ public class ToDoTaskModel
 {
     [Required]
     [JsonPropertyName("uuid")]
-    public Guid uuid { get; set; }
+    public Guid Uuid { get; set; }
 
     [Required]
     [StringLength(64, MinimumLength = 1)]
     [JsonPropertyName("name")]
-    public string taskName { get; set; }
+    public string TaskName { get; set; }
 
     [Required]
     [StringLength(256, MinimumLength = 1)]
     [JsonPropertyName("description")]
-    public string taskDescription { get; set; }
+    public string TaskDescription { get; set; }
 
     [JsonPropertyName("created")]
-    public DateTime creationDate { get; set; } = DateTime.Now;
+    public DateTime CreationDate { get; set; } = DateTime.Now;
 
     [JsonPropertyName("completed")]
-    public DateTime? completionDate { get; set; }
+    public DateTime? CompletionDate { get; set; }
 
     [JsonPropertyName("complete")]
-    public bool completedFlag { get; set; }
+    public bool CompletedFlag { get; set; }
 
     public static ToDoTaskModel GetUnknownTask()
     {
         return new ToDoTaskModel()
         {
-            uuid = Guid.Empty,
-            taskName = "Unknown Task",
-            taskDescription = "Unknown Task",
-            creationDate = DateTime.Parse(
+            Uuid = Guid.Empty,
+            TaskName = "Unknown Task",
+            TaskDescription = "Unknown Task",
+            CreationDate = DateTime.Parse(
                 "1970-01-01T00:00:00Z",
                 null,
                 System.Globalization.DateTimeStyles.RoundtripKind

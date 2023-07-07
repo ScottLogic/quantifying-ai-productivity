@@ -36,7 +36,7 @@ public class TodoController : ControllerBase
             return StatusCode((int)HttpStatusCode.BadRequest, ToDoTaskModel.GetUnknownTask());
         }
         var newTodoTask = _todoRepository.AddTask(
-            new ToDoTaskModel() { taskName = name, taskDescription = description }
+            new ToDoTaskModel() { TaskName = name, TaskDescription = description }
         );
         if (newTodoTask == null)
         {
@@ -49,11 +49,14 @@ public class TodoController : ControllerBase
     public IActionResult CompleteTask(Guid id)
     {
         var todoItem = _todoRepository.GetTasksById(id);
-        if (todoItem == null || todoItem.uuid == Guid.Empty)
+        if (todoItem == null || todoItem.Uuid == Guid.Empty)
         {
-            return StatusCode((int)HttpStatusCode.NoContent, ToDoTaskModel.GetUnknownTask());
+            return StatusCode(
+                (int)HttpStatusCode.OK,
+                new { Message = $"Task {id} is not found", Body = ToDoTaskModel.GetUnknownTask() }
+            );
         }
-        if (todoItem.completedFlag)
+        if (todoItem.CompletedFlag)
         {
             return StatusCode((int)HttpStatusCode.NoContent, "Task already marked complete.");
         }

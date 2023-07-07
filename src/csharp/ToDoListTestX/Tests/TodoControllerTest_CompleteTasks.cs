@@ -13,10 +13,10 @@ public class TodoControllerTest_CompleteTasks
             .Returns(
                 new ToDoTaskModel()
                 {
-                    uuid = new Guid("f360ba09-4682-448b-b32f-0a9e538502fa"),
-                    taskName = "Walk the dog",
-                    taskDescription = "Walk the dog for forty five minutes",
-                    creationDate = DateTime.Parse(
+                    Uuid = new Guid("f360ba09-4682-448b-b32f-0a9e538502fa"),
+                    TaskName = "Walk the dog",
+                    TaskDescription = "Walk the dog for forty five minutes",
+                    CreationDate = DateTime.Parse(
                         "2023-06-23T09:30:00Z",
                         null,
                         System.Globalization.DateTimeStyles.RoundtripKind

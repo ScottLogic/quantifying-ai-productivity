@@ -35,13 +35,13 @@ public class ToDoRepository : IToDoRepository
         return (
             (completedFlag == null)
                 ? _todoList.AsEnumerable()
-                : (_todoList.FindAll(x => x.completedFlag == (bool)completedFlag).AsEnumerable())
+                : (_todoList.FindAll(x => x.CompletedFlag == (bool)completedFlag).AsEnumerable())
         );
     }
 
     public ToDoTaskModel GetTasksById(Guid id)
     {
-        var todoItem = _todoList.Find(x => x.uuid == id);
+        var todoItem = _todoList.Find(x => x.Uuid == id);
         todoItem = todoItem ?? ToDoTaskModel.GetUnknownTask();
         return todoItem;
     }
@@ -50,9 +50,9 @@ public class ToDoRepository : IToDoRepository
     {
         if (newTodoTask != null)
         {
-            newTodoTask.uuid = Guid.NewGuid();
+            newTodoTask.Uuid = Guid.NewGuid();
             _todoList.Add(newTodoTask);
-            var createdTask = GetTasksById(newTodoTask.uuid);
+            var createdTask = GetTasksById(newTodoTask.Uuid);
             return createdTask;
         }
         return newTodoTask;
@@ -60,12 +60,12 @@ public class ToDoRepository : IToDoRepository
 
     public bool CompleteTask(Guid id)
     {
-        var todoItem = _todoList.Find(x => x.uuid == id);
+        var todoItem = _todoList.Find(x => x.Uuid == id);
         if (todoItem != null)
         {
-            todoItem.completedFlag = true;
-            todoItem.completionDate = DateTime.Now;
-            return todoItem.completedFlag;
+            todoItem.CompletedFlag = true;
+            todoItem.CompletionDate = DateTime.Now;
+            return todoItem.CompletedFlag;
         }
         return false;
     }
