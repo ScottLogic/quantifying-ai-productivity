@@ -127,7 +127,7 @@ Add a new PUT endpoint that uses a uuid as a path parameter to mark a specific t
 
 | URI                                                 | Required behaviour                               |
 |-----------------------------------------------------|--------------------------------------------------|
-| http://localhost:8080/todo/completed/{uuid}         | Mark the task with supplied uuid as complete and return a meaningful response with HTTP status 200.<br> To mark a task as complete the “completed” fields should be set to the current time and the<br> “complete” boolean value should be set to true.|
+| http://localhost:8080/todo/completed/{uuid}         | Mark the task with supplied uuid as complete and return a meaningful response with HTTP status 200. To mark a task as complete the “completed” fields should be set to the current time and the “complete” boolean value should be set to true.|
 
 Given the static data above:
 
@@ -189,9 +189,9 @@ Add a new POST endpoint that takes two parameters, task name and task descriptio
 
 | URI                                                                                      | Required behaviour                               |
 |------------------------------------------------------------------------------------------|--------------------------------------------------|
-| http://localhost:8080/todo/addTask{?name=Task%20Four&description=Description%20Four}     | Create a new task with the given name and description, <br>add it to the list of tasks and return HTTP status 201.|
+| http://localhost:8080/todo/addTask{?name=Name&description=Description}     | Create a new task with the given name and description, add it to the list of tasks and return HTTP status 201.|
 
-http://localhost:8080/todo/addTask?name=Task%20Four&description=Description%20Four returns:
+http://localhost:8080/todo/addTask?name=Name&description=Description returns:
 
 ```
 {
@@ -202,14 +202,14 @@ http://localhost:8080/todo/addTask?name=Task%20Four&description=Description%20Fo
 
 with HTTP status 201 (CREATED). Note that the uuid will be randomly generated.
 
-http://localhost:8080/todo/addTask?name=Thing%20One returns:
+http://localhost:8080/todo/addTask?name=Name returns:
 
 ```
 {
 "timestamp": "2023-06-27T12:32:05.590Z",
 "status": 400,
 "error": "Bad Request",
-"path": "/todo/addTask?name=Thing%20One"
+"path": "/todo/addTask?name=Name"
 }
 ```
 
