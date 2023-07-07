@@ -11,7 +11,9 @@ public class TodoControllerTest_AddTask
         var taskDescription = "This task is a mission impossible";
         mockToDoRepo
             .Setup(x => x.AddTask(It.IsAny<ToDoTaskModel>()))
-            .Returns(new ToDoTaskModel() { TaskName = taskName, TaskDescription = taskDescription });
+            .Returns(
+                new ToDoTaskModel() { TaskName = taskName, TaskDescription = taskDescription }
+            );
         var controller = new TodoController(mockToDoRepo.Object);
 
         // Act
