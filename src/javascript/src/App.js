@@ -86,9 +86,9 @@ app.put('/todo/completed/:taskId', (req, res) => {
 
     const task = tasks.find((task) => task.uuid === taskId);
 
-    // If the task is not found return NO_CONTENT.
+    // If the task is not found return an error message and SUCCESS.
     if (!task) {
-        res.status(204).json({ 
+        res.json({ 
             success: false, 
             message: "Task not found." });
         return;
