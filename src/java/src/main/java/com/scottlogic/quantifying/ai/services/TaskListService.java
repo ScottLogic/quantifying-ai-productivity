@@ -61,7 +61,7 @@ public class TaskListService {
     public ResponseEntity<AddTaskResponse> addTask(String name, String description) {
         ToDoTask newTask = new ToDoTask(name, description);
         toDoTaskList.add(newTask);
-        return ResponseEntity.ok().body(new AddTaskResponse(newTask.getUuid(),
+        return ResponseEntity.status(HttpStatus.CREATED).body(new AddTaskResponse(newTask.getUuid(),
                 "Task " + newTask.getName() + " added successfully."));
     }
 
@@ -76,7 +76,7 @@ public class TaskListService {
 
         if (Objects.nonNull(toDoTask)) {
             if (toDoTask == ToDoTask.UNKNOWN_TASK) {
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new CompletionResponse(false, "Task not found."));
+                return ResponseEntity.ok().body(new CompletionResponse(false, "Task not found."));
             } else if (toDoTask.isComplete()) {
                 return ResponseEntity.ok().body(new CompletionResponse(false, "Task already marked complete."));
             }
