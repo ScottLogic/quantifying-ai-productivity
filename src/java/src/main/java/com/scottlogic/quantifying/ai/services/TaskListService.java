@@ -7,11 +7,12 @@ import com.scottlogic.quantifying.ai.model.web.AddTaskResponse;
 import com.scottlogic.quantifying.ai.model.web.CompletionResponse;
 import com.scottlogic.quantifying.ai.model.web.ToDoTask;
 import jakarta.annotation.PostConstruct;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -23,9 +24,9 @@ public class TaskListService {
     @PostConstruct
     private void loadToDoList() {
         try {
+            File file = new File("../static_data/ToDoList.json");
             ObjectMapper objectMapper = JsonMapper.builder().findAndAddModules().build();
-            ClassPathResource resource = new ClassPathResource("static/data/ToDoTasks.json");
-            InputStream inputStream = resource.getInputStream();
+            InputStream inputStream = new FileInputStream(file);
             toDoTaskList = objectMapper.readValue(inputStream, new TypeReference<>() {});
         } catch (IOException e) {
             e.printStackTrace();
