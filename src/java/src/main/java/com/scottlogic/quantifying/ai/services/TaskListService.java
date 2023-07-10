@@ -7,7 +7,6 @@ import com.scottlogic.quantifying.ai.model.web.AddTaskResponse;
 import com.scottlogic.quantifying.ai.model.web.CompletionResponse;
 import com.scottlogic.quantifying.ai.model.web.ToDoTask;
 import jakarta.annotation.PostConstruct;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
