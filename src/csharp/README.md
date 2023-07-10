@@ -22,7 +22,7 @@ dotnet run
 ## Testing the project
 In the terminal, use this command to go into the project app folder:
 ```bash
-cd ToDoListTestX
+cd ToDoListAPITest
 ```
 Then run the tests this command:
 ```bash
