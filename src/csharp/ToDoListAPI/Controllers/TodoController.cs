@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using ToDoListAPI.Interfaces;
 using ToDoListAPI.Models;
@@ -16,7 +17,7 @@ public class TodoController : ControllerBase
     }
 
     [HttpGet]
-    public IEnumerable<ToDoTaskModel> Get()
+    public IEnumerable<ToDoTaskModel> GetAllTasks()
     {
         return _todoRepository.GetAllTasks();
     }
