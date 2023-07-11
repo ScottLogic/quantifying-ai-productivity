@@ -1,4 +1,4 @@
-namespace ToDoListTestX;
+namespace ToDoListAPITest;
 
 public class TodoControllerTest_AddTask
 {
@@ -12,7 +12,13 @@ public class TodoControllerTest_AddTask
         mockToDoRepo
             .Setup(x => x.AddTask(It.IsAny<ToDoTaskModel>()))
             .Returns(
-                new ToDoTaskModel() { TaskName = taskName, TaskDescription = taskDescription }
+                new ToDoTaskModel()
+                {
+                    Uuid = Guid.NewGuid(),
+                    TaskName = taskName,
+                    TaskDescription = taskDescription,
+                    CreationDate = DateTime.Now
+                }
             );
         var controller = new TodoController(mockToDoRepo.Object);
 
@@ -21,10 +27,10 @@ public class TodoControllerTest_AddTask
         // Assert
         Assert.NotNull(objResult);
         Assert.NotNull(objResult.Value);
-        Assert.Equal(200, objResult.StatusCode);
-        Assert.IsType<ToDoTaskModel>(objResult.Value);
-        ToDoTaskModel item = (ToDoTaskModel)objResult.Value;
-        Assert.Equal(taskName, item.TaskName);
-        Assert.Equal(taskDescription, item.TaskDescription);
+        Assert.Equal(201, objResult.StatusCode);
+        var resultValObj = objResult.Value as object;
+        var taskId = resultValObj.GetType()?.GetProperty("taskId")?.GetValue(resultValObj);
+        Assert.IsType<Guid>(taskId);
+        Assert.NotEqual(Guid.Empty, taskId);
     }
 }
