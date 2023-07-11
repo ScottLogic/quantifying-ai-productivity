@@ -1,4 +1,9 @@
+using ToDoListAPI.Interfaces;
+using ToDoListAPI.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddTransient<IToDoRepository, ToDoRepository>();
 
 // Add services to the container.
 
