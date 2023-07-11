@@ -223,3 +223,21 @@ with HTTP status 400.
 
 ## Testers
 
+The testing task is to implement API tests using any generative AI model, such as ChatGPT, Google Bard, etc. A skeleton framework has been provided in Cypress. It is also valid to start completely from scratch if you wish.
+
+First, start the web service in the language of your choice, e.g. JavaScript, and make sure it's running on localhost:8080.
+
+To get started with Cypress, open a new terminal, cd into the `quantifying-ai/test` directory, and type:
+
+```
+npm install
+npx cypress open
+```
+
+This will open a Cypress browser. Select 'E2E testing', choose a browser (e.g. Chrome) and 'Start E2E Testing...'
+
+The tests found in `test/cypress/e2e` will appear. To run, click on your test suite, e.g. `todoAppAPI.cy.js`
+
+You can add tests to this file, or create a new test suite.
+
+You can also run tests headlessly using `npx cypress run`
