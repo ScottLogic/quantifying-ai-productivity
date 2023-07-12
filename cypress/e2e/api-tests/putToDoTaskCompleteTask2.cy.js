@@ -2,17 +2,17 @@
 
 /*
 ******************************************
-IMPORTANT: This script can only be executed if Test 2 has NEVER been completed before.
+IMPORTANT: This script can only be executed if Test 2 has NEVER been executed before.
 
 TASK OBJECTIVES:
-Check that completed list is equal to 0
-Mark the test as completed
-Check that the completed list is now equal to 1 and check the corresponding values
+- Check that completed list is equal to 0
+- Mark the test as completed
+- Check that the completed list is now equal to 1 and check the corresponding values
 ******************************************
 */
 
 describe("API Tasks", () => {
-  it("Tests that the completing a task populates the completed list", () => {
+  it("Tests that completing a task populates the completed list", () => {
     //Check that the completed list is equal to 0
     cy.request({
       method: "GET",
@@ -20,7 +20,6 @@ describe("API Tasks", () => {
     })
       .then((response) => {
         expect(response.status).to.eq(200);
-        //cy.log(JSON.stringify(response.body));
         expect(response.body.length).to.eq(0);
         cy.log("The array length is: " + response.body.length);
       })
@@ -38,16 +37,15 @@ describe("API Tasks", () => {
             );
           })
           .then((response) => {
-            //Check that the completed list is equal to 1 and check values
+            //Check that the completed list is equal to 1 and check the values
             cy.request({
               method: "GET",
               url: "http://localhost:8080/todo?complete=true",
             }).then((response) => {
               expect(response.status).to.eq(200);
               expect(response.body.length).to.eq(1);
-              //cy.log("The array length is: " + response.body.length);
+              cy.log("The array length is: " + response.body.length);
 
-              //Check key value pairs
               expect(response.body[0].uuid).to.eq(
                 "fd5ff9df-f194-4c6e-966a-71b38f95e14f"
               );

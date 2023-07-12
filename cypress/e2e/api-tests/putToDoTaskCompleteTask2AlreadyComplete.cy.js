@@ -3,13 +3,13 @@
 /*
 ******************************************
 IMPORTANT: 
-This script can only be executed if Test 2 has ALREADY been completed before.
+This script can only be executed if Test 2 has ALREADY been executed.
 
 TASK OBJECTIVES:
+- Check that completed list is equal to 1
+- Mark the test as completed
+- Check that the completed list is still equal to 1
 Note: there is no need to check the values as this is completed in a previous script
-Check that completed list is equal to 1
-Mark the test as completed
-Check that the completed list is still equal to 1
 ******************************************
 */
 

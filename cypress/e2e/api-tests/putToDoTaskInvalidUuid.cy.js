@@ -3,8 +3,8 @@
 /*
 ******************************************
 TASK OBJECTIVES:
-Use an invalid UUID
-Check that the UUID is invalid based on the field values in the response body
+- Use an invalid UUID
+- Check that the UUID is invalid based on the field values in the response body
 ******************************************
 */
 

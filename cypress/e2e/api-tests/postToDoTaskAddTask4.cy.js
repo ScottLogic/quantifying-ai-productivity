@@ -1,23 +1,19 @@
 /// <reference types = "Cypress" />
 
-const { create } = require("combined-stream");
-
 /*
 ******************************************
-IMPORTANT: This script can only be executed if Test 2 has NEVER been completed before.
-
 TASK OBJECTIVES:
-Check that list all tasks is equal to 3
-Add a task and check the data
-Check that the list all tasks is now equal to 4 and check the corresponding values
+- Check that List All Tasks is greater than 0
+- Add a task and check the data
+- Check that List All Tasks now has the new task and check the corresponding values are correct
 ******************************************
 */
 
 describe("API Tasks", () => {
-  it("Tests that adding a task populates the list all tasks", () => {
+  it("Tests that adding a task populates the List All Tasks array", () => {
     var uuid = null;
 
-    //Check that the list all tasks is equal to 3
+    //Check that the list all tasks is greater than 0
     cy.request({
       method: "GET",
       url: "http://localhost:8080/todo",
@@ -43,22 +39,20 @@ describe("API Tasks", () => {
             );
           })
           .then((response) => {
-            //Check that the list all tasks is equal to 4
+            //Check that the List All Tasks now has the new task and corresponding values
             cy.request({
               method: "GET",
               url: "http://localhost:8080/todo",
             }).then((response) => {
               expect(response.status).to.eq(200);
-              //Check key value pairs
-              //Assigns the UUID as null -> changes it in post -> check that whatever is in
-              //the post is now in the response body.  Then we find the related field values
+              //Assigns the UUID as null -> changes it in post request -> checks related field values
               var createdTask = response.body.find((x) => x.uuid == uuid);
               cy.log(createdTask.uuid);
               expect(createdTask).to.not.be.null;
               expect(createdTask).to.not.be.undefined;
               expect(createdTask.name).to.eq("Task Four");
               expect(createdTask.description).to.eq("Description Four");
-              //Comparing created time with actual response and do comparison that it is within now and 5 seconds ago
+              //Compares created time with actual response and does a comparison that it is within now and 5 seconds ago
               var createdSeconds =
                 new Date(createdTask.created).getTime() / 1000;
               cy.log(createdSeconds);
@@ -67,7 +61,6 @@ describe("API Tasks", () => {
               expect(
                 createdSeconds < nowSeconds && createdSeconds > nowSeconds - 5
               ).to.be.true;
-
               expect(createdTask.completed).to.be.null;
               expect(createdTask.complete).to.eq(false);
             });

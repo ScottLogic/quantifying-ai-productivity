@@ -3,13 +3,13 @@
 /*
 ******************************************
 TASK OBJECTIVES:
-Use an a UUID that cannot be found
-Check that the expected field values are equal to the response body
+- Use a UUID that cannot be found
+- Check that the expected field values are equal to the response body
 ******************************************
 */
 
 describe("API Tasks", () => {
-  it("Gets a task that is not found", () => {
+  it("Gets a task that cannot be found", () => {
     cy.request({
       method: "GET",
       url: "http://localhost:8080/todo/5c3ec8bc-6099-1a2b-b6da-8e2956db3a34",

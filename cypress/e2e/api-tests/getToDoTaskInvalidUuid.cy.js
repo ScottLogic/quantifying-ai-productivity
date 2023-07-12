@@ -3,8 +3,8 @@
 /*
 ******************************************
 TASK OBJECTIVES:
-Use an invalid UUID
-Check the response status
+- Use an invalid UUID
+- Check the expected field values are equal to the response body
 ******************************************
 */
 
@@ -13,7 +13,7 @@ describe("API Tasks", () => {
     cy.request({
       method: "GET",
       url: "http://localhost:8080/todo/invalid-uuid",
-      //Need this line to ensure it does not fail on bad status code
+      //Need this line to ensure it does not fail on a bad status code
       failOnStatusCode: false,
     }).then((response) => {
       //Note: cannot test the timestamp as there is a microsecond difference between

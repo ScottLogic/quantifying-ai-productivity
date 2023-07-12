@@ -3,8 +3,8 @@
 /*
 ******************************************
 TASK OBJECTIVES:
-Retrieve Task 3
-Check that the expected field values are equal to the response body
+- Retrieve Task 3
+- Check that the expected field values are equal to the response body
 ******************************************
 */
 

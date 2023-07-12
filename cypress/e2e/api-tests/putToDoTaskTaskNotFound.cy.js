@@ -3,8 +3,8 @@
 /*
 ******************************************
 TASK OBJECTIVES:
-Use a UUID assigned to task not found
-Check that the task cannot be found
+- Use a UUID assigned to task not found
+- Check that the task cannot be found
 ******************************************
 */
 
