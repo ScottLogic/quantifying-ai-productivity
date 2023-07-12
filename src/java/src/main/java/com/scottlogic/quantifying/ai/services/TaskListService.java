@@ -3,10 +3,12 @@ package com.scottlogic.quantifying.ai.services;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.scottlogic.quantifying.ai.model.web.AddTaskErrorResponse;
 import com.scottlogic.quantifying.ai.model.web.AddTaskResponse;
 import com.scottlogic.quantifying.ai.model.web.CompletionResponse;
 import com.scottlogic.quantifying.ai.model.web.ToDoTask;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -59,7 +61,13 @@ public class TaskListService {
      * @param name The name for the new task.
      * @param description The description for the new task.
      */
-    public ResponseEntity<AddTaskResponse> addTask(String name, String description) {
+    public ResponseEntity<Object> addTask(String name, String description, HttpServletRequest request) {
+        if (name.isEmpty() || description.isEmpty()) {
+            AddTaskErrorResponse errorResponse = new AddTaskErrorResponse("Bad Request",
+                    request.getRequestURI() + (request.getQueryString() != null ? "?" + request.getQueryString() : ""));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
+
         ToDoTask newTask = new ToDoTask(name, description);
         toDoTaskList.add(newTask);
         return ResponseEntity.status(HttpStatus.CREATED).body(new AddTaskResponse(newTask.getUuid(),
