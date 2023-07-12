@@ -1,32 +1,31 @@
-# To Do List API in C#
-Using this To Do List web API (C#) in VS Code
+# To Do List API in Java
+Using this To Do List web API (Java) in VS Code
 
 ## Requirements:
-* NET6 SDK
+* Java SE 17 SDK
 * VS Code with these extensions installed:
 
-    - C#
-    - NuGet Package Manager
-    - .NET Core Test Explorer (optional)
+    - Extension Pack for Java
+    - Gradle for Java
 
 ## Running the project
 Open the terminal by pressing `Ctrl+'` or go to menu View > Terminal, then use this command to go into the project app folder:
 ```bash
-cd src/csharp/ToDoListAPI
+cd src/java
 ```
 Then run the project with this command:
 ```bash
-dotnet run
+./gradlew bootRun
 ```
-
+## Check list tasks that you could use
+```bash
+./gradlew tasks
+```
 ## Testing the project
-In the terminal, when you are in `src/csharp` path, use this command to go into the project test folder:
+In the terminal, make sure you are in src/java folder.
+Run the tests this command:
 ```bash
-cd ToDoListAPITest
-```
-Then run the tests this command:
-```bash
-dotnet test
+./gradlew test
 ```
 ## Contributing
 
