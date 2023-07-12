@@ -2,8 +2,8 @@ package com.scottlogic.quantifying.ai.model.web;
 
 public class AddTaskErrorResponse {
 
-    private String error;
-    private String path;
+    private final String error;
+    private final String path;
 
     public AddTaskErrorResponse(String error, String path) {
         this.error = error;
