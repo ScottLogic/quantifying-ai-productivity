@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Instant;
 import java.util.*;
 
 @Service
@@ -63,8 +64,12 @@ public class TaskListService {
      */
     public ResponseEntity<Object> addTask(String name, String description, HttpServletRequest request) {
         if (name.isEmpty() || description.isEmpty()) {
-            AddTaskErrorResponse errorResponse = new AddTaskErrorResponse("Bad Request",
-                    request.getRequestURI() + (request.getQueryString() != null ? "?" + request.getQueryString() : ""));
+      AddTaskErrorResponse errorResponse =
+          new AddTaskErrorResponse(
+              "Bad Request",
+              request.getRequestURI()
+                  + (request.getQueryString() != null ? "?" + request.getQueryString() : ""),
+              Instant.now());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
 
