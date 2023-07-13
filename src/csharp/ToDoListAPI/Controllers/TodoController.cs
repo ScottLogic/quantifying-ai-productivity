@@ -40,9 +40,16 @@ public class TodoController : ControllerBase
         );
         if (newTodoTask == null)
         {
-            return StatusCode((int)HttpStatusCode.BadRequest, "Could not create the task");
+            return StatusCode((int)HttpStatusCode.BadRequest, "Could not create the task.");
         }
-        return StatusCode((int)HttpStatusCode.OK, newTodoTask);
+        return StatusCode(
+            (int)HttpStatusCode.Created,
+            new
+            {
+                taskId = newTodoTask.Uuid,
+                message = $"Task {newTodoTask.TaskName} added successfully."
+            }
+        );
     }
 
     [HttpPut("completed/{id}")]
@@ -53,17 +60,23 @@ public class TodoController : ControllerBase
         {
             return StatusCode(
                 (int)HttpStatusCode.OK,
-                new { Message = $"Task {id} is not found", Body = ToDoTaskModel.GetUnknownTask() }
+                new { success = false, message = "Task not found." }
             );
         }
         if (todoItem.CompletedFlag)
         {
-            return StatusCode((int)HttpStatusCode.NoContent, "Task already marked complete.");
+            return StatusCode(
+                (int)HttpStatusCode.OK,
+                new { success = false, message = "Task already marked complete." }
+            );
         }
         if (!_todoRepository.CompleteTask(id))
         {
-            return StatusCode((int)HttpStatusCode.BadRequest, "This task cannot be completed");
+            return StatusCode((int)HttpStatusCode.BadRequest, "This task cannot be completed.");
         }
-        return StatusCode((int)HttpStatusCode.OK, "This task has now been completed");
+        return StatusCode(
+            (int)HttpStatusCode.OK,
+            new { success = true, message = "This task has now been completed." }
+        );
     }
 }
