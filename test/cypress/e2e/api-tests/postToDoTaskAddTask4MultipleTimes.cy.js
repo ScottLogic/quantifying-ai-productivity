@@ -15,6 +15,8 @@ in the AddTask4 script.
 */
 
 describe("API Tasks", () => {
+  let currentSize = 0;
+
   it("Tests that adding a task multiple times populates the List All Tasks with multiple records", () => {
     function ProduceFourTasks() {
       for (let i = 0; i < 4; i++) {
@@ -41,6 +43,7 @@ describe("API Tasks", () => {
         expect(response.status).to.eq(200);
         expect(response.body.length).to.be.gte(3);
         cy.log("The array length is: " + response.body.length);
+        currentSize = response.body.filter((x) => x.name == "Task Four").length;
       })
       .then((response) => {
         //Post four tasks using the function above
@@ -55,7 +58,7 @@ describe("API Tasks", () => {
           expect(response.status).to.eq(200);
           //Searching tasks in the list that match task name "Task Four"
           var createdTasks = response.body.filter((x) => x.name == "Task Four");
-          expect(createdTasks.length).to.eq(4);
+          expect(createdTasks.length).to.eq(currentSize + 4);
         });
       });
   });

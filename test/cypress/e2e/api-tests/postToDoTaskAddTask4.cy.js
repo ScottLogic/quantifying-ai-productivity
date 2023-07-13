@@ -12,6 +12,7 @@ TASK OBJECTIVES:
 describe("API Tasks", () => {
   it("Tests that adding a task populates the List All Tasks array", () => {
     var uuid = null;
+    let currentSize = 0;
 
     //Check that the list all tasks is greater than 0
     cy.request({
@@ -22,6 +23,7 @@ describe("API Tasks", () => {
         expect(response.status).to.eq(200);
         expect(response.body.length).to.be.greaterThan(0);
         cy.log("The array length is: " + response.body.length);
+        currentSize = response.body.length;
       })
       .then((response) => {
         //Add the task
@@ -45,6 +47,7 @@ describe("API Tasks", () => {
               url: "http://localhost:8080/todo",
             }).then((response) => {
               expect(response.status).to.eq(200);
+              expect(response.body.length).to.eq(currentSize + 1);
               //Assigns the UUID as null -> changes it in post request -> checks related field values
               var createdTask = response.body.find((x) => x.uuid == uuid);
               cy.log(createdTask.uuid);
