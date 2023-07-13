@@ -1,5 +1,6 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using ToDoListAPI.Interfaces;
 using ToDoListAPI.Models;
 
@@ -29,12 +30,8 @@ public class TodoController : ControllerBase
     }
 
     [HttpPost("addtask")]
-    public IActionResult AddTask(string name, string description)
+    public IActionResult AddTask([BindRequired] string name, [BindRequired] string description)
     {
-        if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(description))
-        {
-            return StatusCode((int)HttpStatusCode.BadRequest, ToDoTaskModel.GetUnknownTask());
-        }
         var newTodoTask = _todoRepository.AddTask(
             new ToDoTaskModel() { TaskName = name, TaskDescription = description }
         );
