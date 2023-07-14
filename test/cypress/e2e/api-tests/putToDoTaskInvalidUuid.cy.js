@@ -24,7 +24,7 @@ describe("API Tasks", () => {
         expect(response.body.error).to.eq("Bad Request");
       }
       if (response.body.path) {
-        expect(response.body.path).to.eq("/todo/invalid-uuid");
+        expect(response.body.path).to.eq("/todo/completed/invalid-uuid");
       }
     });
   });

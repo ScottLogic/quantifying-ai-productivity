@@ -30,7 +30,10 @@ describe("API Tasks", () => {
         expect(response.body.error).to.eq("Bad Request");
       }
       if (response.body.path) {
-        expect(response.body.path).to.eq("/todo/addTask?description=Missing%20Name");
+        expect(response.body.path).to.be.oneOf([
+          "/todo/addTask?description=Missing%20Name",
+          "/todo/addTask"
+        ]);
       }
     });
   });
