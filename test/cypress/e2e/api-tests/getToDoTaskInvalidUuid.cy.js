@@ -19,8 +19,14 @@ describe("API Tasks", () => {
       //Note: cannot test the timestamp as there is a microsecond difference between
       //the request being made and the actual value
       expect(response.status).to.eq(400);
-      expect(response.body.error).to.eq("Bad Request");
-      expect(response.body.path).to.eq("/todo/invalid-uuid");
+      // The C# web framework does not provide the error or path fields in the response body.
+      // Test the response body fields for JavaScript and Spring Boot implementations.
+      if (response.body.error) {
+        expect(response.body.error).to.eq("Bad Request");
+      }
+      if (response.body.path) {
+        expect(response.body.path).to.eq("/todo/invalid-uuid");
+      }
     });
   });
 });
