@@ -82,12 +82,12 @@ http://localhost:8080/todo/5c3ec8bc-6099-4cd5-b6da-8e2956db3a34 returns
 
 ```
 {
-"uuid": "5c3ec8bc-6099-4cd5-b6da-8e2956db3a34",
-"name": "Test generative AI",
-"description": "Use generative AI technology to write a simple web service",
-"created": "2023-06-23T09:00:00Z",
-"completed": null,
-"complete": false
+    "uuid": "5c3ec8bc-6099-4cd5-b6da-8e2956db3a34",
+    "name": "Test generative AI",
+    "description": "Use generative AI technology to write a simple web service",
+    "created": "2023-06-23T09:00:00Z",
+    "completed": null,
+    "complete": false
 }
 ```
 
@@ -97,29 +97,27 @@ http://localhost:8080/todo/5c3ec8bc-6099-1a2b-b6da-8e2956db3a34 returns
 
 ```
 {
-"uuid": "00000000-0000-0000-0000-000000000000",
-"name": "Unknown Task",
-"description": "Unknown Task",
-"created": "1970-01-01T00:00:00.000Z",
-"completed": null,
-"complete": false
+    "uuid": "00000000-0000-0000-0000-000000000000",
+    "name": "Unknown Task",
+    "description": "Unknown Task",
+    "created": "1970-01-01T00:00:00.000Z",
+    "completed": null,
+    "complete": false
 }
 ```
 
 with HTTP status 200.
 
-http://localhost:8080/todo/invalid-uuid returns
+http://localhost:8080/todo/invalid-uuid returns HTTP status 400 Bad Request. A meaningful response may also be returned, e.g.
 
 ```
 {
-"timestamp": "2023-06-27T12:32:05.590Z",
-"status": 400,
-"error": "Bad Request",
-"path": "/todo/invalid-uuid"
+    "timestamp": "2023-06-27T12:32:05.590Z",
+    "status": 400,
+    "error": "Bad Request",
+    "path": "/todo/invalid-uuid"
 }
 ```
-
-with HTTP status 400.
 
 ### Add a new PUT endpoint to mark a task as complete.
 
@@ -127,8 +125,8 @@ Add a new PUT endpoint that uses a uuid as a path parameter to mark a specific t
 
 ```
 {
-"success": true,
-"message": "This task has now been completed."
+    "success": true,
+    "message": "This task has now been completed."
 }
 ```
 
@@ -144,8 +142,8 @@ http://localhost:8080/todo/5c3ec8bc-6099-4cd5-b6da-8e2956db3a34 returns
 
 ```
 {
-"success": true,
-"message": "This task has now been completed."
+    "success": true,
+    "message": "This task has now been completed."
 }
 ```
 
@@ -155,8 +153,8 @@ A further call to http://localhost:8080/todo/5c3ec8bc-6099-4cd5-b6da-8e2956db3a3
 
 ```
 {
-"success": false,
-"message": "Task already marked complete."
+    "success": false,
+    "message": "Task already marked complete."
 }
 ```
 
@@ -166,25 +164,23 @@ http://localhost:8080/todo/5c3ec8bc-6099-1a2b-b6da-8e2956db3a34 returns
 
 ```
 {
-"success": false,
-"message": "Task not found."
+    "success": false,
+    "message": "Task not found."
 }
 ```
 
 with HTTP status 200.
 
-http://localhost:8080/todo/completed/invalid-uuid returns
+http://localhost:8080/todo/completed/invalid-uuid returns HTTP status 400 Bad Request. A meaningful response may also be returned, e.g.
 
 ```
 {
-"timestamp": "2023-06-27T12:32:05.590Z",
-"status": 400,
-"error": "Bad Request",
-"path": "/todo/completed/invalid-uuid"
+    "timestamp": "2023-06-27T12:32:05.590Z",
+    "status": 400,
+    "error": "Bad Request",
+    "path": "/todo/completed/invalid-uuid"
 }
 ```
-
-with HTTP status 400.
 
 ### Add a new POST endpoint to create a new task and add it to the list of tasks.
 
@@ -192,8 +188,8 @@ Add a new POST endpoint that takes two parameters, task name and task descriptio
 
 ```
 {
-"taskId": "13f8e57c-49dc-4301-afe9-0bcf2e840056",
-"message": "Task {task name} added successfully."
+    "taskId": "13f8e57c-49dc-4301-afe9-0bcf2e840056",
+    "message": "Task {task name} added successfully."
 }
 ```
 
@@ -207,25 +203,23 @@ http://localhost:8080/todo/addTask?name=Name&description=Description returns:
 
 ```
 {
-"taskId": "13f8e57c-49dc-4301-afe9-0bcf2e840056",
-"message": "Task Task Four added successfully."
+    "taskId": "13f8e57c-49dc-4301-afe9-0bcf2e840056",
+    "message": "Task Task Four added successfully."
 }
 ```
 
 with HTTP status 201 (CREATED). Note that the uuid will be randomly generated.
 
-http://localhost:8080/todo/addTask?name=Name returns:
+http://localhost:8080/todo/addTask?name=Name returns HTTP status 400 Bad Request. A meaningful response may also be returned, e.g.
 
 ```
 {
-"timestamp": "2023-06-27T12:32:05.590Z",
-"status": 400,
-"error": "Bad Request",
-"path": "/todo/addTask?name=Name"
+    "timestamp": "2023-06-27T12:32:05.590Z",
+    "status": 400,
+    "error": "Bad Request",
+    "path": "/todo/addTask?name=Name"
 }
 ```
-
-with HTTP status 400.
 
 ## Testers
 
