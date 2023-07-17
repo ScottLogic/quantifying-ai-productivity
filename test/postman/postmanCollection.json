@@ -1,0 +1,685 @@
+{
+	"info": {
+		"_postman_id": "162fd908-a5da-4134-bc2b-efe33ad6a8ce",
+		"name": "localhost:8080/",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28135579",
+		"_collection_link": "https://quantifying-ai-sl.postman.co/workspace/Gen-AI-Team-Workspace~b724e7f4-2c07-4717-8e36-cf26a1c46c79/collection/28188874-162fd908-a5da-4134-bc2b-efe33ad6a8ce?action=share&creator=28135579&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "ToDoTask - List All Tasks",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var jsonData = pm.response.json()\r",
+							"    pm.test(\"The length of the array is: \" + (jsonData.length));\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {},
+				"disableUrlEncoding": false
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/todo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"todo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ToDoTask - Completed List",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"    var jsonData = pm.response.json();\r",
+							"\r",
+							"    if(jsonData.length == 0){\r",
+							"        pm.test(\"The array is empty\");\r",
+							"    } else {\r",
+							"        pm.test(\"The length of the array is: \" + (jsonData.length));\r",
+							"    }\r",
+							"})  \r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {},
+				"disableUrlEncoding": false
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/todo?complete=true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"todo"
+					],
+					"query": [
+						{
+							"key": "complete",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ToDoTask - Not Completed List",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"    var jsonData = pm.response.json();\r",
+							"\r",
+							"    if(jsonData.length == 0){\r",
+							"        pm.test(\"The array is empty\");\r",
+							"    } else {\r",
+							"        pm.test(\"The length of the array is: \" + (jsonData.length));\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/todo?complete=false",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"todo"
+					],
+					"query": [
+						{
+							"key": "complete",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ToDoTask - Task Three",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Data Comparison for GET Task Three\", function () {\r",
+							"    var expected = {\r",
+							"        uuid: \"5c3ec8bc-6099-4cd5-b6da-8e2956db3a34\",\r",
+							"        name: \"Test generative AI\",\r",
+							"        description: \"Use generative AI technology to write a simple web service\",\r",
+							"        created: \"2023-06-23T09:00:00Z\",\r",
+							"        completed: null,\r",
+							"        complete: false\r",
+							"    }\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.uuid).to.eql(expected.uuid);\r",
+							"    pm.expect(jsonData.name).to.eql(expected.name);\r",
+							"    pm.expect(jsonData.description).to.eql(expected.description);\r",
+							"    pm.expect(new Date(jsonData.created).getTime()).to.eql(new Date(expected.created).getTime());\r",
+							"    pm.expect(jsonData.completed).to.eql(expected.completed);\r",
+							"    pm.expect(jsonData.complete).to.eql(expected.complete);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/todo/5c3ec8bc-6099-4cd5-b6da-8e2956db3a34",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"todo",
+						"5c3ec8bc-6099-4cd5-b6da-8e2956db3a34"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ToDoTask - Task Not Found",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Data Comparison for GET task not found\", function () {\r",
+							"    var expected = {\r",
+							"        uuid: \"00000000-0000-0000-0000-000000000000\",\r",
+							"        name: \"Unknown Task\",\r",
+							"        description: \"Unknown Task\",\r",
+							"        created: \"1970-01-01T00:00:00Z\",\r",
+							"        completed: null,\r",
+							"        complete: false\r",
+							"    }\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.uuid).to.eql(expected.uuid);\r",
+							"    pm.expect(jsonData.name).to.eql(expected.name);\r",
+							"    pm.expect(jsonData.description).to.eql(expected.description);\r",
+							"    pm.expect(new Date(jsonData.created).getTime()).to.eql(new Date(expected.created).getTime());\r",
+							"    pm.expect(jsonData.completed).to.eql(expected.completed);\r",
+							"    pm.expect(jsonData.complete).to.eql(expected.complete);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/todo/5c3ec8bc-6099-1a2b-b6da-8e2956db3a34",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"todo",
+						"5c3ec8bc-6099-1a2b-b6da-8e2956db3a34"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ToDoTask - Invalid UUID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var moment = require('moment');\r",
+							"pm.globals.set(\"CurrentDateTime\", moment());"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/todo/invalid-uuid",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"todo",
+						"invalid-uuid"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ToDoTask - Complete Task Two",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"    \r",
+							"pm.test(\"Data Comparison for PUT task completion\", function () {\r",
+							"    var expectedOutcome = {\r",
+							"        success: true,\r",
+							"        message: \"This task has now been completed.\",\r",
+							"    }\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.eql(expectedOutcome);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/todo/completed/fd5ff9df-f194-4c6e-966a-71b38f95e14f",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"todo",
+						"completed",
+						"fd5ff9df-f194-4c6e-966a-71b38f95e14f"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ToDoTask - Complete Task Two (Already Complete)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"PUT Data Comparison for PUT task already completed\", function () {\r",
+							"    var expectedOutcome = {\r",
+							"        success: false,\r",
+							"        message: \"Task already marked complete.\",\r",
+							"    }\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.eql(expectedOutcome);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/todo/completed/fd5ff9df-f194-4c6e-966a-71b38f95e14f",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"todo",
+						"completed",
+						"fd5ff9df-f194-4c6e-966a-71b38f95e14f"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ToDoTask - Task Not Found",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"PUT Data Comparison for PUT task not found\", function () {\r",
+							"    var expected = {\r",
+							"        success: false,\r",
+							"        message: \"Task not found.\"\r",
+							"    }\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.eql(expected);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/todo/completed/fd5ff9df-f194-1a3b-966a-71b38f95e14f",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"todo",
+						"completed",
+						"fd5ff9df-f194-1a3b-966a-71b38f95e14f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ToDoTask - Invalid UUID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/todo/completed/invalid-uuid",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"todo",
+						"completed",
+						"invalid-uuid"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ToDoTask - Add Task Four",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Data Comparison for ADD Task 4\", function () {\r",
+							"    var expected = {\r",
+							"        message: \"Task Task Four added successfully.\"\r",
+							"    }\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.eql(expected.message);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/todo/addTask?name=Task Four&description=Description Four",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"todo",
+						"addTask"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Task Four"
+						},
+						{
+							"key": "description",
+							"value": "Description Four"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ToDoTask - Add Task Missing Description and Name values",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/todo/addTask?name=&description=",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"todo",
+						"addTask"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": ""
+						},
+						{
+							"key": "description",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ToDoTask - Add Task Missing Description",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/todo/addTask?name=Missing Description",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"todo",
+						"addTask"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Missing Description"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ToDoTask - Add Task Missing Name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/todo/addTask?description=Missing Name",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"todo",
+						"addTask"
+					],
+					"query": [
+						{
+							"key": "description",
+							"value": "Missing Name"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
