@@ -4,7 +4,7 @@ The aim of this experiment is to gain an understanding of the productivity gains
 
 ## Developers
 
-The development task is to implement a web service that provides endpoints to manage a to do list. The choice of implementation language is at your discretion. Skeleton implementations have been provided in C#, Java and JavaScript on the ```start-here``` branch. It is also valid to start completely from scratch if you wish.
+The development task is to implement a web service that provides endpoints to manage a to do list. The choice of implementation language is at your discretion. Skeleton implementations have been provided in C#, Java and JavaScript on the `start-here` branch. It is also valid to start completely from scratch if you wish.
 
 No guidance is provided as to the use of generative AI tools in completing the implementation of the web server. It is valid to implement a solution using generative AI and consider the experience and productivity gain as a standalone activity. It is also valid to implement a solution without using generative AI and then revert to the skeleton code and re-implement a solution using generative AI to compare the experience and the time taken for each implementation.
 
@@ -45,7 +45,7 @@ The server data will be initialised with a list containing three tasks:
 
 The intial GET endpoint returns the list of tasks held by the server. If you are starting from scratch you need to implement this endpoint before continuing.
 
-The data above is stored in the file ```src/static_data/ToDoList.json``` within the project. Feel free to copy and paste it into the implementation, or load the data from the file.
+The data above is stored in the file `src/static_data/ToDoList.json` within the project. Feel free to copy and paste it into the implementation, or load the data from the file.
 
 ## Changes required
 
@@ -58,11 +58,11 @@ http://localhost:8080/todo{?complete=true}
 A GET endpoint that takes an optional boolean parameter “complete”.
 If the parameter is given then the endpoint returns a list of tasks that have been filtered based on the value supplied for the parameter:
 
-| URI                                       | Required behaviour                               |
-|-------------------------------------------|--------------------------------------------------|
-| http://localhost:8080/todo                | Return a list of all tasks with HTTP status 200. |
-| http://localhost:8080/todo?complete=true  | Return a list only containing completed tasks with HTTP status 200. |
-| http://localhost:8080/todo?complete=false | Return a list only containing incomplete tasks with HTTP status 200. | 
+| URI                                       | Required behaviour                                                   |
+| ----------------------------------------- | -------------------------------------------------------------------- |
+| http://localhost:8080/todo                | Return a list of all tasks with HTTP status 200.                     |
+| http://localhost:8080/todo?complete=true  | Return a list only containing completed tasks with HTTP status 200.  |
+| http://localhost:8080/todo?complete=false | Return a list only containing incomplete tasks with HTTP status 200. |
 
 ### Add a new GET endpoint to obtain a task by uuid.
 
@@ -72,9 +72,9 @@ http://localhost:8080/todo/{uuid}
 
 A GET endpoint that uses a uuid as a path parameter to return the task with the supplied uuid from the list of tasks. The endpoint returns the task with the given uuid if it exists, otherwise a fixed UNKNOWN_TASK is returned. If an invalid uuid is supplied the endpoint will return a bad request error.
 
-| URI                                       | Required behaviour                               |
-|-------------------------------------------|--------------------------------------------------|
-| http://localhost:8080/todo/{uuid}         | Return the task with supplied uuid with HTTP status 200. |                                           
+| URI                               | Required behaviour                                       |
+| --------------------------------- | -------------------------------------------------------- |
+| http://localhost:8080/todo/{uuid} | Return the task with supplied uuid with HTTP status 200. |
 
 Given the static data data above:
 
@@ -90,6 +90,7 @@ http://localhost:8080/todo/5c3ec8bc-6099-4cd5-b6da-8e2956db3a34 returns
 "complete": false
 }
 ```
+
 with HTTP status 200.
 
 http://localhost:8080/todo/5c3ec8bc-6099-1a2b-b6da-8e2956db3a34 returns
@@ -104,6 +105,7 @@ http://localhost:8080/todo/5c3ec8bc-6099-1a2b-b6da-8e2956db3a34 returns
 "complete": false
 }
 ```
+
 with HTTP status 200.
 
 http://localhost:8080/todo/invalid-uuid returns
@@ -116,6 +118,7 @@ http://localhost:8080/todo/invalid-uuid returns
 "path": "/todo/invalid-uuid"
 }
 ```
+
 with HTTP status 400.
 
 ### Add a new PUT endpoint to mark a task as complete.
@@ -129,11 +132,11 @@ Add a new PUT endpoint that uses a uuid as a path parameter to mark a specific t
 }
 ```
 
- If the task is already marked as completed, or the task is not found, then no change is made and the problem should be indicated in the response. If an invalid uuid is supplied the endpoint will return a bad request error.
+If the task is already marked as completed, or the task is not found, then no change is made and the problem should be indicated in the response. If an invalid uuid is supplied the endpoint will return a bad request error.
 
-| URI                                                 | Required behaviour                               |
-|-----------------------------------------------------|--------------------------------------------------|
-| http://localhost:8080/todo/completed/{uuid}         | Mark the task with supplied uuid as complete and return a meaningful response with HTTP status 200. To mark a task as complete the “completed” fields should be set to the current time and the “complete” boolean value should be set to true.|
+| URI                                         | Required behaviour                                                                                                                                                                                                                              |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| http://localhost:8080/todo/completed/{uuid} | Mark the task with supplied uuid as complete and return a meaningful response with HTTP status 200. To mark a task as complete the “completed” fields should be set to the current time and the “complete” boolean value should be set to true. |
 
 Given the static data above:
 
@@ -145,6 +148,7 @@ http://localhost:8080/todo/5c3ec8bc-6099-4cd5-b6da-8e2956db3a34 returns
 "message": "This task has now been completed."
 }
 ```
+
 with HTTP status 200.
 
 A further call to http://localhost:8080/todo/5c3ec8bc-6099-4cd5-b6da-8e2956db3a34 returns
@@ -155,6 +159,7 @@ A further call to http://localhost:8080/todo/5c3ec8bc-6099-4cd5-b6da-8e2956db3a3
 "message": "Task already marked complete."
 }
 ```
+
 with HTTP status 200.
 
 http://localhost:8080/todo/5c3ec8bc-6099-1a2b-b6da-8e2956db3a34 returns
@@ -165,6 +170,7 @@ http://localhost:8080/todo/5c3ec8bc-6099-1a2b-b6da-8e2956db3a34 returns
 "message": "Task not found."
 }
 ```
+
 with HTTP status 200.
 
 http://localhost:8080/todo/completed/invalid-uuid returns
@@ -177,6 +183,7 @@ http://localhost:8080/todo/completed/invalid-uuid returns
 "path": "/todo/completed/invalid-uuid"
 }
 ```
+
 with HTTP status 400.
 
 ### Add a new POST endpoint to create a new task and add it to the list of tasks.
@@ -190,12 +197,11 @@ Add a new POST endpoint that takes two parameters, task name and task descriptio
 }
 ```
 
- The status of the response should be 201 (CREATED) for a successful operation. If both name and description parameters are not supplied the endpoint will return a bad request error.
+The status of the response should be 201 (CREATED) for a successful operation. If both name and description parameters are not supplied the endpoint will return a bad request error.
 
-
-| URI                                                                                      | Required behaviour                               |
-|------------------------------------------------------------------------------------------|--------------------------------------------------|
-| http://localhost:8080/todo/addTask{?name=Name&description=Description}     | Create a new task with the given name and description, add it to the list of tasks and return HTTP status 201.|
+| URI                                                                    | Required behaviour                                                                                             |
+| ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| http://localhost:8080/todo/addTask{?name=Name&description=Description} | Create a new task with the given name and description, add it to the list of tasks and return HTTP status 201. |
 
 http://localhost:8080/todo/addTask?name=Name&description=Description returns:
 
@@ -241,3 +247,7 @@ The tests found in `test/cypress/e2e` will appear. To run, click on your test su
 You can add tests to this file, or create a new test suite.
 
 You can also run tests headlessly using `npx cypress run`
+
+## Using Postman
+
+There is a Postman collection under the test folder. This can be imported into Postman, which can be used to aid development and testing.
