@@ -1,2 +1,5 @@
 ### VS Code ###
 .vscode/
+
+### Node Modules - Cypress ###
+node_modules/

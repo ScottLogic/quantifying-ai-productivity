@@ -1,6 +1,6 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.ComponentModel.DataAnnotations;
 using ToDoListAPI.Interfaces;
 using ToDoListAPI.Models;
 
@@ -30,7 +30,7 @@ public class TodoController : ControllerBase
     }
 
     [HttpPost("addtask")]
-    public IActionResult AddTask([BindRequired] string name, [BindRequired] string description)
+    public IActionResult AddTask([Required] string name, [Required] string description)
     {
         var newTodoTask = _todoRepository.AddTask(
             new ToDoTaskModel() { TaskName = name, TaskDescription = description }
