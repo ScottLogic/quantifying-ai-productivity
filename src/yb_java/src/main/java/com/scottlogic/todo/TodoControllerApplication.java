@@ -55,7 +55,7 @@ public class TodoControllerApplication {
     @GetMapping("/todo/{id}")
     public ResponseEntity<Todo> getById(@PathVariable UUID id) {
         Todo todo = todos.stream()
-                .filter(t -> t.id().equals(id))
+                .filter(t -> t.uuid().equals(id))
                 .findFirst()
                 .orElse(unknownTodo);
 
@@ -74,7 +74,7 @@ public class TodoControllerApplication {
             todos.add(todo);
 
             Map<String, Object> response = new HashMap<>();
-            response.put("taskId", todo.id());
+            response.put("taskId", todo.uuid());
             response.put("message", "Task " + name + " added successfully.");
 
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -92,7 +92,7 @@ public class TodoControllerApplication {
         Map<String, Object> response = new HashMap<>();
 
         Optional<Todo> todoToUpdate = todos.stream()
-                .filter(todo -> todo.id().equals(id))
+                .filter(todo -> todo.uuid().equals(id))
                 .findFirst();
 
         if (todoToUpdate.isPresent()) {

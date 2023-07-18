@@ -3,9 +3,10 @@ package com.scottlogic.todo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
-public record Todo(UUID id, String name, String description,
+public record Todo(UUID uuid, String name, String description,
                    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'") LocalDateTime created,
                    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'") LocalDateTime completed, boolean complete) {
 
@@ -18,6 +19,6 @@ public record Todo(UUID id, String name, String description,
     }
 
     public Todo updateComplete(Boolean complete) {
-        return new Todo(id(), name(), description(), created(), LocalDateTime.now(), complete);
+        return new Todo(uuid(), name(), description(), created(), LocalDateTime.now(), complete);
     }
 }
