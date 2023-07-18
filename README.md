@@ -4,7 +4,7 @@ The aim of this experiment is to gain an understanding of the productivity gains
 
 ## Developers
 
-The development task is to implement a web service that provides endpoints to manage a to do list. The choice of implementation language is at your discretion. Skeleton implementations have been provided in C#, Java and JavaScript on the `start-here` branch. It is also valid to start completely from scratch if you wish.
+The development task is to implement a web service that provides endpoints to manage a to do list. The choice of implementation language is at your discretion. Skeleton implementations have been provided in C#, Java and JavaScript on the `start-here-dev` branch. It is also valid to start completely from scratch if you wish.
 
 No guidance is provided as to the use of generative AI tools in completing the implementation of the web server. It is valid to implement a solution using generative AI and consider the experience and productivity gain as a standalone activity. It is also valid to implement a solution without using generative AI and then revert to the skeleton code and re-implement a solution using generative AI to compare the experience and the time taken for each implementation.
 
@@ -223,7 +223,7 @@ http://localhost:8080/todo/addTask?name=Name returns HTTP status 400 Bad Request
 
 ## Testers
 
-The testing task is to implement API tests using any generative AI model, such as ChatGPT, Google Bard, etc. A skeleton framework has been provided in Cypress. It is also valid to start completely from scratch if you wish.
+The testing task is to implement API tests using any generative AI model, such as ChatGPT, Google Bard, etc. A skeleton framework has been provided in Cypress on the `start-here-test` branch. It is also valid to start completely from scratch if you wish.
 
 First, start the web service in the language of your choice, e.g. JavaScript, and make sure it's running on localhost:8080.
 
