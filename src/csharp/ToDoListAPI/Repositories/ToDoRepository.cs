@@ -21,56 +21,12 @@ public class ToDoRepository : IToDoRepository
         }
     }
 
-    public IEnumerable<ToDoTaskModel> GetAllTasks(bool? completedFlag = null)
+    public IEnumerable<ToDoTaskModel> GetAllTasks()
     {
-        if (completedFlag != null)
-        {
-            return GetTasksByCompletedFlag(completedFlag);
-        }
         return _todoList.AsEnumerable();
     }
 
-    public IEnumerable<ToDoTaskModel> GetTasksByCompletedFlag(bool? completedFlag = null)
-    {
-        return (
-            (completedFlag == null)
-                ? _todoList.AsEnumerable()
-                : (_todoList.FindAll(x => x.CompletedFlag == (bool)completedFlag).AsEnumerable())
-        );
-    }
-
-    public ToDoTaskModel GetTasksById(Guid id)
-    {
-        var todoItem = _todoList.Find(x => x.Uuid == id);
-        todoItem = todoItem ?? ToDoTaskModel.GetUnknownTask();
-        return todoItem;
-    }
-
-    public ToDoTaskModel AddTask(ToDoTaskModel newTodoTask)
-    {
-        if (newTodoTask != null)
-        {
-            newTodoTask.Uuid = Guid.NewGuid();
-            _todoList.Add(newTodoTask);
-            var createdTask = GetTasksById(newTodoTask.Uuid);
-            return createdTask;
-        }
-        return newTodoTask;
-    }
-
-    public bool CompleteTask(Guid id)
-    {
-        var todoItem = _todoList.Find(x => x.Uuid == id);
-        if (todoItem != null)
-        {
-            todoItem.CompletedFlag = true;
-            todoItem.CompletionDate = DateTime.Now;
-            return todoItem.CompletedFlag;
-        }
-        return false;
-    }
-
-    public IEnumerable<ToDoTaskModel> ReadToDoFile()
+    private IEnumerable<ToDoTaskModel> ReadToDoFile()
     {
         IEnumerable<ToDoTaskModel> readToDoList = null;
         string jsonString = File.ReadAllText(_fileName);
