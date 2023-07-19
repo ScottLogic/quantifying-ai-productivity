@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -18,26 +18,26 @@ public class TodoControllerApplication {
             new Todo(UUID.fromString("f360ba09-4682-448b-b32f-0a9e538502fa"),
                     "Walk the dog",
                     "Walk the dog for forty five minutes",
-                    LocalDateTime.of(2023, 6, 23, 9, 30, 0),
+                    Instant.parse("2023-06-23T09:30:00Z"),
                     null,
                     false),
             new Todo(UUID.fromString("fd5ff9df-f194-4c6e-966a-71b38f95e14f"),
                     "Mow the lawn",
                     "Mow the lawn in the back garden",
-                    LocalDateTime.of(2023, 6, 23, 9, 0, 0),
+                    Instant.parse("2023-06-23T09:00:00Z"),
                     null,
                     false),
             new Todo(UUID.fromString("5c3ec8bc-6099-4cd5-b6da-8e2956db3a34"),
                     "Test generative AI",
                     "Use generative AI technology to write a simple web service",
-                    LocalDateTime.of(2023, 6, 23, 9, 0, 0),
+                    Instant.parse("2023-06-23T09:00:00Z"),
                     null,
                     false)
     ));
     private static Todo unknownTodo = new Todo(UUID.fromString("00000000-0000-0000-0000-000000000000"),
             "Unknown Task",
             "Unknown Task",
-            LocalDateTime.of(1970, 1, 1, 0, 0, 0),
+            Instant.parse("1970-01-01T00:00:00Z"),
             null,
             false);
 
