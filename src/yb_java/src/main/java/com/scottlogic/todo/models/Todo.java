@@ -1,4 +1,4 @@
-package com.scottlogic.todo;
+package com.scottlogic.todo.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
