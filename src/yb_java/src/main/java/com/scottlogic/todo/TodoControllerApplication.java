@@ -6,6 +6,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -14,32 +23,19 @@ import java.util.stream.Collectors;
 @SpringBootApplication
 public class TodoControllerApplication {
 
-    private static List<Todo> todos = new ArrayList<>(List.of(
-            new Todo(UUID.fromString("f360ba09-4682-448b-b32f-0a9e538502fa"),
-                    "Walk the dog",
-                    "Walk the dog for forty five minutes",
-                    Instant.parse("2023-06-23T09:30:00Z"),
-                    null,
-                    false),
-            new Todo(UUID.fromString("fd5ff9df-f194-4c6e-966a-71b38f95e14f"),
-                    "Mow the lawn",
-                    "Mow the lawn in the back garden",
-                    Instant.parse("2023-06-23T09:00:00Z"),
-                    null,
-                    false),
-            new Todo(UUID.fromString("5c3ec8bc-6099-4cd5-b6da-8e2956db3a34"),
-                    "Test generative AI",
-                    "Use generative AI technology to write a simple web service",
-                    Instant.parse("2023-06-23T09:00:00Z"),
-                    null,
-                    false)
-    ));
+    private static List<Todo> todos = new ArrayList<>();
     private static Todo unknownTodo = new Todo(UUID.fromString("00000000-0000-0000-0000-000000000000"),
             "Unknown Task",
             "Unknown Task",
             Instant.parse("1970-01-01T00:00:00Z"),
             null,
             false);
+
+    static {
+        if (todos.isEmpty()) {
+            todos.addAll(readTodoFromJsonFile());
+        }
+    }
 
     @GetMapping("/todo")
     public List<Todo> getAllTodos(@RequestParam(required = false) Boolean complete) {
@@ -62,9 +58,9 @@ public class TodoControllerApplication {
         return ResponseEntity.ok(todo);
     }
 
-
     @PostMapping("/todo/addTask")
-    public ResponseEntity<Map<String, Object>> createTodo(@RequestParam(required = true) String name, @RequestParam(required = true) String description) {
+    public ResponseEntity<Map<String, Object>> createTodo(@RequestParam(required = true) String name,
+            @RequestParam(required = true) String description) {
         try {
             if (name.isBlank() || description.isBlank()) {
                 return ResponseEntity.badRequest().build();
@@ -84,8 +80,6 @@ public class TodoControllerApplication {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
-
-
 
     @PutMapping("/todo/completed/{id}")
     public ResponseEntity<Map<String, Object>> updateTodo(@PathVariable UUID id) {
@@ -118,7 +112,31 @@ public class TodoControllerApplication {
         return ResponseEntity.ok(response);
     }
 
+    private static List<Todo> readTodoFromJsonFile() {
+        List<Todo> todoList = new ArrayList<Todo>();
+        try {
 
+            File jsonfile = new File("../static_data/ToDoList.json");
+            if (!jsonfile.exists()) {
+                throw new IOException("File not found: " + jsonfile.getAbsolutePath());
+            }
+            var filePath = Paths.get(jsonfile.getAbsolutePath());
+
+            byte[] jsonData = Files.readAllBytes(filePath);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.findAndRegisterModules();
+            objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+            objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"));
+
+            todoList = objectMapper.readValue(jsonData, new TypeReference<>() {
+            });
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return todoList;
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(TodoControllerApplication.class, args);
