@@ -5,7 +5,7 @@
 describe('Test Experiment GET Task 4', () => {
     it('should validate API response is 200, check for correct uuid, name and description, as well as log time since epoch and check that "completed" is equal to null and false', () => {
 
-      cy.request('GET', 'http://localhost:8080/todo/{uuid}')
+      cy.request('GET', 'http://localhost:8080/todo/5c3ec8bc-6099-4cd5-b6da-8e2956db3a34')
         .then((response) => {
           expect(response.status).to.eq(200);
   
