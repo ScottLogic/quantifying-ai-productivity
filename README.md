@@ -138,7 +138,7 @@ If the task is already marked as completed, or the task is not found, then no ch
 
 Given the static data above:
 
-http://localhost:8080/todo/5c3ec8bc-6099-4cd5-b6da-8e2956db3a34 returns
+http://localhost:8080/todo/completed/5c3ec8bc-6099-4cd5-b6da-8e2956db3a34 returns
 
 ```
 {
@@ -149,7 +149,7 @@ http://localhost:8080/todo/5c3ec8bc-6099-4cd5-b6da-8e2956db3a34 returns
 
 with HTTP status 200.
 
-A further call to http://localhost:8080/todo/5c3ec8bc-6099-4cd5-b6da-8e2956db3a34 returns
+A further call to http://localhost:8080/todo/completed/5c3ec8bc-6099-4cd5-b6da-8e2956db3a34 returns
 
 ```
 {
@@ -160,7 +160,7 @@ A further call to http://localhost:8080/todo/5c3ec8bc-6099-4cd5-b6da-8e2956db3a3
 
 with HTTP status 200.
 
-http://localhost:8080/todo/5c3ec8bc-6099-1a2b-b6da-8e2956db3a34 returns
+http://localhost:8080/todo/completed/5c3ec8bc-6099-1a2b-b6da-8e2956db3a34 returns
 
 ```
 {
