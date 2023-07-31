@@ -2,6 +2,8 @@
 
 The aim of this experiment is to gain an understanding of the productivity gains that are possible when using generative AI technologies to aid with development and testing work.
 
+This readme includes instructions for both developers and testers. For developers, see the next section. For testers, you'll need to scroll down to the bottom.
+
 ## Developers
 
 The development task is to implement a web service that provides endpoints to manage a to do list. The choice of implementation language is at your discretion. Skeleton implementations have been provided in C#, Java and JavaScript on the `start-here-dev` branch. It is also valid to start completely from scratch if you wish.
@@ -221,6 +223,21 @@ http://localhost:8080/todo/addTask?name=Name returns HTTP status 400 Bad Request
 }
 ```
 
+### Test your changes
+
+You can either test your changes using postman or cypress. To import the Postman collection you will need to register an account.
+
+To test using the Postman collection, first [download](https://www.postman.com/downloads/) and install Postman. After opening Postman, sign-in or register an account. You can then import the Postman collection by clicking "Import" or using the keyboard shortcut Ctrl+O. The JSON file can be found under the `test` folder.
+
+If you prefer to use Cypress (or do not wish to create a Postman account) then first [download](https://nodejs.org/en/download) and install nodejs. Once installed, open a new terminal, cd into the test directory and then run:
+
+```
+npm install
+npx cypress open
+```
+
+Once Cypress opens, click on `E2E Testing` and select a browser (eg. Chrome). On the next screen you can run the specs.
+
 ## Testers
 
 The testing task is to implement API tests using any generative AI model, such as ChatGPT, Google Bard, etc. A skeleton framework has been provided in Cypress on the `start-here-test` branch. It is also valid to start completely from scratch if you wish.
@@ -242,6 +259,3 @@ You can add tests to this file, or create a new test suite.
 
 You can also run tests headlessly using `npx cypress run`
 
-## Using Postman
-
-There is a Postman collection under the test folder. This can be imported into Postman, which can be used to aid development and testing.
