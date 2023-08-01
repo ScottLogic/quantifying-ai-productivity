@@ -124,7 +124,7 @@ describe("POST Add Task 4", () => {
               cy.request("POST", "/tasks", taskData).then((response) => {
                 expect(response.status).to.eq(201);
               });
-            });
+        });
           
             it("should have a non-null 'task id' and the 'message' field should contain a message", () => {
               const taskData = {
@@ -138,7 +138,7 @@ describe("POST Add Task 4", () => {
                 expect(response.body.taskId).to.not.be.null;
                 expect(response.body.message).to.contain("message"); // Replace "message" with the expected message
               });
-            });
-          });
+        });
+});
 
-  });
+  
