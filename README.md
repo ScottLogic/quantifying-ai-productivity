@@ -202,13 +202,13 @@ The status of the response should be 201 (CREATED) for a successful operation. I
 
 | URI                                                                    | Required behaviour                                                                                             |
 | ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| http://localhost:8080/todo/addTask{?name=Name&description=Description} | Create a new task with the given name and description, add it to the list of tasks and return HTTP status 201. |
+| http://localhost:8080/todo/addTask{?name=TaskName&description=Description} | Create a new task with the given name and description, add it to the list of tasks and return HTTP status 201. |
 
-http://localhost:8080/todo/addTask?name=Name&description=Description returns:
+http://localhost:8080/todo/addTask?name=TaskName&description=Description returns:
 ```
 {
     "taskId": "13f8e57c-49dc-4301-afe9-0bcf2e840056",
-    "message": "Task Task Four added successfully."
+    "message": "Task TaskName added successfully."
 }
 ```
 
