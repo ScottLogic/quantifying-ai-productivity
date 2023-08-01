@@ -114,10 +114,15 @@ describe("POST Add Task 4", () => {
 
     //add task
     it("should add Task 4 and return a response of 201", () => {
-        cy.request("POST", "http://localhost:8080/todo/addTask?name=Task%204%20&description=Description%20of%20Task%204").then((response) => {
+        //BELOW IS ALTERNATIVE WAY TO WRITE THE REQUEST
+        // cy.request({
+        // method: 'POST',
+        // url: 'http://localhost:8080/todo/addTask?name=Task 4 &description=Description of Task 4',}).
+        cy.request("POST", "http://localhost:8080/todo/addTask?name=Task%204&description=Description%20of%20Task%204").
+        then((response) => {
           expect(response.status).to.eq(201);
-        //   expect(response.body.taskId).to.not.be.null;
-        //   expect(response.body.message).to.contain("Task Four added successfully."); // Replace "message" with the expected message
+          expect(response.body.taskId).to.not.be.null;
+          expect(response.body.message).to.contain("Task Task 4 added successfully.");
         });
     });
           
