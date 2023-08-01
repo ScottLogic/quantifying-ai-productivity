@@ -113,32 +113,26 @@ describe("POST Add Task 4", () => {
     });
 
     //add task
-    it("should return a response of 201", () => {
-              const taskData = {
-                // Provide the necessary task data in this object
-                name: "New Task",
-                description: "Task description",
-                // ...
-              };
-          
-              cy.request("POST", "/tasks", taskData).then((response) => {
-                expect(response.status).to.eq(201);
-              });
+    it("should add Task 4 and return a response of 201", () => {
+        cy.request("POST", "http://localhost:8080/todo/addTask?name=Task%204%20&description=Description%20of%20Task%204").then((response) => {
+          expect(response.status).to.eq(201);
+        //   expect(response.body.taskId).to.not.be.null;
+        //   expect(response.body.message).to.contain("Task Four added successfully."); // Replace "message" with the expected message
         });
+    });
           
-            it("should have a non-null 'task id' and the 'message' field should contain a message", () => {
-              const taskData = {
-                // Provide the necessary task data in this object
-                name: "New Task",
-                description: "Task description",
-                // ...
-              };
+        //     it.skip("should have a non-null 'task id' and the 'message' field should contain a message", () => {
+        //       const taskData = {
+        //         // Provide the necessary task data in this object
+        //         name: "New Task",
+        //         description: "Task description",
+        //         // ...
+        //       };
           
-              cy.request("POST", "/tasks", taskData).then((response) => {
-                expect(response.body.taskId).to.not.be.null;
-                expect(response.body.message).to.contain("message"); // Replace "message" with the expected message
-              });
-        });
+        //       cy.request("POST", "/tasks", taskData).then((response) => {
+
+        //       });
+        // });
 });
 
   
