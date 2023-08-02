@@ -146,18 +146,29 @@ describe("POST Add Task 4", () => {
     });
 
     it("should return a response of 200 and the length of the response should increment by 1 after Task 4 has been added", () => {
-      cy.request('GET', 'http://localhost:8080/todo/' + createdTaskId).then((response) => {
+      cy.request('GET', 'http://localhost:8080/todo/').then((response) => {
         expect(response.status).to.eq(200);
         newLength = response.body.length;
         cy.log("newLength: " + newLength);
-        //expect(newLength).to.eq(initialLength + 1);
+        expect(newLength).to.eq(initialLength + 1);
         });
       });
 
     it("should have a non-null or undefined UUID and all fields should contain the correct values", () => {
-        cy.get('@apiResponse').then((response) => {
-            createdTaskId = response.body.taskId;
-            cy.log("createdTaskId: " + createdTaskId);
+      cy.request('GET', 'http://localhost:8080/todo/' + createdTaskId).then((response) => {
+      cy.log("createdTaskId: " + createdTaskId);
+      const task = response.body;
+      expect(task).to.not.be.null;
+      expect(task).to.not.be.undefined;
+      expect(task.name).to.eq(taskName);
+      expect(task.description).to.eq(taskDescription);
+      expect(task.created).to.not.be.null;
+      expect(task.completed).to.not.be.null;
+      expect(task.complete).to.eq(false);
+      const createdTimestamp = new Date(task.created).getTime();
+      const submissionTime = new Date().getTime();
+      expect(submissionTime - createdTimestamp).to.be.lessThan(5);
+
 
 
     });
