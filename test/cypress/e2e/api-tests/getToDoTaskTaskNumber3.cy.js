@@ -34,7 +34,6 @@ describe('Test Experiment GET Task 4', () => {
       cy.request('GET', 'http://localhost:8080/todo/5c3ec8bc-6099-4cd5-b6da-8e2956db3a34')
         .then((response) => {
           expect(response.status).to.eq(200);
-
           expect(response.body).to.have.property('uuid', '5c3ec8bc-6099-4cd5-b6da-8e2956db3a34');
           expect(response.body).to.have.property('name', 'Test generative AI');
           expect(response.body).to.have.property('description', 'Use generative AI technology to write a simple web service');

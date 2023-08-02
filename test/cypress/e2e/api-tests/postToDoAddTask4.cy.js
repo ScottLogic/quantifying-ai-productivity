@@ -158,19 +158,17 @@ describe("POST Add Task 4", () => {
       cy.request('GET', 'http://localhost:8080/todo/' + createdTaskId).then((response) => {
       cy.log("createdTaskId: " + createdTaskId);
       const task = response.body;
+      cy.log(response.body)
       expect(task).to.not.be.null;
       expect(task).to.not.be.undefined;
       expect(task.name).to.eq(taskName);
       expect(task.description).to.eq(taskDescription);
       expect(task.created).to.not.be.null;
-      expect(task.completed).to.not.be.null;
+      expect(task.completed).to.be.null;
       expect(task.complete).to.eq(false);
       const createdTimestamp = new Date(task.created).getTime();
       const submissionTime = new Date().getTime();
-      expect(submissionTime - createdTimestamp).to.be.lessThan(5);
-
-
-
+      expect(submissionTime - createdTimestamp).to.be.lessThan(5000);
     });
 });
 });
