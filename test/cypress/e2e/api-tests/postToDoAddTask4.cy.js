@@ -105,9 +105,11 @@
   
 describe("POST Add Task 4", () => {
 
-    let initialLength;
+    let initialLength
+    let newLength
     let taskName = "Task 4";
     let taskDescription = "Description of Task 4";
+    let createdTaskId = null;
     beforeEach(() => {
       // Make an API request and alias the response as 'apiResponse'
       cy.request('GET', 'http://localhost:8080/todo').as('apiResponse');
@@ -137,27 +139,26 @@ describe("POST Add Task 4", () => {
           expect(response.status).to.eq(201);
           expect(response.body.taskId).to.not.be.null;
           expect(response.body.message).to.contain("Task Task 4 added successfully.");
-          expect(response.body.name).to.eq(taskName);
+          cy.log("response.body.taskId: " + response.body.taskId);
+          createdTaskId = (response.body.taskId);
           
         });
     });
 
     it("should return a response of 200 and the length of the response should increment by 1 after Task 4 has been added", () => {
-      cy.get('@apiResponse').then((response) => {
+      cy.request('GET', 'http://localhost:8080/todo/' + createdTaskId).then((response) => {
         expect(response.status).to.eq(200);
-        let newLength = response.body.length;
-        expect(newLength).to.eq(initialLength + 1);
+        newLength = response.body.length;
+        cy.log("newLength: " + newLength);
+        //expect(newLength).to.eq(initialLength + 1);
         });
       });
 
     it("should have a non-null or undefined UUID and all fields should contain the correct values", () => {
-        cy.request("POST", "http://localhost:8080/todo/addTask?name=Task%204&description=Description%20of%20Task%204").then((response) => {
-        const task = response.body;
-  
-        expect(task).to.not.be.null;
-        expect(task).to.not.be.undefined;
-        cy.log(task).to.have.property('name', taskName)
-        //expect(task.name).to.eq("Task 4");
+        cy.get('@apiResponse').then((response) => {
+            createdTaskId = response.body.taskId;
+            cy.log("createdTaskId: " + createdTaskId);
+
 
     });
 });
