@@ -104,11 +104,22 @@
 //   });
   
 describe("POST Add Task 4", () => {
+
+    let initialLength;
+    let taskName = "Task 4";
+    let taskDescription = "Description of Task 4";
+    beforeEach(() => {
+      // Make an API request and alias the response as 'apiResponse'
+      cy.request('GET', 'http://localhost:8080/todo').as('apiResponse');
+    });
+
+
     //initial checks
     it("should return a response of 200 and the length of the response should be greater than zero when initially checking responses", () => {
-      cy.request("GET", "http://localhost:8080/todo").then((response) => {
+      cy.get('@apiResponse').then((response) => {
         expect(response.status).to.eq(200);
-        expect(response.body.length).to.be.greaterThan(0);
+        initialLength = response.body.length;
+        expect(initialLength).to.be.greaterThan(0);
       });
     });
 
@@ -118,26 +129,36 @@ describe("POST Add Task 4", () => {
         // cy.request({
         // method: 'POST',
         // url: 'http://localhost:8080/todo/addTask?name=Task 4 &description=Description of Task 4',}).
-        cy.request("POST", "http://localhost:8080/todo/addTask?name=Task%204&description=Description%20of%20Task%204").
+        //OR
+        //cy.request("POST", "http://localhost:8080/todo/addTask?name=Task%204&description=Description%20of%20Task%204").
+        //OR- USING VARIABLES
+        cy.request("POST", "http://localhost:8080/todo/addTask?name=" + taskName + "&description=" + taskDescription).
         then((response) => {
           expect(response.status).to.eq(201);
           expect(response.body.taskId).to.not.be.null;
           expect(response.body.message).to.contain("Task Task 4 added successfully.");
+          expect(response.body.name).to.eq(taskName);
+          
         });
     });
-          
-        //     it.skip("should have a non-null 'task id' and the 'message' field should contain a message", () => {
-        //       const taskData = {
-        //         // Provide the necessary task data in this object
-        //         name: "New Task",
-        //         description: "Task description",
-        //         // ...
-        //       };
-          
-        //       cy.request("POST", "/tasks", taskData).then((response) => {
 
-        //       });
-        // });
-});
+    it("should return a response of 200 and the length of the response should increment by 1 after Task 4 has been added", () => {
+      cy.get('@apiResponse').then((response) => {
+        expect(response.status).to.eq(200);
+        let newLength = response.body.length;
+        expect(newLength).to.eq(initialLength + 1);
+        });
+      });
 
+    it("should have a non-null or undefined UUID and all fields should contain the correct values", () => {
+        cy.request("POST", "http://localhost:8080/todo/addTask?name=Task%204&description=Description%20of%20Task%204").then((response) => {
+        const task = response.body;
   
+        expect(task).to.not.be.null;
+        expect(task).to.not.be.undefined;
+        cy.log(task).to.have.property('name', taskName)
+        //expect(task.name).to.eq("Task 4");
+
+    });
+});
+});
