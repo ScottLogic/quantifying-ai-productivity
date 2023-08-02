@@ -13,17 +13,6 @@
 
 describe("POST Add Task Missing Name and Description", () => {
 
-    let initialLength
-    let newLength
-    let taskName = "";
-    let taskDescription = "";
-    let createdTaskId = null;
-    // beforeEach(() => {
-    //   // Make an API request and alias the response as 'apiResponse'
-    //   cy.request('GET', 'http://localhost:8080/todo').as('apiResponse');
-    // });
-
-    //add task
     it("should add Task with no name or description and return a response of 400", () => {
         cy.request({
           method: "POST", 
