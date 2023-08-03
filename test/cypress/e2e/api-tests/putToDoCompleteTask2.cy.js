@@ -42,10 +42,25 @@ describe("Test Experiment GET Task 2", () => {
     //NEED TO FIND TASK 2 (BYUUID) AND MARK IT AS COMPLETE
     cy.request({
       method: "PUT",
-      url: "http://localhost:8080/todo/fd5ff9df-f194-4c6e-966a-71b38f95e14f", 
+      url: "http://localhost:8080/todo/completed/fd5ff9df-f194-4c6e-966a-71b38f95e14f", 
     }).then((response) => {
       expect(response.status).to.equal(200);
-      cy.log(response.body.length)
+      expect(response.body.message).to.equal('This task has now been completed.')
+    });
+  });
+
+  it.only("should give a response of 200 and array has been populated once Task 2 has been marked as completed", () => {
+    cy.request({
+      method: "GET",
+      url: "http://localhost:8080/todo?complete=true", 
+    }).then((response) => {
+      expect(response.status).to.equal(200);
+      expect(response.body[0].name).to.equal('Mow the lawn')
+      expect(response.body[0].description).to.equal('Mow the lawn in the back garden')
+      expect(response.body[0].uuid).to.equal('fd5ff9df-f194-4c6e-966a-71b38f95e14f')
+      //expect(response.body[0].created).to.equal()
+      //expect(response.body[0].completed).to.equal()
+      expect(response.body[0].complete).to.equal(true)
     });
   });
 });
