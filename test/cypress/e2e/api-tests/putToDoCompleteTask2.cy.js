@@ -41,8 +41,8 @@ describe("Test Experiment GET Task 2", () => {
   it("should give a response of 200 when a PUT request marks Task 2 as Complete", () => {
     //NEED TO FIND TASK 2 (BYUUID) AND MARK IT AS COMPLETE
     cy.request({
-      method: "GET",
-      url: "http://localhost:8080/todo", 
+      method: "PUT",
+      url: "http://localhost:8080/todo/fd5ff9df-f194-4c6e-966a-71b38f95e14f", 
     }).then((response) => {
       expect(response.status).to.equal(200);
       cy.log(response.body.length)
