@@ -27,7 +27,7 @@
 // });
 
 
-describe("Test Experiment GET Task 2", () => {
+describe(" PUT Complete Task 2", () => {
   it("should check response status is 200 and log response length", () => {
     cy.request({
       method: "GET",
