@@ -1,43 +1,26 @@
 package com.scottlogic.quantifying.ai.model.web;
 
-import java.time.Instant;
-import java.util.Objects;
+import java.util.Date;
 import java.util.UUID;
 
-public class ToDoTask implements java.io.Serializable{
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-    public static ToDoTask UNKNOWN_TASK = new ToDoTask(UUID.fromString("00000000-0000-0000-0000-000000000000"), "Unknown Task", "Unknown Task", Instant.EPOCH, null, false);
-
-    private UUID uuid;
-
+public class ToDoTask {
+    private String uuid;
     private String name;
-
     private String description;
 
-    private Instant created;
-
-    private Instant completed;
-
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
+    private Date created;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
+    private Date completed;
     private boolean complete;
 
     public ToDoTask() {
-        // JSON Serialization
     }
 
-    public ToDoTask(String name, String description) {
-        this(UUID.randomUUID(), name, description, Instant.now(), null, false);
-    }
-
-    public ToDoTask(String name, String description, Instant created, Instant completed, boolean complete) {
-        this(UUID.randomUUID(), name, description, created, completed, complete);
-    }
-
-    public ToDoTask(UUID uuid, String name, String description, Instant created, Instant completed, boolean complete) {
-        if (Objects.nonNull(uuid)) {
-            this.uuid = uuid;
-        } else {
-            this.uuid = UUID.randomUUID();
-        }
+    public ToDoTask(String uuid, String name, String description, Date created, Date completed, boolean complete) {
+        this.uuid = uuid;
         this.name = name;
         this.description = description;
         this.created = created;
@@ -45,38 +28,60 @@ public class ToDoTask implements java.io.Serializable{
         this.complete = complete;
     }
 
-    public UUID getUuid() {
+    public ToDoTask(String name, String description) {
+        this.uuid = UUID.randomUUID().toString();
+        this.name = name;
+        this.description = description;
+        this.created = new Date();
+        this.complete = false;
+    }
+
+    public String getUuid() {
         return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getDescription() {
         return description;
     }
 
-    public Instant getCreated() {
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getCreated() {
         return created;
     }
 
-    public Instant getCompleted() {
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public Date getCompleted() {
         return completed;
+    }
+
+    public void setCompleted(Date completed) {
+        this.completed = completed;
     }
 
     public boolean isComplete() {
         return complete;
     }
 
-    public void setCompleted(Instant completed) {
-        this.completed = completed;
-    }
-
     public void setComplete(boolean complete) {
         this.complete = complete;
-        if (complete) {
-            setCompleted(Instant.now());
-        }
     }
+
 }
