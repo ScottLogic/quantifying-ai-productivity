@@ -85,8 +85,18 @@
   
 
     describe('POST add Task 5', () => {
+    let initialTasksCount;
+
+    beforeEach(() => {
+      // Get the initial count of tasks before adding new ones
+      cy.request('GET', 'http://localhost:8080/todo').then((response) => {
+        expect(response.status).to.equal(200);
+        initialTasksCount = response.body.length;
+      });
+    });
+
         it('should add Task 4 four times', () => {
-                
+            function addTask4FourTimes() {    
           // Perform the POST request 4 times and check the response
           for (let i = 0; i < 4; i++) {
             cy.request({
@@ -104,7 +114,18 @@
               expect(response.body.message).to.contain('Task Task 4 added successfully.');
             });
           }
+        }
         });
+
+        it('should get a list of all tasks and check response body size is greater than 3', () => {
+                  cy.request('GET', 'http://localhost:8080/todo').then((response) => {
+                    // Check the response status is 200
+                    expect(response.status).to.equal(200);
+              
+                    // Check the response body size is greater than 3
+                    expect(response.body.length).to.be.greaterThan(3);
+                  });
+                });
       });
       
     
