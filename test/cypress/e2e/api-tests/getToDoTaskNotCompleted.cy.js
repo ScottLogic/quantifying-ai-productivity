@@ -27,7 +27,7 @@ describe("Test Experiment GET Task 3", () => {
       }).then((response) => {
         expect(response.status).to.equal(200);
 
-        cy.log(`Response length: ${JSON.stringify(response.body).length}`);
+        cy.log('Response length: ', response.body.length);
       });
     });
   });
