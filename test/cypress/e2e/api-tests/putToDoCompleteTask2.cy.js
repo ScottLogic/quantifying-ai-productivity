@@ -58,8 +58,8 @@ describe("Test Experiment GET Task 2", () => {
       expect(response.body[0].name).to.equal('Mow the lawn')
       expect(response.body[0].description).to.equal('Mow the lawn in the back garden')
       expect(response.body[0].uuid).to.equal('fd5ff9df-f194-4c6e-966a-71b38f95e14f')
-      //expect(response.body[0].created).to.equal()
-      //expect(response.body[0].completed).to.equal()
+      expect(response.body[0].created).to.equal('2023-06-23T09:00:00Z')
+      expect(response.body[0].completed).to.not.be.null
       expect(response.body[0].complete).to.equal(true)
     });
   });
