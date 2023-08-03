@@ -130,7 +130,7 @@ describe("POST Add Task 4", () => {
         //BELOW IS ALTERNATIVE WAY TO WRITE THE REQUEST
         // cy.request({
         // method: 'POST',
-        // url: 'http://localhost:8080/todo/addTask?name=Task 4 &description=Description of Task 4',}).
+        // url: 'http://localhost:8080/todo/addTask?name=Task 4&description=Description of Task 4',}).
         //OR
         //cy.request("POST", "http://localhost:8080/todo/addTask?name=Task%204&description=Description%20of%20Task%204").
         //OR- USING VARIABLES
