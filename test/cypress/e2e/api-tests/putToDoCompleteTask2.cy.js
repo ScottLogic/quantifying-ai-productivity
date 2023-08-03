@@ -49,7 +49,7 @@ describe("Test Experiment GET Task 2", () => {
     });
   });
 
-  it.only("should give a response of 200 and array has been populated once Task 2 has been marked as completed", () => {
+  it("should give a response of 200 and array has been populated once Task 2 has been marked as completed", () => {
     cy.request({
       method: "GET",
       url: "http://localhost:8080/todo?complete=true", 
