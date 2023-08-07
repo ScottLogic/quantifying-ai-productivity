@@ -4,7 +4,7 @@ describe('Todo App API', () => {
       cy.request('http://localhost:8080/todo').should((response) => {
         expect(response.status).to.equal(200)
         expect(response.body).to.be.an('array')
-        expect(response.body).to.have.length(3)
+        expect(response.body).to.have.length(19)
       })
     })
   
