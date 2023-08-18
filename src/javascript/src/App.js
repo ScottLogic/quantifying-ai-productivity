@@ -6,6 +6,14 @@ const app = express();
 app.use(express.json());
 
 const tasksFilePath = path.join(__dirname, '../../static_data', 'ToDoList.json');
+const UNKNOWN_TASK = {
+    uuid: "00000000-0000-0000-0000-000000000000",
+    name: "Unknown Task",
+    description: "Unknown Task",
+    created: "1970-01-01T00:00:00.000Z",
+    completed: null,
+    complete: false
+};
 
 let tasks = [];
 
@@ -30,6 +38,24 @@ const validateUuid = (uuid) => {
     return uuidRegex.test(uuid);
 };
 
+// create bad request
+const createBadRequest = (path) => {
+    return {
+        timestamp: new Date().toISOString(),
+        status: 400,
+        error: 'Bad Request',
+        path,
+    };
+};
+
+// created completed status
+const createCompletedStatus = (success, message) => {
+    return {
+        success,
+        message,
+    };
+};
+
 // Load tasks from the file when the server starts
 loadTasksFromFile();
 
@@ -49,12 +75,7 @@ app.get('/todo/:uuid', (req, res) => {
     // validate whether uuid is a valid uuid
     if (!validateUuid(uuid)) {
         // if not, return a 400 Bad Request
-        res.status(400).json({
-            timestamp: new Date().toISOString(),
-            status: 400,
-            error: 'Bad Request',
-            path: '/todo/' + uuid,
-        });
+        res.status(400).json(createBadRequest('/todo/' + uuid));
         return;
     }
 
@@ -63,14 +84,7 @@ app.get('/todo/:uuid', (req, res) => {
         res.json(task);
     } else {
         // return an UNKNOWN_TASK object with 200 status
-        res.status(200).json({
-            uuid: "00000000-0000-0000-0000-000000000000",
-            name: "Unknown Task",
-            description: "Unknown Task",
-            created: "1970-01-01T00:00:00.000Z",
-            completed: null,
-            complete: false
-        });
+        res.status(200).json(UNKNOWN_TASK);
     }
 });
 
@@ -80,12 +94,7 @@ app.put('/todo/completed/:uuid', (req, res) => {
     // validate whether uuid is a valid uuid
     if (!validateUuid(uuid)) {
         // if not, return a 400 Bad Request with and object containing the error
-        res.status(400).json({
-            timestamp: new Date().toISOString(),
-            status: 400,
-            error: 'Bad Request',
-            path: '/todo/completed/' + uuid,
-        });
+        res.status(400).json(createBadRequest('/todo/completed/' + uuid));     
         return;
     }
 
@@ -93,49 +102,30 @@ app.put('/todo/completed/:uuid', (req, res) => {
     if (task) {
         // if task is already completed, return 200 with object describing the error
         if (task.complete) {
-            res.status(200).json({
-                success: false,
-                message: 'Task already marked complete.',
-            });
+            res.status(200).json(createCompletedStatus(false, 'Task already marked complete.'));
             return;
         }
         // mark task as complete and set completed to current time
         task.complete = true;
         task.completed = new Date().toISOString();
         // return 200 with object describing the success
-        res.status(200).json({
-            success: true,
-            message: 'This task has now been completed.',
-        });
+        res.status(200).json(createCompletedStatus(true, 'This task has now been completed.'));
     } else {
         // return 200 with object describing the error
-        res.status(200).json({
-            success: false,
-            message: 'Task not found.',
-        });
+        res.status(200).json(createCompletedStatus(false, 'Task not found.'));
     }
 });
 
 // Add a new POST endpoint that takes two query parameters, task name and task description, that creates a new task item with the given name and description. The uuid of the new task will be assigned by the server as a random uuid and the created timestamp should be set to the current time. The new item will have no value for the completed timestamp and a value of false for the complete flag. The body of the response should include the uuid of the new task and a string message.
 app.post('/todo/addTask', (req, res) => {
     const { name, description } = req.query;
+
     // validate whether name and description are provided
     if (!name || !description) {
-        const wasNameEmptyString = name === '';
-        const wasDescriptionEmptyString = description === '';
-
-        // html encode the name and description if they were defined - even an empty string
-        const encodedName = name || wasNameEmptyString ? encodeURIComponent(name) : undefined;
-        const encodedDescription = description || wasDescriptionEmptyString ? encodeURIComponent(description) : undefined;
-
-        // if not, return a 400 Bad Request with and object containing the error
-        // path should contain encoded query parameters only if they were provided
-        res.status(400).json({
-            timestamp: new Date().toISOString(),
-            status: 400,
-            error: 'Bad Request',
-            path: '/todo/addTask?' + (encodedName || wasNameEmptyString ? 'name=' + encodedName + (!encodedDescription && !wasDescriptionEmptyString ? '' : '&') : '') + (encodedDescription || wasDescriptionEmptyString ? 'description=' + encodedDescription : ''),
-        });
+        // get original url
+        const originalUrl = req.originalUrl;
+        // return bad request with original url
+        res.status(400).json(createBadRequest(originalUrl));
         return;
     }
 
