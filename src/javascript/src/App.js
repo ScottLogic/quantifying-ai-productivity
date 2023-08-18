@@ -74,4 +74,46 @@ app.get('/todo/:uuid', (req, res) => {
     }
 });
 
+// mark a task as completed by uuid
+app.put('/todo/completed/:uuid', (req, res) => {
+    const { uuid } = req.params;
+    // validate whether uuid is a valid uuid
+    if (!validateUuid(uuid)) {
+        // if not, return a 400 Bad Request with and object containing the error
+        res.status(400).json({
+            timestamp: new Date().toISOString(),
+            status: 400,
+            error: 'Bad Request',
+            path: '/todo/completed/' + uuid,
+        });
+        return;
+    }
+
+    const task = tasks.find(task => task.uuid === uuid);
+    if (task) {
+        // if task is already completed, return 200 with object describing the error
+        if (task.complete) {
+            res.status(200).json({
+                success: false,
+                message: 'Task already marked complete.',
+            });
+            return;
+        }
+        // mark task as complete and set completed to current time
+        task.complete = true;
+        task.completed = new Date().toISOString();
+        // return 200 with object describing the success
+        res.status(200).json({
+            success: true,
+            message: 'This task has now been completed.',
+        });
+    } else {
+        // return 200 with object describing the error
+        res.status(200).json({
+            success: false,
+            message: 'Task not found.',
+        });
+    }
+});
+
 app.listen(8080, () => console.log('Example app listening on port 8080!'));
