@@ -109,6 +109,44 @@ app.put('/todo/completed/:taskId', (req, res) => {
     });
 });
 
+// Mark a task as not completed
+app.put('/todo/incompleted/:taskId', (req, res) => {
+    const { taskId } = req.params;
+        
+    // Invalid uuid.
+    if (!uuidValidate(taskId)) {
+        res.status(400).json(badRequest(req.url));
+        return;
+    }
+
+    const task = tasks.find((task) => task.uuid === taskId);
+
+    // If the task is not found return an error message and SUCCESS.
+    if (!task) {
+        res.json({ 
+            success: false, 
+            message: "Task not found." });
+        return;
+    }
+
+    // If the task is already complete return an error message and SUCCESS.
+    if (!task.complete) {
+        res.json({
+            success: false,
+            message: "Task already marked incomplete.",
+        });
+        return;
+    }
+
+    // Mark the task as complete and return success.
+    task.completed = null
+    task.complete = false;
+    res.json({ 
+        success: true, 
+        message: 'This task has now been completed.' 
+    });
+});
+
 // Add a new task
 app.post('/todo/addTask', (req, res) => {
     const { name, description } = req.query;
@@ -142,3 +180,5 @@ const badRequest = (url) => ({
     error: "Bad Request",
     path: url
 });
+
+exports.dataReset = loadTasksFromFile
