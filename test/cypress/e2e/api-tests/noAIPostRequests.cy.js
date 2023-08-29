@@ -15,13 +15,16 @@ describe("Post requests", () => {
         expect(response.body.message).to.eq("Task Task Four added successfully.")
       });
       cy.request("GET", "/todo").then((response) => {
+        const lastItem = response.body[response.body.length - 1]
+        const creationTime = new Date(lastItem.created).getTime();
+        const currentTime = Date.now();
+        const timestamp = currentTime - creationTime;
         expect(response.status).to.eq(200);
         expect(response.body.length).to.eq(taskCount + 1);
-        const lastItem = response.body[response.body.length - 1]
         expect(lastItem.uuid).to.not.be.null;
         expect(lastItem.name).to.eq("Task Four");
         expect(lastItem.description).to.eq("Description Four");
-        //expect(lastItem.created).to.eq()
+        expect(timestamp).to.be.within(0, 5000);
         expect(lastItem.completed).to.be.null;
         expect(lastItem.complete).to.be.false;
     });
@@ -36,8 +39,11 @@ describe("Post requests", () => {
         description: ""},
         failOnStatusCode: false
       }).then((response) => {
+        const creationTime = new Date(response.body.timestamp).getTime();
+        const currentTime = Date.now();
+        const timestamp = currentTime - creationTime;
         expect(response.status).to.eq(400);
-        //expect(response.body.timestamp).to.eq();
+        expect(timestamp).to.be.within(0, 5000);
         expect(response.body.error).to.eq("Bad Request");
         expect(response.body.path).to.eq("/todo/addTask?name=&description=");
       });
@@ -51,8 +57,11 @@ describe("Post requests", () => {
         description: "Missing Description"},
         failOnStatusCode: false
       }).then((response) => {
+        const creationTime = new Date(response.body.timestamp).getTime();
+        const currentTime = Date.now();
+        const timestamp = currentTime - creationTime;
         expect(response.status).to.eq(400);
-        //expect(response.body.timestamp).to.eq();
+        expect(timestamp).to.be.within(0, 5000);
         expect(response.body.error).to.eq("Bad Request");
         expect(response.body.path).to.eq("/todo/addTask?name=&description=Missing%20Description");
       });
@@ -66,8 +75,11 @@ describe("Post requests", () => {
         description: ""},
         failOnStatusCode: false
       }).then((response) => {
+        const creationTime = new Date(response.body.timestamp).getTime();
+        const currentTime = Date.now();
+        const timestamp = currentTime - creationTime;
         expect(response.status).to.eq(400);
-        //expect(response.body.timestamp).to.eq();
+        expect(timestamp).to.be.within(0, 5000);
         expect(response.body.error).to.eq("Bad Request");
         expect(response.body.path).to.eq("/todo/addTask?name=Missing%20Name&description=");
       });
