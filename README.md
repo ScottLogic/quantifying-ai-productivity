@@ -13,7 +13,7 @@ If you wish to implement the API tests you should checkout the `start-here-test`
 git checkout <start-here-dev|start-here-test>
 ```
 
-You should create your own branch to work on so that you can commit your code to the repository.
+You should create your own branch to work on, commit your code and push it to the repository on your branch. We may wish to analyse the code that the generative AI helped produce as part of the outcomes of this experiment.
 ```
 git checkout -b <new-branch-name>
 ```
