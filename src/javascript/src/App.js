@@ -6,6 +6,8 @@ const unknownTask = require('./utils/unknownTask.json');
 const completedJson = require('./utils/completed.json');
 const { badRequest } = require('./utils/badRequest');
 const { makeTimestamp } = require('./utils/makeTimestamp');
+const { makeTask } = require('./utils/makeTask');
+const { taskAdded } = require('./utils/taskAdded');
 
 const app = express();
 app.use(express.json());
@@ -66,6 +68,18 @@ app.put('/todo/completed/:uuid', (req, res) => {
         } else {
             res.json(completedJson.notFound);
         }
+    }
+})
+
+app.post('/todo/addTask', (req, res) => {
+    const name = req.query.name;
+    const description = req.query.description;
+    if (name !== undefined && description !== undefined) {
+        const taskToAdd = makeTask(name, description);
+        tasks.push(taskToAdd);
+        res.status(201).json(taskAdded(taskToAdd));
+    } else {
+        res.status(400).json(badRequest(req.path));
     }
 })
 
