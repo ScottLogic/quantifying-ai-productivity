@@ -5,6 +5,7 @@ const { isValidUUID } = require('./utils/uuidChecker');
 const unknownTask = require('./utils/unknownTask.json');
 const completedJson = require('./utils/completed.json');
 const { badRequest } = require('./utils/badRequest');
+const { fullPath } = require('./utils/fullPath.js');
 const { makeTimestamp } = require('./utils/makeTimestamp');
 const { makeTask } = require('./utils/makeTask');
 const { taskAdded } = require('./utils/taskAdded');
