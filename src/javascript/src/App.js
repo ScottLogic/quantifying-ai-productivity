@@ -44,7 +44,7 @@ app.get('/todo', (req, res) => {
 app.get('/todo/:uuid', (req, res) => {
     const uuid = req.params.uuid;
     if (!isValidUUID(uuid)) {
-        res.status(400).json(badRequest(req.path));
+        res.status(400).json(badRequest(fullPath(req)));
     } else {
         const taskWithUuid = [...tasks].find(task => task.uuid == uuid);
         res.json(taskWithUuid ?? unknownTask)
@@ -54,7 +54,7 @@ app.get('/todo/:uuid', (req, res) => {
 app.put('/todo/completed/:uuid', (req, res) => {
     const uuid = req.params.uuid;
     if (!isValidUUID(uuid)) {
-        res.status(400).json(badRequest(req.path));
+        res.status(400).json(badRequest(fullPath(req)));
     } else {
         const taskWithUuid = tasks.find(task => task.uuid == uuid);
         if (taskWithUuid) {
@@ -74,12 +74,12 @@ app.put('/todo/completed/:uuid', (req, res) => {
 app.post('/todo/addTask', (req, res) => {
     const name = req.query.name;
     const description = req.query.description;
-    if (name !== undefined && description !== undefined) {
+    if (name && description) {
         const taskToAdd = makeTask(name, description);
         tasks.push(taskToAdd);
         res.status(201).json(taskAdded(taskToAdd));
     } else {
-        res.status(400).json(badRequest(req.path));
+        res.status(400).json(badRequest(fullPath(req)));
     }
 })
 
