@@ -1,6 +1,9 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const { isValidUUID } = require('./utils/uuidChecker');
+const unknownTask = require('./utils/unknownTask.json');
+const { badRequest } = require('./utils/badRequest');
 
 const app = express();
 app.use(express.json());
@@ -33,5 +36,15 @@ app.get('/todo', (req, res) => {
     const completeTasks = [...tasks].filter(task => `${task.complete}` === todoComplete);
     res.json(todoComplete != null ? completeTasks : tasks);
 });
+
+app.get('/todo/:uuid', (req, res) => {
+    const uuid = req.params.uuid;
+    if (!isValidUUID(uuid)) {
+        res.status(400).json(badRequest(req.path));
+    } else {
+        const taskWithUuid = [...tasks].find(task => task.uuid == uuid);
+        res.json(taskWithUuid ?? unknownTask)
+    }
+})
 
 app.listen(8080, () => console.log('Example app listening on port 8080!'));
