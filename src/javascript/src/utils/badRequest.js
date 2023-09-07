@@ -1,3 +1,5 @@
+const { makeTimestamp } = require("./makeTimestamp")
+
 function badRequest(path) {
     return {
         "timestamp": makeTimestamp(),
@@ -5,10 +7,6 @@ function badRequest(path) {
         "error": "Bad Request",
         "path": path
     }
-}
-
-function makeTimestamp() {
-    return new Date().toISOString();
 }
 
 module.exports = { badRequest }

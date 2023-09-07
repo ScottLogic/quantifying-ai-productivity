@@ -3,7 +3,9 @@ const fs = require('fs');
 const path = require('path');
 const { isValidUUID } = require('./utils/uuidChecker');
 const unknownTask = require('./utils/unknownTask.json');
+const completedJson = require('./utils/completed.json');
 const { badRequest } = require('./utils/badRequest');
+const { makeTimestamp } = require('./utils/makeTimestamp');
 
 const app = express();
 app.use(express.json());
@@ -44,6 +46,26 @@ app.get('/todo/:uuid', (req, res) => {
     } else {
         const taskWithUuid = [...tasks].find(task => task.uuid == uuid);
         res.json(taskWithUuid ?? unknownTask)
+    }
+})
+
+app.put('/todo/completed/:uuid', (req, res) => {
+    const uuid = req.params.uuid;
+    if (!isValidUUID(uuid)) {
+        res.status(400).json(badRequest(req.path));
+    } else {
+        const taskWithUuid = tasks.find(task => task.uuid == uuid);
+        if (taskWithUuid) {
+            if (!taskWithUuid.complete) {
+                taskWithUuid.completed = makeTimestamp();
+                taskWithUuid.complete = true;
+                res.json(completedJson.completed);
+            } else {
+                res.json(completedJson.already);
+            }
+        } else {
+            res.json(completedJson.notFound);
+        }
     }
 })
 

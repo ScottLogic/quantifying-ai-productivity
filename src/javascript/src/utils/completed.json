@@ -1,0 +1,14 @@
+{
+    "completed": {
+        "success": true,
+        "message": "This task has now been completed."
+    },
+    "already": {
+        "success": false,
+        "message": "Task already marked complete."
+    },
+    "notFound": {
+        "success": false,
+        "message": "Task not found."
+    }
+}
