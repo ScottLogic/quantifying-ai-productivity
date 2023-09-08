@@ -88,6 +88,10 @@ public class TaskListController {
         boolean isNameNullOrEmpty = name == null || name == "";
         boolean isDescriptionNullOrEmpty = description == null || description == "";
 
+        if (isNameNullOrEmpty && isDescriptionNullOrEmpty) {
+            BadRequestResponse errorResponse = new BadRequestResponse(400, "Bad Request", "/todo/addTask?name=&description=");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
         if (isNameNullOrEmpty || isDescriptionNullOrEmpty) {
             BadRequestResponse errorResponse = new BadRequestResponse(400, "Bad Request", "/todo/addTask");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
