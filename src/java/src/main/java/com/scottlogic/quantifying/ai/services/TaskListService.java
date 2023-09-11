@@ -1,4 +1,5 @@
 package com.scottlogic.quantifying.ai.services;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,4 +34,20 @@ public class TaskListService {
         return toDoTaskList;
     }
 
+    public List<ToDoTask> getToDoTasksByComplete(boolean complete) {
+        return toDoTaskList.stream()
+                .filter(task -> task.isComplete() == complete)
+                .collect(Collectors.toList());
+    }
+
+    public ToDoTask getToDoTaskByUuid(UUID uuid) {
+        return toDoTaskList.stream()
+                .filter(task -> task.getUuid().equals(uuid))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public void addTask(ToDoTask newTask) {
+        toDoTaskList.add(newTask);
+    }
 }
