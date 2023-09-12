@@ -7,17 +7,15 @@ describe('Todo API', () => {
       const taskUuid = 'fd5ff9df-f194-4c6e-966a-71b38f95e14f';
   
       // Send a PUT request to mark the task as completed and set the completed time to now
-      cy.request('PUT', `http://localhost:8080/todo/completed/${taskUuid}`, {
-        completed: now
-      }).then((response) => {
+      cy.request('PUT', `http://localhost:8080/todo/completed/${taskUuid}`).then((response) => {
         // Check the response body has the "success":true line
         expect(response.body).to.have.property('success', true);
   
         // Get the task
         cy.request('GET', `http://localhost:8080/todo/${taskUuid}`).then((response) => {
          // Crop now and response.body.completed so they are only up to seconds
-        const nowWithoutMs = now.slice(0, 17);
-        const completedWithoutMs = response.body.completed.slice(0, 17);
+        const nowWithoutMs = now.slice(0, 19);
+        const completedWithoutMs = response.body.completed.slice(0, 19);
 
         // Check the completed time is the same as the time the PUT request was sent up to the second
         expect(completedWithoutMs).to.equal(nowWithoutMs);
