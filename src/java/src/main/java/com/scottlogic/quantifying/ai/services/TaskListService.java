@@ -54,6 +54,8 @@ public class TaskListService {
   }
 
   public ToDoTask addTask(String name, String description) {
-    return new ToDoTask(name, description, Instant.now(), null, false);
+    ToDoTask newTask = new ToDoTask(name, description, Instant.now(), null, false);
+    toDoTaskList.add(newTask);
+    return newTask;
   }
 }

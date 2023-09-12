@@ -6,6 +6,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(code = HttpStatus.BAD_REQUEST)
 public class InvalidUuidException extends RuntimeException {
   public InvalidUuidException() {
-    super("Invalid UUID");
+    super();
   }
 }

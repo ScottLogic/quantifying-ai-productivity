@@ -2,6 +2,7 @@ package com.scottlogic.quantifying.ai.controllers;
 
 import com.scottlogic.quantifying.ai.dtos.TaskCompletionResponse;
 import com.scottlogic.quantifying.ai.dtos.TaskCreationResponse;
+import com.scottlogic.quantifying.ai.exceptions.EmptyStringParameterException;
 import com.scottlogic.quantifying.ai.exceptions.InvalidUuidException;
 import com.scottlogic.quantifying.ai.model.web.*;
 import com.scottlogic.quantifying.ai.services.TaskListService;
@@ -71,6 +72,10 @@ public class TaskListController {
   @PostMapping("/addTask")
   public ResponseEntity<TaskCreationResponse> addTask(
       @RequestParam String name, @RequestParam String description) {
+    if (name.isEmpty() || description.isEmpty()) {
+      throw new EmptyStringParameterException();
+    }
+
     ToDoTask task = taskListService.addTask(name, description);
 
     return ResponseEntity.status(HttpStatus.CREATED)
