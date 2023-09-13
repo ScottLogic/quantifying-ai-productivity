@@ -1,5 +1,5 @@
-describe('Update task completion', () => {
-    it('should return a 400 status code when uuid is invalid', () => {
+describe('Invalid Update Task Completion', () => {
+    it('Update Invalid UUID To Completed', () => {
         const invalidUUID=1;
       cy.request({ method: 'PUT',
       url: `http://localhost:8080/todo/completed/${invalidUUID}`,
