@@ -50,4 +50,9 @@ public class TaskListService {
     public void addTask(ToDoTask newTask) {
         toDoTaskList.add(newTask);
     }
+
+    public void resetTasks() {
+        toDoTaskList.clear();
+        loadToDoList();
+    }
 }

@@ -1,21 +1,21 @@
 package com.scottlogic.quantifying.ai.controllers;
 
-import org.springframework.http.ResponseEntity;
 import com.scottlogic.quantifying.ai.model.web.*;
 import com.scottlogic.quantifying.ai.services.TaskListService;
-import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.HttpStatus;
-import javax.servlet.http.HttpServletRequest;
-
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.*;
 
 @RestController
 @RequestMapping("todo")
+@Validated
 public class TaskListController {
-    @Autowired // Inject the HttpServletRequest
-    private HttpServletRequest request;
 
     private static final ToDoTask UNKNOWN_TASK = new ToDoTask(
             UUID.fromString("00000000-0000-0000-0000-000000000000"),
@@ -29,6 +29,11 @@ public class TaskListController {
 
     public TaskListController(TaskListService taskListService) {
         this.taskListService = taskListService;
+    }
+
+    @PostMapping("/reset")
+    public void resetTasks() {
+        taskListService.resetTasks();
     }
 
     @GetMapping("")
@@ -71,32 +76,19 @@ public class TaskListController {
         return new TaskCompleted(true, "This task has now been completed.");
     }
 
+
     @PostMapping("/addTask")
-    public ResponseEntity<?> addTask(
-            @RequestParam(name = "name", required = false) String name,
-            @RequestParam(name = "description", required = false) String description) {
-
-        if (name == null || name.isEmpty() || description == null || description.isEmpty()) {
-            // build the parameters from the request
-
-            final ErrorResponse errorResponse = new ErrorResponse(
-                    HttpStatus.BAD_REQUEST,
-                    "/todo/addTask",
-                    Instant.now()
-            );
-            return ResponseEntity
-                    .badRequest()
-                    .body(errorResponse);
-        }
-
+    public ResponseEntity<TaskAdded> addTask(
+            @Valid @RequestParam(name = "name") @NotBlank String name,
+            @Valid @RequestParam(name = "description") @NotBlank String description) {
         UUID taskId = UUID.randomUUID();
         ToDoTask newTask = new ToDoTask(taskId, name, description, Instant.now(), null, false);
 
         taskListService.addTask(newTask);
 
         String message = "Task " + name + " added successfully.";
-        TaskAdded response = new TaskAdded(taskId, message);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        TaskAdded result = new TaskAdded(taskId, message);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 }
