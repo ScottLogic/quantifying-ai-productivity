@@ -1,4 +1,4 @@
-Cypress.Commands.add('logApiRequest', (method, url, requestBody = null) => {
+Cypress.Commands.add('logApiRequestGET', (method, url, requestBody = null) => {
   cy.request({
     method: method,
     url: url,
@@ -16,4 +16,12 @@ Cypress.Commands.add('logApiRequest', (method, url, requestBody = null) => {
       cy.log(`Task ${index + 1}: { ${objectDetails} }`);
     });
   });
+});
+
+Cypress.Commands.add('logApiRequestGETUuid', (response) => {
+  // Log the properties of the response.body object
+  const objectDetails = Object.entries(response.body)
+    .map(([key, value]) => `${key}: ${value}`)
+    .join(', ');
+  cy.log(`{ ${objectDetails} }`);
 });

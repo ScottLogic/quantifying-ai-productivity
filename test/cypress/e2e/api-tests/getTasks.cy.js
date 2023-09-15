@@ -12,7 +12,7 @@ describe('GET all tasks', () => {
       expect(response.status).to.equal(200);
       expect(response.body).to.be.an('array');
       expect(response.body).to.have.length(3);
-      cy.logApiRequest('GET', 'http://localhost:8080/todo');
+      cy.logApiRequestGET('GET', 'http://localhost:8080/todo');
     });
   });
 });
@@ -29,7 +29,7 @@ describe('GET tasks by property "complete"', () => {
             expect(item).to.have.property('complete', true);
           });
         }
-        cy.logApiRequest('GET', 'http://localhost:8080/todo?complete=true');
+        cy.logApiRequestGET('GET', 'http://localhost:8080/todo?complete=true');
       }
     );
   });
@@ -45,7 +45,7 @@ describe('GET tasks by property "complete"', () => {
             expect(item).to.have.property('complete', false);
           });
         }
-        cy.logApiRequest('GET', 'http://localhost:8080/todo?complete=false');
+        cy.logApiRequestGET('GET', 'http://localhost:8080/todo?complete=false');
       }
     );
   });
