@@ -17,8 +17,8 @@ describe('GET all tasks', () => {
   });
 });
 
-describe('Get: Completed List', () => {
-  it('Return an array of COMPLETE tasks, and have HTTP status 200', () => {
+describe('GET tasks by property "complete"', () => {
+  it('Get: Completed List', () => {
     cy.request('GET', 'http://localhost:8080/todo?complete=true').then(
       (response) => {
         expect(response.status).to.equal(200);
