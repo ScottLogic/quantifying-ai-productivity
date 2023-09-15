@@ -1,5 +1,5 @@
 describe('GET all tasks', () => {
-  it('Return an array of all tasks, and have HTTP status code 200', () => {
+  it('Get: List All Tasks', () => {
     cy.request('GET', 'http://localhost:8080/todo').then((response) => {
       response.body.forEach((item) => {
         expect(item).to.have.property('uuid');
@@ -17,7 +17,7 @@ describe('GET all tasks', () => {
   });
 });
 
-describe('GET tasks by property "complete"', () => {
+describe('Get: Completed List', () => {
   it('Return an array of COMPLETE tasks, and have HTTP status 200', () => {
     cy.request('GET', 'http://localhost:8080/todo?complete=true').then(
       (response) => {
@@ -34,7 +34,7 @@ describe('GET tasks by property "complete"', () => {
     );
   });
 
-  it('Return an array of INCOMPLETE tasks, and have HTTP status 200', () => {
+  it('Get: Not Completed List', () => {
     cy.request('GET', 'http://localhost:8080/todo?complete=false').then(
       (response) => {
         expect(response.status).to.equal(200);
