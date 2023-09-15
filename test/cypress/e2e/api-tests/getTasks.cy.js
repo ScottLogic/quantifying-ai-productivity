@@ -6,9 +6,6 @@ describe('GET all tasks', () => {
 
   it('should return an array of objects with a status code of 200', () => {
     cy.request('GET', 'http://localhost:8080/todo').then((response) => {
-      expect(response.status).to.equal(200);
-      expect(response.body).to.be.an('array');
-
       response.body.forEach((item) => {
         expect(item).to.have.property('uuid');
         expect(item).to.have.property('name');
@@ -17,6 +14,9 @@ describe('GET all tasks', () => {
         expect(item).to.have.property('completed');
         expect(item).to.have.property('complete');
       });
+      expect(response.status).to.equal(200);
+      expect(response.body).to.be.an('array');
+      expect(response.body).to.have.length(3);
     });
   });
 });
