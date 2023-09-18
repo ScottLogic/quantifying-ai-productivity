@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"target": "es2022",
 		"module": "ESNext",
-		"moduleResolution": "node",
+		"moduleResolution": "nodenext",
 		"lib": [
 			"ES2022"
 		],
@@ -12,6 +12,9 @@
 		"strict": true,
 		"noImplicitAny": true,
 		"skipLibCheck": true
+	},
+	"ts-node": {
+		"esm": true
 	},
 	"exclude": [
 		"node_modules"

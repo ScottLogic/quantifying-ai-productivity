@@ -5,8 +5,7 @@
 	"main": "api.ts",
 	"type": "module",
 	"scripts": {
-		"start": "node --watch --loader ts-node/esm --experimental-specifier-resolution=node api.ts",
-		"serve": "node --loader ts-node/esm --experimental-specifier-resolution=node api.ts",
+		"start": "tsx watch api.ts",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"author": "cwilton",
@@ -15,9 +14,10 @@
 		"express": "^4.18.2"
 	},
 	"devDependencies": {
-		"@types/express": "^4.17.17",
-		"@types/node": "^18.15.3",
-		"ts-node": "^10.9.1",
+		"@types/express": "^4.17.13",
+		"@types/node": "^18.17.17",
+		"express": "^4.18.2",
+		"tsx": "^3.12.10",
 		"typescript": "^5.2.2"
 	},
 	"packageManager": "yarn@3.6.3"

@@ -1,44 +1,18 @@
+// import express from 'express'
 import express from 'express'
-import Todos from './data-store'
+// import todos with assert type: json [copilot failed here]
+import todos from './todos.json' assert { type: 'json' }
 
-const isUuid = (() => {
-	const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-	return (input: string) => uuidPattern.test(input)
-})()
+// Create a new express application instance
+const app: express.Application = express()
 
-const api = express()
-api.use(express.json())
-
-api.get('/todo', (req, res) => {
-	const { complete } = req.query
-	const completeFlag = (complete === 'true' || complete === 'false')
-		? complete === 'true'
-		: undefined
-	res.json(Todos.getAll(completeFlag))
+// Define a route handler for getting all todos
+app.get('/todo', (req, res) => {
+	// Return all todos
+	res.json(todos)
 })
 
-api.get('/todo/:uuid', (req, res) => {
-	const { uuid } = req.params
-	if (!isUuid(uuid)) res.status(400).send('Invalid UUID')
-	res.json(Todos.get(uuid))
+// Start the server on port 8080
+app.listen(8080, () => {
+	console.log('Server started on port 8080')
 })
-
-api.put('/todo/completed/:uuid', (req, res) => {
-	const { uuid } = req.params
-	if (!isUuid(uuid)) res.status(400).send('Invalid UUID')
-	res.json(Todos.put(uuid))
-})
-
-api.post('/todo/addTask', (req, res) => {
-	const { name, description } = req.query
-	if (!name) res.status(400).send('Name query parameter missing')
-	if (!description) res.status(400).send('Description query parameter missing')
-
-	const id = Todos.create(name as string, description as string)
-	res.header('Location', `/todo/${id}`).status(201).json({
-		taskId: id,
-		message: `Task ${name} added successfully.`
-	})
-})
-
-api.listen(8080, () => console.log('cwilton typescript app listening on port 8080!'))
