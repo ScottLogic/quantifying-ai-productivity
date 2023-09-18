@@ -1,0 +1,19 @@
+{
+	"compilerOptions": {
+		"target": "es2022",
+		"module": "ESNext",
+		"moduleResolution": "node",
+		"lib": [
+			"ES2022"
+		],
+		"esModuleInterop": true,
+		"resolveJsonModule": true,
+		"forceConsistentCasingInFileNames": true,
+		"strict": true,
+		"noImplicitAny": true,
+		"skipLibCheck": true
+	},
+	"exclude": [
+		"node_modules"
+	]
+}
