@@ -4,9 +4,14 @@ import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
-public class ToDoTask implements java.io.Serializable{
+public class ToDoTask implements java.io.Serializable {
 
-    public static ToDoTask UNKNOWN_TASK = new ToDoTask(UUID.fromString("00000000-0000-0000-0000-000000000000"), "Unknown Task", "Unknown Task", Instant.EPOCH, null, false);
+    public static ToDoTask UNKNOWN_TASK = new ToDoTask(UUID.fromString("00000000-0000-0000-0000-000000000000"),
+            "Unknown Task",
+            "Unknown Task",
+            Instant.EPOCH,
+            null,
+            false);
 
     private UUID uuid;
 
