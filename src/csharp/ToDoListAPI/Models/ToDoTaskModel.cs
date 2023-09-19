@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace ToDoListAPI.Models;
@@ -21,7 +20,7 @@ public class ToDoTaskModel
     public string TaskDescription { get; set; }
 
     [JsonPropertyName("created")]
-    public DateTime CreationDate { get; set; } = DateTime.Now;
+    public DateTime CreationDate { get; set; } = DateTime.UtcNow;
 
     [JsonPropertyName("completed")]
     public DateTime? CompletionDate { get; set; }

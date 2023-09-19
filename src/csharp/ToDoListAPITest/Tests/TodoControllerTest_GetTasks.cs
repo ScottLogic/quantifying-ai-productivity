@@ -8,7 +8,7 @@ public class TodoControllerTest_GetTasks
         // Arrange
         var mockToDoRepo = new Mock<IToDoRepository>();
         mockToDoRepo
-            .Setup(x => x.GetAllTasks())
+            .Setup(x => x.GetAllTasks(null))
             .Returns(
                 new List<ToDoTaskModel>()
                 {
