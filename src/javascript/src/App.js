@@ -119,7 +119,7 @@ app.put('/todo/completed/:uuid', (req, res) => {
     if (!task) {
       res.status(200).json({
         success: false,
-        message: 'The task with this UUID does not exist.'
+        message: 'Task not found.'
       });
       return;
     }
@@ -128,7 +128,7 @@ app.put('/todo/completed/:uuid', (req, res) => {
     if (task.complete) {
       res.status(200).json({
         success: false,
-        message: 'This task is already completed.'
+        message: 'Task already marked complete.'
       });
       return;
     }
@@ -166,7 +166,7 @@ app.post('/todo/addTask', (req, res) => {
     // Create a new task object with the given name and description, and assign a random uuid and the current time as the id and created fields
     const newTask = {
       uuid: uuidv4(),
-      title: name,
+      name: name,
       description: description,
       created: new Date().toISOString(),
       completed: null,
@@ -178,7 +178,7 @@ app.post('/todo/addTask', (req, res) => {
   
     // Return a success response with the id of the new task and a message
     res.status(201).json({
-      taskId: newTask.id,
+      taskId: newTask.uuid,
       message: `Task ${name} added successfully.`
     });
   });
