@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
 using ToDoListAPI.Interfaces;
 using ToDoListAPI.Models;
 
@@ -21,9 +22,32 @@ public class ToDoRepository : IToDoRepository
         }
     }
 
+    public void AddTask(ToDoTaskModel task)
+    {
+        _todoList.Add(task);
+    }
+
     public IEnumerable<ToDoTaskModel> GetAllTasks()
     {
         return _todoList.AsEnumerable();
+    }
+
+    public ToDoTaskModel GetTaskByUuid(Guid uuid)
+    {
+        return _todoList.FirstOrDefault(t => t.Uuid == uuid, ToDoTaskModel.GetUnknownTask());
+    }
+
+    public bool UpdateTaskCompleted(ToDoTaskModel task)
+    {
+        if (task != null && _todoList.Contains(task))
+        {
+            _todoList.Remove(task);
+            task.CompletedFlag = true;
+            task.CompletionDate = DateTime.Now;
+            _todoList.Add(task);
+            return true;
+        }
+        return false;
     }
 
     private IEnumerable<ToDoTaskModel> ReadToDoFile()
