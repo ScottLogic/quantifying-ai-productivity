@@ -36,11 +36,25 @@ const unknownTask = {
     "complete": false
 }
 
-// Get complete tasks
+const generateUuid = () => {
+    const characters ='abcdefghijklmnopqrstuvwxyz0123456789';
+    function generateString(length) {
+        let result = '';
+        const charactersLength = characters.length;
+        for ( let i = 0; i < length; i++ ) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+    
+        return result;
+    }
+    return generateString(8)+'-'+generateString(4)+'-'+generateString(4)+'-'+generateString(4)+'-'+generateString(12)
+}
+
+//todo api
 app.get('/todo/:uuid', (req, res) => {
     const re = /^([a-z0-9]{8}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{12})$/;
     if (!re.exec(req.params.uuid)){
-        res.status(400).send({
+        return res.status(400).send({
             "timestamp": new Date(Date.now()),
             "status": 400,
             "error": "Bad Request",
@@ -48,11 +62,11 @@ app.get('/todo/:uuid', (req, res) => {
         })
     }
 
-    let tasksToShow = tasks.find(task => task.uuid === (req.params.uuid))
-    if (tasksToShow === undefined) {
-        tasksToShow = unknownTask
+    let task = tasks.find(task => task.uuid === (req.params.uuid))
+    if (task === undefined) {
+        task = unknownTask
     }
-    res.json(tasksToShow);
+    res.json(task);
 });
 
 app.get('/todo', (req, res) => {
@@ -61,10 +75,75 @@ app.get('/todo', (req, res) => {
     if ('complete' in req.query) {
         let completeQuery = req.query.complete
         tasksToShow = tasksToShow.filter(task => task.complete === (completeQuery === 'true'))
-        res.json(tasksToShow);
-        return;
+        return res.json(tasksToShow);
     }
     res.json(tasks);
 });
+
+app.put('/todo/completed/:uuid', (req,res) => {
+    const re = /^([a-z0-9]{8}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{12})$/;
+    if (!re.exec(req.params.uuid)){
+        return res.status(400).send({
+            "timestamp": new Date(Date.now()),
+            "status": 400,
+            "error": "Bad Request",
+            "path": req.url
+        })
+    }
+    let task = tasks.find(task => task.uuid === (req.params.uuid))
+    if (task === undefined) {
+        return res.json({
+            "success": false,
+            "message": "Task not found."
+        })
+    }
+    if (task.complete){
+        return res.json({
+            "success": false,
+            "message": "Task already marked complete."
+        })
+    }
+    task.complete = true
+    task.completed = new Date(Date.now())
+    res.json({
+        "success": true,
+        "message": "This task has now been completed."
+    })
+})
+
+app.post('/todo/addTask', (req,res) => {
+    if (!('name' in req.query) || !('description' in req.query)) {
+        return res.status(400).send({
+            "timestamp": new Date(Date.now()),
+            "status": 400,
+            "error": "Bad Request",
+            "path": req.url
+        })
+    }
+
+    if ((req.query.name.length === 0) || (req.query.description.length === 0)) {
+        return res.status(400).send({
+            "timestamp": new Date(Date.now()),
+            "status": 400,
+            "error": "Bad Request",
+            "path": req.url
+        })
+    }
+
+    const randomUuid = generateUuid()
+    tasks.push({
+        "uuid": randomUuid,
+        "name": req.query.name,
+        "description": req.query.description,
+        "created": new Date(Date.now()),
+        "completed": null,
+        "complete": false
+    })
+
+    res.status(201).send({
+        "taskId": randomUuid,
+        "message": `Task ${req.query.name} added successfully.`
+    })
+})
 
 app.listen(8080, () => console.log('Example app listening on port 8080!'));
