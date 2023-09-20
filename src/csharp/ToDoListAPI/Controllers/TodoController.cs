@@ -43,7 +43,7 @@ public class TodoController : ControllerBase
     }
 
     // PUT endpoint to set task as complete
-    [HttpPut("{id}")]
+    [HttpPut("completed/{id}")]
     public ActionResult<SetTaskCompleteResponse> SetTaskComplete(Guid id)
     {
         SetTaskCompleteResponse response = new SetTaskCompleteResponse();
