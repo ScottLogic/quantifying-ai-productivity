@@ -7,4 +7,6 @@ public interface IToDoRepository
     IEnumerable<ToDoTaskModel> GetAllTasks();
     IEnumerable<ToDoTaskModel> GetCompleteTasks();
     IEnumerable<ToDoTaskModel> GetIncompleteTasks();
+
+    ToDoTaskModel GetTaskById(Guid id);
 }

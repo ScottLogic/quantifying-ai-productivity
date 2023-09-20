@@ -38,6 +38,12 @@ public class ToDoRepository : IToDoRepository
         return _todoList.Where(t => !t.CompletedFlag).AsEnumerable();
     }
 
+    public ToDoTaskModel GetTaskById(Guid id)
+    {
+        // find the task in the list
+        return _todoList.FirstOrDefault(t => t.Uuid == id);
+    }
+
     private IEnumerable<ToDoTaskModel> ReadToDoFile()
     {
         IEnumerable<ToDoTaskModel> readToDoList = null;

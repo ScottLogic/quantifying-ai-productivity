@@ -26,4 +26,19 @@ public class TodoController : ControllerBase
             return _todoRepository.GetIncompleteTasks();
         }
     }
+
+    // GET endpoint to get tasks by UUID
+    [HttpGet("{id}")]
+    public ActionResult<ToDoTaskModel> GetTaskById(Guid id)
+    {
+        var task = _todoRepository.GetTaskById(id);
+        if (task == null)
+        {
+            // return an unknown task
+            task = new ToDoTaskModel();
+            task.TaskName = "Unknown Task";
+            task.TaskDescription = "Unknown Task";
+        }
+        return task;
+    }
 }
