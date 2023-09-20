@@ -65,6 +65,23 @@ public class ToDoRepository : IToDoRepository
         return null;
     }
 
+    public Guid AddTask(string name, string description)
+    {
+        Guid newGuid = Guid.NewGuid();
+        // create a new task
+        ToDoTaskModel newTask = new ToDoTaskModel()
+        {
+            Uuid = newGuid,
+            TaskName = name,
+            TaskDescription = description,
+            CreationDate = DateTime.Now,
+            CompletedFlag = false
+        };
+        // add the task to the list
+        _todoList.Add(newTask);
+        return newGuid;
+    }
+
     private IEnumerable<ToDoTaskModel> ReadToDoFile()
     {
         IEnumerable<ToDoTaskModel> readToDoList = null;

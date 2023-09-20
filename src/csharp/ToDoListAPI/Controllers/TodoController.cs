@@ -44,9 +44,9 @@ public class TodoController : ControllerBase
 
     // PUT endpoint to set task as complete
     [HttpPut("{id}")]
-    public ActionResult<ResponseStatusBody> SetTaskComplete(Guid id)
+    public ActionResult<SetTaskCompleteResponse> SetTaskComplete(Guid id)
     {
-        ResponseStatusBody response = new ResponseStatusBody();
+        SetTaskCompleteResponse response = new SetTaskCompleteResponse();
         bool? res = _todoRepository.SetTaskComplete(id);
         if (res == null)
         {
@@ -60,5 +60,20 @@ public class TodoController : ControllerBase
             response.message = "This task has now been completed.";
         } 
         return response;
+    }
+
+    // POST endpoint to add a task
+    [HttpPost]
+    public ActionResult<AddTaskResponse> AddTask(string name, string description) {
+        // make sure name and description are not null
+        if (name == null || description == null) {
+            return BadRequest("Task name and description are required.");
+        } 
+        AddTaskResponse response = new AddTaskResponse();
+        Guid taskId = _todoRepository.AddTask(name, description);
+        response.taskId = taskId;
+        response.message = "Task " + name + " added successfully.";
+        // return code 201
+        return CreatedAtAction(nameof(GetTaskById), new { id = taskId }, response);
     }
 }

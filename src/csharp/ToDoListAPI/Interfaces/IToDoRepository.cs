@@ -12,4 +12,6 @@ public interface IToDoRepository
 
     // set task as complete 
     bool? SetTaskComplete(Guid id);
+
+    Guid AddTask(string name, string description);
 }
