@@ -38,6 +38,16 @@ const unknownTask = {
 
 // Get complete tasks
 app.get('/todo/:uuid', (req, res) => {
+    const re = /^([a-z0-9]{8}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{12})$/;
+    if (!re.exec(req.params.uuid)){
+        res.status(400).send({
+            "timestamp": new Date(Date.now()),
+            "status": 400,
+            "error": "Bad Request",
+            "path": req.url
+        })
+    }
+
     let tasksToShow = tasks.find(task => task.uuid === (req.params.uuid))
     if (tasksToShow === undefined) {
         tasksToShow = unknownTask
