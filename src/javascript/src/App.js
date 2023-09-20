@@ -27,10 +27,21 @@ const loadTasksFromFile = () => {
 // Load tasks from the file when the server starts
 loadTasksFromFile();
 
+const unknownTask = {
+    "uuid": "00000000-0000-0000-0000-000000000000",
+    "name": "Unknown Task",
+    "description": "Unknown Task",
+    "created": "1970-01-01T00:00:00.000Z",
+    "completed": null,
+    "complete": false
+}
 
 // Get complete tasks
 app.get('/todo/:uuid', (req, res) => {
     let tasksToShow = tasks.find(task => task.uuid === (req.params.uuid))
+    if (tasksToShow === undefined) {
+        tasksToShow = unknownTask
+    }
     res.json(tasksToShow);
 });
 
