@@ -63,7 +63,7 @@ public class TodoController : ControllerBase
     }
 
     // POST endpoint to add a task
-    [HttpPost]
+    [HttpPost("addTask")]
     public ActionResult<AddTaskResponse> AddTask(string name, string description) {
         // make sure name and description are not null
         if (name == null || description == null) {
