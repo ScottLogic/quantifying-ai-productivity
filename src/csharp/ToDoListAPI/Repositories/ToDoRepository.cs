@@ -57,6 +57,7 @@ public class ToDoRepository : IToDoRepository
             } else {
                 // set the task as complete
                 task.CompletedFlag = true;
+                task.CompletionDate = DateTime.Now;
                 return true;
             }
         }
