@@ -44,6 +44,26 @@ public class ToDoRepository : IToDoRepository
         return _todoList.FirstOrDefault(t => t.Uuid == id);
     }
 
+    public bool? SetTaskComplete(Guid id)
+    {
+        // find the task in the list
+        var task = _todoList.FirstOrDefault(t => t.Uuid == id);
+        if (task != null)
+        {
+            if (task.CompletedFlag)
+            {
+                // task already complete
+                return false;
+            } else {
+                // set the task as complete
+                task.CompletedFlag = true;
+                return true;
+            }
+        }
+        // task not found
+        return null;
+    }
+
     private IEnumerable<ToDoTaskModel> ReadToDoFile()
     {
         IEnumerable<ToDoTaskModel> readToDoList = null;

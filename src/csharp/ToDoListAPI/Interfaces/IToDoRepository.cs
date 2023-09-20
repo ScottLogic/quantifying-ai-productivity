@@ -9,4 +9,7 @@ public interface IToDoRepository
     IEnumerable<ToDoTaskModel> GetIncompleteTasks();
 
     ToDoTaskModel GetTaskById(Guid id);
+
+    // set task as complete 
+    bool? SetTaskComplete(Guid id);
 }

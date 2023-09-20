@@ -41,4 +41,24 @@ public class TodoController : ControllerBase
         }
         return task;
     }
+
+    // PUT endpoint to set task as complete
+    [HttpPut("{id}")]
+    public ActionResult<ResponseStatusBody> SetTaskComplete(Guid id)
+    {
+        ResponseStatusBody response = new ResponseStatusBody();
+        bool? res = _todoRepository.SetTaskComplete(id);
+        if (res == null)
+        {
+            response.success = false;
+            response.message = "Task not found.";
+        } else if (res == false) {
+            response.success = false;
+            response.message = "Task already marked complete.";
+        } else {
+            response.success = true;
+            response.message = "This task has now been completed.";
+        } 
+        return response;
+    }
 }
