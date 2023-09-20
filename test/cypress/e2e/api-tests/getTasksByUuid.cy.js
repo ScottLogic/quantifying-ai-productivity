@@ -1,5 +1,5 @@
-describe('GET Task by UUID', () => {
-  it('Get: Task Number 3', () => {
+describe('Get: Task Number 3', () => {
+  it('should retrieve and verify task data for task number 3', () => {
     const uuid = '5c3ec8bc-6099-4cd5-b6da-8e2956db3a34';
 
     cy.request('GET', `http://localhost:8080/todo/${uuid}`).then((response) => {
@@ -16,8 +16,10 @@ describe('GET Task by UUID', () => {
       });
     });
   });
+});
 
-  it('Get: Task Not Found', () => {
+describe('Get: Task Not Found', () => {
+  it('should handle a task that is not found', () => {
     const uuid = '5c3ec8bc-6099-1a2b-b6da-8e2956db3a34';
 
     cy.fixture('expectedResponses.json').then((expectedData) => {
@@ -34,8 +36,10 @@ describe('GET Task by UUID', () => {
       );
     });
   });
+});
 
-  it('Get: Invalid UUID', () => {
+describe('Get: Invalid UUID', () => {
+  it('should handle an invalid UUID gracefully', () => {
     const uuid = 'invalid-uuid';
 
     cy.request({

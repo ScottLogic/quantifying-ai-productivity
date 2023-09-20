@@ -1,5 +1,5 @@
 describe('GET all tasks', () => {
-  it('Get: List All Tasks', () => {
+  it('should retrieve a list of all tasks', () => {
     cy.request('GET', 'http://localhost:8080/todo').then((response) => {
       response.body.forEach((item) => {
         expect(item).to.have.property('uuid');
@@ -17,8 +17,8 @@ describe('GET all tasks', () => {
   });
 });
 
-describe('GET tasks by property "complete"', () => {
-  it('Get: Completed List', () => {
+describe('Get: Completed List ', () => {
+  it('should retrieve a list of completed tasks', () => {
     cy.request('GET', 'http://localhost:8080/todo?complete=true').then(
       (response) => {
         expect(response.status).to.equal(200);
@@ -33,8 +33,10 @@ describe('GET tasks by property "complete"', () => {
       }
     );
   });
+});
 
-  it('Get: Not Completed List', () => {
+describe('Get: Not Completed List', () => {
+  it('should retrieve a list of not completed tasks', () => {
     cy.request('GET', 'http://localhost:8080/todo?complete=false').then(
       (response) => {
         expect(response.status).to.equal(200);
