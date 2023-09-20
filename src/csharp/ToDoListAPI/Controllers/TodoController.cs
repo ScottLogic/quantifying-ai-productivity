@@ -38,6 +38,8 @@ public class TodoController : ControllerBase
             task = new ToDoTaskModel();
             task.TaskName = "Unknown Task";
             task.TaskDescription = "Unknown Task";
+            // set epoch as creation date
+            task.CreationDate = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         }
         return task;
     }
