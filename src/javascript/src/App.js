@@ -27,15 +27,23 @@ const loadTasksFromFile = () => {
 // Load tasks from the file when the server starts
 loadTasksFromFile();
 
+
 // Get complete tasks
+app.get('/todo/:uuid', (req, res) => {
+    let tasksToShow = tasks.find(task => task.uuid === (req.params.uuid))
+    res.json(tasksToShow);
+});
+
 app.get('/todo', (req, res) => {
-    
-    if (req.query.complete === undefined) {
-        res.json(tasks);
+    let tasksToShow = tasks
+
+    if ('complete' in req.query) {
+        let completeQuery = req.query.complete
+        tasksToShow = tasksToShow.filter(task => task.complete === (completeQuery === 'true'))
+        res.json(tasksToShow);
         return;
     }
-    tasksToShow = tasks.filter(task => task.complete === (req.query.complete === 'true'))
-    res.json(tasksToShow);
+    res.json(tasks);
 });
 
 app.listen(8080, () => console.log('Example app listening on port 8080!'));
