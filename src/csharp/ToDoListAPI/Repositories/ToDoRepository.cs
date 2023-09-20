@@ -26,6 +26,18 @@ public class ToDoRepository : IToDoRepository
         return _todoList.AsEnumerable();
     }
 
+    public IEnumerable<ToDoTaskModel> GetCompleteTasks()
+    {
+        // filter the list for complete tasks
+        return _todoList.Where(t => t.CompletedFlag).AsEnumerable();
+    }
+
+    public IEnumerable<ToDoTaskModel> GetIncompleteTasks()
+    {
+        // filter the list for incomplete tasks
+        return _todoList.Where(t => !t.CompletedFlag).AsEnumerable();
+    }
+
     private IEnumerable<ToDoTaskModel> ReadToDoFile()
     {
         IEnumerable<ToDoTaskModel> readToDoList = null;
