@@ -21,9 +21,39 @@ public class ToDoRepository : IToDoRepository
         }
     }
 
-    public IEnumerable<ToDoTaskModel> GetAllTasks()
+    public void AddTask(ToDoTaskModel task)
     {
-        return _todoList.AsEnumerable();
+        _todoList.Add(task);
+    }
+
+    public bool CompleteTask(Guid id)
+    {
+        var task = _todoList.FirstOrDefault(t => t.Uuid == id);
+
+        if (task.CompletedFlag)
+        {
+            return false;
+        }
+
+        task.CompletedFlag = true;
+        task.CompletionDate = DateTime.Now;
+
+        return true;
+    }
+
+    public IEnumerable<ToDoTaskModel> GetAllTasks(bool? completed)
+    {
+        if (completed == null)
+        {
+            return _todoList.AsEnumerable();
+        }
+
+        return _todoList.Where(t => t.CompletedFlag == completed);
+    }
+
+    public ToDoTaskModel GetById(Guid id)
+    {
+        return _todoList.FirstOrDefault(t => t.Uuid == id);
     }
 
     private IEnumerable<ToDoTaskModel> ReadToDoFile()
