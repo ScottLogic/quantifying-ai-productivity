@@ -40,10 +40,10 @@ describe('Todo App API', () => {
         expect(response.body).to.have.property('uuid', taskUuid);
         expect(response.body).to.have.property('name', 'Test generative AI');
         expect(response.body).to.have.property('description', 'Use generative AI technology to write a simple web service');
-      });
-    });
+      })
+    })
+
     it('should search for tasks with name or description as "Unknown Task"', () => {
-      // Define the search term
       const searchTerm = 'Unknown Task';
       cy.request('http://localhost:8080/todo').should((response) => {
         expect(response.status).to.equal(200);
@@ -57,6 +57,22 @@ describe('Todo App API', () => {
   
         // Assert that at least one task matches the search criteria
         expect(matchingTasks.length).to.be.equal(0);
-      });
-    });
+      })
+    })
+
+    it('should handle Invalid UUID', () => {
+      const invalidUuid = 'invalid-uuid';
+      cy.request({
+        url: `http://localhost:8080/todo/${invalidUuid}`,
+        failOnStatusCode: false, // Allow the test to continue even if the response status is not 2xx
+      }).should((response) => {
+        expect(response.status).to.equal(400); // Expecting a 400 Bad Request status code
+  
+        // Assert individual properties of the response body
+        expect(response.body).to.have.property('timestamp').to.be.a('string');
+        expect(response.body).to.have.property('status').to.equal(400);
+        expect(response.body).to.have.property('error').to.equal('Bad Request');
+        expect(response.body).to.have.property('path').to.equal('/todo/invalid-uuid');
+        })
+      })
   })
