@@ -24,4 +24,12 @@ describe('Todo App API', () => {
         expect(response.body).to.have.length(3)
         })
       })
+    
+      it('should get all incompleted tasks', () => {
+        cy.request('http://localhost:8080/todo?complete=false').should((response) => {
+          expect(response.status).to.equal(200)
+          expect(response.body).to.be.an('array')
+          expect(response.body).to.have.length(3)
+          })
+        })
   })
