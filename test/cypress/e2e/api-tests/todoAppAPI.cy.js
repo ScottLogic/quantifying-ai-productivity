@@ -16,4 +16,12 @@ describe('Todo App API', () => {
         expect(response.body).to.have.property('name', 'Walk the dog')
       })
     })
+
+    it('should get all completed tasks', () => {
+      cy.request('http://localhost:8080/todo?complete').should((response) => {
+        expect(response.status).to.equal(200)
+        expect(response.body).to.be.an('array')
+        expect(response.body).to.have.length(3)
+        })
+      })
   })
