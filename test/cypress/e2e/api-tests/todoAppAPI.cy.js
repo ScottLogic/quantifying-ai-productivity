@@ -34,14 +34,29 @@ describe('Todo App API', () => {
       })
 
     it('should get task number 3', () => {
-      // Define the UUID of the task you want to retrieve
       const taskUuid = '5c3ec8bc-6099-4cd5-b6da-8e2956db3a34';
-  
       cy.request(`http://localhost:8080/todo/${taskUuid}`).should((response) => {
         expect(response.status).to.equal(200);
         expect(response.body).to.have.property('uuid', taskUuid);
         expect(response.body).to.have.property('name', 'Test generative AI');
         expect(response.body).to.have.property('description', 'Use generative AI technology to write a simple web service');
+      });
+    });
+    it('should search for tasks with name or description as "Unknown Task"', () => {
+      // Define the search term
+      const searchTerm = 'Unknown Task';
+      cy.request('http://localhost:8080/todo').should((response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.an('array');
+  
+        // Filter tasks that have name or description equal to the search term
+        const matchingTasks = response.body.filter(
+          (task) =>
+            task.name === searchTerm || task.description === searchTerm
+        );
+  
+        // Assert that at least one task matches the search criteria
+        expect(matchingTasks.length).to.be.equal(0);
       });
     });
   })
