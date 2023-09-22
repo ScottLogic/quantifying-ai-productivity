@@ -1,5 +1,11 @@
+import chai from 'chai';
+import chaiDatetime from 'chai-datetime';
+
+chai.use(chaiDatetime);
+
 //example Cypress API tests generated using Google Bard
 describe('Todo App API', () => {
+    let task4Uuid; '5606433b-edea-498d-b6e4-ba5a9d25ae89';
     it('should get all tasks', () => {
       cy.request('http://localhost:8080/todo').should((response) => {
         expect(response.status).to.equal(200)
@@ -149,7 +155,7 @@ describe('Todo App API', () => {
         })
       })
     })
-    
+
     it('should handle Task Not Found on PUT request', () => {
       const nonExistentTaskUuid = '5c3ec8bc-6099-1a2b-b6da-8e2956db3a34'; 
       cy.request({
@@ -172,13 +178,53 @@ describe('Todo App API', () => {
         method: 'PUT',
         url: `http://localhost:8080/todo/completed/${invalidUuid}`,
         body: {
-          complete: true,
+        
         },
         failOnStatusCode: false,
       }).should((response) => {
         expect(response.status).to.equal(400); 
         expect(response.body).to.have.property('error', 'Bad Request');
         expect(response.body).to.have.property('path', `/todo/completed/${invalidUuid}`);
+      })
+    })
+
+    it('should add Task 4', () => {
+      cy.request('GET', 'http://localhost:8080/todo').should((response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.an('array');
+        expect(response.body).to.have.length.gt(0);
+      });
+
+      cy.request({
+        method: 'POST',
+        url: 'http://localhost:8080/todo/addTask?name=Task Four&description=Description Four',
+        body: {
+          name: 'Task Four',
+          description: 'Description Four',
+        },
+      }).should((response) => {
+        expect(response.status).to.equal(201);
+        expect(response.body).to.have.property('taskId').not.to.be.null;
+        expect(response.body).to.have.property('message').to.be.a('string');
+        task4Uuid = response.body.taskId; // Store the task 4 UUID for later use
+      });
+
+      cy.request('GET', 'http://localhost:8080/todo').should((response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.an('array');
+        expect(response.body).to.have.length.gt(0);
+  
+        const task4 = response.body.find((task) => task.uuid === task4Uuid);
+        expect(task4).to.exist;
+        expect(task4.uuid).to.equal(task4Uuid);
+        expect(task4.name).to.equal('Task Four');
+        expect(task4.description).to.equal('Description Four');
+        const createdTime = new Date(task4.created).getTime();
+        const currentTime = new Date().getTime();
+        const timeDifference = currentTime - createdTime;
+        expect(timeDifference).to.be.within(0, 5000);
+        expect(task4.completed).to.be.null;
+        expect(task4.complete).to.be.false;
       })
     })         
   })

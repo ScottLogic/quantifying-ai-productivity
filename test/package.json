@@ -10,5 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "cypress": "^12.17.1"
+  },
+  "devDependencies": {
+    "chai-datetime": "^1.8.0"
   }
 }
