@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using ToDoListAPI.Models;
 
 namespace ToDoListAPI.Interfaces;
@@ -5,4 +6,5 @@ namespace ToDoListAPI.Interfaces;
 public interface IToDoRepository
 {
     IEnumerable<ToDoTaskModel> GetAllTasks(bool? isComplete = null);
+    ToDoTaskModel GetTaskByUuid(Guid uuid);
 }

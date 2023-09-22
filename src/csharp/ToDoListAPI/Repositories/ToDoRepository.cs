@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
 using ToDoListAPI.Interfaces;
 using ToDoListAPI.Models;
 
@@ -30,6 +31,11 @@ public class ToDoRepository : IToDoRepository
         }
 
         return todoList;
+    }
+
+    public ToDoTaskModel GetTaskByUuid(Guid uuid)
+    {
+        return _todoList.FirstOrDefault(x => x.Uuid == uuid);
     }
 
     private IEnumerable<ToDoTaskModel> ReadToDoFile()

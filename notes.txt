@@ -11,3 +11,25 @@ Got good help from gihub CoPilot on this code...
 
 Otherwise I'm still having to figure things out for myself - especially how everything is "wired together".
 
+
+Got this help from CoPilot:
+    public ActionResult<ToDoTaskModel> GetTaskByUuid(Guid uuid)
+    {
+        var task = _todoRepository.GetTaskByUuid(uuid);
+        if (task == null)
+        {
+            return NotFound();
+        }
+        return task;
+    }
+
+(the "NotFound()" part is wrong for our specification, but otherwise looks not bad)
+
+This bit was helpful as well...
+        if (!Guid.TryParse(uuid, out Guid uuidGuid))
+        {
+            return ToDoTaskModel.GetUnknownTask();
+        }
+
+[the return isn't what I want but the Guid.TryParse() syntax was what I needed]
+
