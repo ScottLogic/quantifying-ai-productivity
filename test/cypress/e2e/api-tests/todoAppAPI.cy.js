@@ -226,5 +226,22 @@ describe('Todo App API', () => {
         expect(task4.completed).to.be.null;
         expect(task4.complete).to.be.false;
       })
-    })         
+    })
+    
+    it('should add Task Missing Name and Description', () => {
+      cy.request({
+        method: 'POST',
+        url: 'http://localhost:8080/todo/addTask?name=&description=',
+        body: {},
+        failOnStatusCode: false,
+      }).should((response) => {
+        expect(response.status).to.equal(400);
+        const createdTime = new Date(response.body.timestamp).getTime();
+        const currentTime = new Date().getTime();
+        const timeDifference = currentTime - createdTime;
+        expect(timeDifference).to.be.within(0, 5000);
+        expect(response.body).to.have.property('error', 'Bad Request');
+        expect(response.body).to.have.property('path', '/todo/addTask?name=&description=');
+      })
+    })
   })
