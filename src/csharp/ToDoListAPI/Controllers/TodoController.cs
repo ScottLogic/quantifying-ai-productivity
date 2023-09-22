@@ -16,8 +16,8 @@ public class TodoController : ControllerBase
     }
 
     [HttpGet]
-    public IEnumerable<ToDoTaskModel> GetAllTasks()
+    public IEnumerable<ToDoTaskModel> GetAllTasks([FromQuery(Name = "complete")] bool? isComplete = null)
     {
-        return _todoRepository.GetAllTasks();
+        return _todoRepository.GetAllTasks(isComplete);
     }
 }

@@ -21,9 +21,15 @@ public class ToDoRepository : IToDoRepository
         }
     }
 
-    public IEnumerable<ToDoTaskModel> GetAllTasks()
+    public IEnumerable<ToDoTaskModel> GetAllTasks(bool? isComplete = null)
     {
-        return _todoList.AsEnumerable();
+        var todoList =  _todoList.AsEnumerable();
+        if (isComplete.HasValue)
+        {
+            todoList = todoList.Where(x => x.CompletedFlag == isComplete.Value);
+        }
+
+        return todoList;
     }
 
     private IEnumerable<ToDoTaskModel> ReadToDoFile()

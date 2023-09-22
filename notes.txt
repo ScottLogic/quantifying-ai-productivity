@@ -2,3 +2,12 @@ Started by creating "specification.txt" file with structured notes about the fea
 (121 lines of text in specification.txt)
 
 Selected C# as the development language
+
+Got good help from gihub CoPilot on this code...
+        if (isComplete.HasValue)
+        {
+            todoList = todoList.Where(x => x.CompletedFlag == isComplete.Value);
+        }
+
+Otherwise I'm still having to figure things out for myself - especially how everything is "wired together".
+
