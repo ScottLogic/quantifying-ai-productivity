@@ -1,0 +1,4 @@
+Started by creating "specification.txt" file with structured notes about the features to be added.
+(121 lines of text in specification.txt)
+
+Selected C# as the development language
