@@ -23,16 +23,16 @@ describe('Todo App API', () => {
         expect(response.status).to.equal(200)
         expect(response.body).to.be.an('array')
         expect(response.body).to.have.length(0)
-        })
       })
+    })
     
     it('should get all incompleted tasks', () => {
       cy.request('http://localhost:8080/todo?complete=false').should((response) => {
         expect(response.status).to.equal(200)
         expect(response.body).to.be.an('array')
         expect(response.body).to.have.length(3)
-        })
       })
+    })
 
     it('should get Task number 3', () => {
       const taskUuid = '5c3ec8bc-6099-4cd5-b6da-8e2956db3a34';
@@ -76,15 +76,16 @@ describe('Todo App API', () => {
         expect(response.body).to.have.property('path').to.equal('/todo/invalid-uuid');
         })
       })
-    it('should complete Task number 2', () => {
-      const task2Uuid = 'fd5ff9df-f194-4c6e-966a-71b38f95e14f';
-    
-      // Send a GET request to verify that there are no completed tasks initially
-      cy.request('http://localhost:8080/todo/?complete=true').then((initialResponse) => {
-        expect(initialResponse.status).to.equal(200);
-        expect(initialResponse.body).to.be.an('array');
-        expect(initialResponse.body).to.have.length(0);
-    
+
+      it('should complete Task number 2', () => {
+        const task2Uuid = 'fd5ff9df-f194-4c6e-966a-71b38f95e14f';
+      
+        // Send a GET request to verify that there are no completed tasks initially
+        cy.request('http://localhost:8080/todo/?complete=true').then((initialResponse) => {
+          expect(initialResponse.status).to.equal(200);
+          expect(initialResponse.body).to.be.an('array');
+          expect(initialResponse.body).to.have.length(0);
+      
         // Send a PUT request to complete Task number 2
         cy.request({
           method: 'PUT',
@@ -97,26 +98,28 @@ describe('Todo App API', () => {
           expect(completeResponse.body).to.have.property('success', true);
           expect(completeResponse.body).to.have.property('message', 'This task has now been completed.');
 
-          cy.wait(1000);
-    
-          // Send a GET request to retrieve completed tasks
-          cy.request('http://localhost:8080/todo?complete=true').then((completedResponse) => {
-            expect(completedResponse.status).to.equal(200);
-            expect(completedResponse.body).to.be.an('array').and.to.not.be.empty;
-    
-            const task2 = completedResponse.body.find((task) => task.uuid === task2Uuid);
-            expect(task2).to.exist;
-    
-            // Check task properties
-            expect(task2.uuid).to.equal(task2Uuid);
-            expect(task2.name).to.equal('Mow the lawn');
-            expect(task2.description).to.equal('Mow the lawn in the back garden');
-            expect(task2.created).to.equal('2023-06-23T09:00:00Z');
-            expect(task2.completed).to.not.be.null;
-            expect(task2.complete).to.be.true;
+        cy.wait(1000);
+  
+        // Send a GET request to retrieve completed tasks
+        cy.request('http://localhost:8080/todo?complete=true').then((completedResponse) => {
+          expect(completedResponse.status).to.equal(200);
+          expect(completedResponse.body).to.be.an('array').and.to.not.be.empty;
+  
+          const task2 = completedResponse.body.find((task) => task.uuid === task2Uuid);
+          expect(task2).to.exist;
+  
+          // Check task properties
+          expect(task2.uuid).to.equal(task2Uuid);
+          expect(task2.name).to.equal('Mow the lawn');
+          expect(task2.description).to.equal('Mow the lawn in the back garden');
+          expect(task2.created).to.equal('2023-06-23T09:00:00Z');
+          expect(task2.completed).to.not.be.null;
+          expect(task2.complete).to.be.true;
+            })
+          })
         })
       })
-          
+
     it('should complete already completed Task number 2', () => {
       const task2Uuid = 'fd5ff9df-f194-4c6e-966a-71b38f95e14f';
 
@@ -124,28 +127,26 @@ describe('Todo App API', () => {
         expect(initialResponse.status).to.equal(200);
         expect(initialResponse.body).to.be.an('array');
         expect(initialResponse.body).to.have.length(1);
-    
-        cy.request({
-          method: 'PUT',
-          url: `http://localhost:8080/todo/completed/${task2Uuid}`,
-          body: {
-            complete: true,
-          },
-        }).then((completeResponse) => {
-          expect(completeResponse.status).to.equal(200);
-          expect(completeResponse.body).to.have.property('success', true);
-          expect(completeResponse.body).to.have.property('message', 'This task has now been completed.');
 
-          cy.wait(1000);
+      cy.request({
+        method: 'PUT',
+        url: `http://localhost:8080/todo/completed/${task2Uuid}`,
+        body: {
+          complete: true,
+        },
+      }).then((completeResponse) => {
+        expect(completeResponse.status).to.equal(200);
+        expect(completeResponse.body).to.have.property('success', false);
+        expect(completeResponse.body).to.have.property('message', 'Task already marked complete.');
 
-          cy.request('http://localhost:8080/todo?complete=true').then((completedResponse) => {
-            expect(response.status).to.equal(200)
-            expect(response.body).to.be.an('array')
-            expect(response.body).to.have.length(1)
+      cy.wait(1000);
+
+      cy.request('http://localhost:8080/todo?complete=true').then((completedResponse) => {
+        expect(completedResponse.status).to.equal(200)
+        expect(completedResponse.body).to.be.an('array')
+        expect(completedResponse.body).to.have.length(1)
               })
             })
           })
         })
-      })
-    })
   })
