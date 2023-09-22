@@ -19,8 +19,17 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	compileOnly 'org.projectlombok:lombok:1.18.30'
+	annotationProcessor 'org.projectlombok:lombok:1.18.30'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+//bootRun {
+//	jvmArgs = [
+//			'-Xdebug',
+//			'-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005'
+//	]
+//}

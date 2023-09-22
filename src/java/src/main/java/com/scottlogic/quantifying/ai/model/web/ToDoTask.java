@@ -1,9 +1,12 @@
 package com.scottlogic.quantifying.ai.model.web;
 
+import lombok.EqualsAndHashCode;
+
 import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
+@EqualsAndHashCode
 public class ToDoTask implements java.io.Serializable{
 
     public static ToDoTask UNKNOWN_TASK = new ToDoTask(UUID.fromString("00000000-0000-0000-0000-000000000000"), "Unknown Task", "Unknown Task", Instant.EPOCH, null, false);
