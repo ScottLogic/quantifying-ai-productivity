@@ -149,4 +149,19 @@ describe('Todo App API', () => {
             })
           })
         })
+    it('should handle Task Not Found on PUT request', () => {
+      const nonExistentTaskUuid = '5c3ec8bc-6099-1a2b-b6da-8e2956db3a34'; 
+      cy.request({
+        method: 'PUT',
+        url: `http://localhost:8080/todo/completed/${nonExistentTaskUuid}`,
+        body: {
+          complete: true,
+        },
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.have.property('success', false);
+        expect(response.body).to.have.property('message', 'Task not found.');
+            })
+          })
   })
