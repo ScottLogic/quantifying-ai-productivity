@@ -114,6 +114,36 @@ describe('Todo App API', () => {
             expect(task2.created).to.equal('2023-06-23T09:00:00Z');
             expect(task2.completed).to.not.be.null;
             expect(task2.complete).to.be.true;
+        })
+      })
+          
+    it('should complete already completed Task number 2', () => {
+      const task2Uuid = 'fd5ff9df-f194-4c6e-966a-71b38f95e14f';
+
+      cy.request('http://localhost:8080/todo/?complete=true').then((initialResponse) => {
+        expect(initialResponse.status).to.equal(200);
+        expect(initialResponse.body).to.be.an('array');
+        expect(initialResponse.body).to.have.length(1);
+    
+        cy.request({
+          method: 'PUT',
+          url: `http://localhost:8080/todo/completed/${task2Uuid}`,
+          body: {
+            complete: true,
+          },
+        }).then((completeResponse) => {
+          expect(completeResponse.status).to.equal(200);
+          expect(completeResponse.body).to.have.property('success', true);
+          expect(completeResponse.body).to.have.property('message', 'This task has now been completed.');
+
+          cy.wait(1000);
+
+          cy.request('http://localhost:8080/todo?complete=true').then((completedResponse) => {
+            expect(response.status).to.equal(200)
+            expect(response.body).to.be.an('array')
+            expect(response.body).to.have.length(1)
+              })
+            })
           })
         })
       })
