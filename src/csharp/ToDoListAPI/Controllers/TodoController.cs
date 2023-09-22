@@ -22,7 +22,6 @@ public class TodoController : ControllerBase
         return _todoRepository.GetAllTasks(isComplete);
     }
 
-    // return invalid uuid response body if uuid is not a valid guid
     [HttpGet("{uuid}")]
     public ActionResult<ToDoTaskModel> GetTaskByUuid(String uuid)
     {
@@ -41,5 +40,57 @@ public class TodoController : ControllerBase
             return ToDoTaskModel.GetUnknownTask();
         }
         return task;
+    }
+
+    [HttpPut("completed/{uuid}")]
+    public ActionResult MarkTaskComplete(string uuid)
+    {
+        if (!Guid.TryParse(uuid, out Guid guid))
+        {
+            return BadRequest(new {
+                timestamp = DateTime.Now,
+                status = 400,
+                error = "invalid uuid",
+                path = "/todo/completed/" + uuid
+            });
+        }
+        var task = _todoRepository.GetTaskByUuid(guid);
+        if (task == null)
+        {
+            return Ok(new {success = "false", message = "Task not found"});
+        }
+        if (task.CompletedFlag)
+        {
+            return Ok(new {success = "false", message = "Task already completed"});
+        }
+        task.CompletedFlag = true;
+        task.CompletionDate = DateTime.Now;
+        _todoRepository.UpdateTask(task);
+        return Ok(new {success = "true", message = "This task has now been completed."});
+    }
+
+    [HttpPost("addTask")]
+    public ActionResult AddTask([FromQuery] string name, [FromQuery] string description)
+    {
+        if (string.IsNullOrEmpty(name))
+        {
+            return BadRequest(new {
+                timestamp = DateTime.Now,
+                status = 400,
+                error = "name is required",
+                path = "/todo/addTask"
+            });
+        }
+        if (string.IsNullOrEmpty(description))
+        {
+            return BadRequest(new {
+                timestamp = DateTime.Now,
+                status = 400,
+                error = "description is required",
+                path = "/todo/addTask"
+            });
+        }
+        var task = _todoRepository.AddTask(name, description);
+        return Ok(task);
     }
 }

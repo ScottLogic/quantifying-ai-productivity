@@ -22,6 +22,23 @@ public class ToDoRepository : IToDoRepository
         }
     }
 
+    public ToDoTaskModel AddTask(string name, string description)
+    {
+        var newTask = new ToDoTaskModel
+        {
+            Uuid = Guid.NewGuid(),
+            TaskName = name,
+            TaskDescription = description,
+            CreationDate = DateTime.Now,
+            CompletionDate = null,
+            CompletedFlag = false
+        };
+        _todoList.Add(newTask);
+        // maybe write out to file for persistence
+        // WriteToDoFile();
+        return newTask;
+    }
+
     public IEnumerable<ToDoTaskModel> GetAllTasks(bool? isComplete = null)
     {
         var todoList =  _todoList.AsEnumerable();
@@ -36,6 +53,25 @@ public class ToDoRepository : IToDoRepository
     public ToDoTaskModel GetTaskByUuid(Guid uuid)
     {
         return _todoList.FirstOrDefault(x => x.Uuid == uuid);
+    }
+
+    public void UpdateTask(ToDoTaskModel task)
+    {
+        var existingTask = _todoList.FirstOrDefault(x => x.Uuid == task.Uuid);
+        if (existingTask != null)
+        {
+            existingTask.TaskName = task.TaskName;
+            existingTask.TaskDescription = task.TaskDescription;
+            existingTask.CreationDate = task.CreationDate;
+            existingTask.CompletionDate = task.CompletionDate;
+            existingTask.CompletedFlag = task.CompletedFlag;
+        }
+        else
+        {
+            throw new Exception("Task not found");
+        }
+        // maybe write out to file for persistence
+        // WriteToDoFile();
     }
 
     private IEnumerable<ToDoTaskModel> ReadToDoFile()

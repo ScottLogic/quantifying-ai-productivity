@@ -33,3 +33,67 @@ This bit was helpful as well...
 
 [the return isn't what I want but the Guid.TryParse() syntax was what I needed]
 
+I put a comment above the controller action I was working on like this...
+    // return invalid uuid response body if uuid is not a valid guid
+
+The hope was that would help CoPilot figure out what I wanted. Maybe it worked?
+
+I typed "[HttpPut" and got the suggestion "[HttpPut("{uuid}")]" which looked like what I wanted, so I accepted it.
+Next this big function definition was suggested by CoPilot. Not exactly right, but a good piece of boilerplate to start with.
+
+    public ActionResult<ToDoTaskModel> UpdateTaskByUuid(String uuid, [FromBody] ToDoTaskModel task)
+    {
+        if (!Guid.TryParse(uuid, out Guid guid))
+        {
+            return BadRequest(new {
+                timestamp = DateTime.Now,
+                status = 400,
+                error = "invalid uuid",
+                path = "/todo/" + uuid
+            });
+        }
+        if (task == null)
+        {
+            return BadRequest(new {
+                timestamp = DateTime.Now,
+                status = 400,
+                error = "invalid task",
+                path = "/todo/" + uuid
+            });
+        }
+        if (task.Uuid != guid)
+        {
+            return BadRequest(new {
+                timestamp = DateTime.Now,
+                status = 400,
+                error = "uuid in body does not match uuid in path",
+                path = "/todo/" + uuid
+            });
+        }
+        var existingTask = _todoRepository.GetTaskByUuid(guid);
+        if (existingTask == null)
+        {
+            return ToDoTaskModel.GetUnknownTask();
+        }
+        _todoRepository.UpdateTask(task);
+        return task;
+    }
+
+To be fair, this is what I would expect a "PUT" request to do most of the time.
+But that's not what's in our specification.
+
+Editing the function above, I started a line with...
+"if (existingTask" and Copilot suggested this
+
+        if (existingTask.CompletedFlag)
+        {
+            return Ok(new {success = "false", message = "Task already marked complete."});
+        }
+
+... which is exactly what I wanted.
+It must have deduced that by comparing the lines above ...
+        if (existingTask == null)
+        {
+            return Ok(new {success = "false", message = "Task not found."});
+        }
+... with the contents of my "specification.txt" so that it knew exactly the error message I wanted.
