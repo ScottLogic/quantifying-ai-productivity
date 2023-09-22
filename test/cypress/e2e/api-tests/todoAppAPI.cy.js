@@ -6,6 +6,7 @@ chai.use(chaiDatetime);
 //example Cypress API tests generated using Google Bard
 describe('Todo App API', () => {
     let task4Uuid; '5606433b-edea-498d-b6e4-ba5a9d25ae89';
+    let initialTaskCount = 0;
     it('should get all tasks', () => {
       cy.request('http://localhost:8080/todo').should((response) => {
         expect(response.status).to.equal(200)
@@ -276,6 +277,44 @@ describe('Todo App API', () => {
         expect(timeDifference).to.be.within(0, 5000);
         expect(response.body).to.have.property('error', 'Bad Request');
         expect(response.body).to.have.property('path', '/todo/addTask?description=Missing%20Name');
+      })
+    })
+
+    it('should add Task 4 multiple times', () => {
+      let initialTaskCount;
+
+      cy.request('http://localhost:8080/todo').then((response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.an('array');
+        initialTaskCount = response.body.length;
+    
+        // Create 4 tasks
+        const task4Uuids = [];
+        for (let i = 0; i < 4; i++) {
+          cy.request({
+            method: 'POST',
+            url: 'http://localhost:8080/todo/addTask?name=Task Four&description=Description Four',
+            body: {
+              name: `Task Four ${i + 1}`,
+              description: `Description Four ${i + 1}`,
+            },
+          }).should((response) => {
+            expect(response.status).to.equal(201);
+            expect(response.body).to.have.property('taskId').not.to.be.null;
+            expect(response.body).to.have.property('message').to.be.a('string');
+            task4Uuids.push(response.body.taskId);
+          });
+        }
+    
+        cy.request('http://localhost:8080/todo').then((response) => {
+          expect(response.status).to.equal(200);
+          expect(response.body).to.be.an('array');
+          const newTaskCount = response.body.length;
+          cy.log(`Initial Task Count: ${initialTaskCount}`);
+          cy.log(`New Task Count: ${newTaskCount}`);
+    
+          expect(newTaskCount).to.equal(initialTaskCount + 4);
+        })
       })
     })
   })
