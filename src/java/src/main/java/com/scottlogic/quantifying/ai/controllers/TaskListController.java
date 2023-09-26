@@ -14,8 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.scottlogic.quantifying.ai.model.web.CompleteRequestResponse;
+import com.scottlogic.quantifying.ai.model.web.AddTaskCompletionResponse;
 import com.scottlogic.quantifying.ai.model.web.ToDoTask;
+import com.scottlogic.quantifying.ai.model.web.UpdateTaskCompletionResponse;
 import com.scottlogic.quantifying.ai.services.TaskListService;
 
 import jakarta.validation.constraints.NotBlank;
@@ -50,27 +51,28 @@ public class TaskListController {
     }
 
     @PutMapping("/completed/{uuid}")
-    public ResponseEntity<CompleteRequestResponse> setTaskAsCompleted(@PathVariable UUID uuid) {
+    public ResponseEntity<UpdateTaskCompletionResponse> setTaskAsCompleted(@PathVariable UUID uuid) {
 
         try {
             taskListService.markTaskComplete(uuid);
             return ResponseEntity
-                    .ok(CompleteRequestResponse.builder().success(true).message("This task has now been completed")
+                    .ok(UpdateTaskCompletionResponse.builder().success(true).message("This task has now been completed")
                             .build());
         } catch (Exception e) {
-            return ResponseEntity.ok(CompleteRequestResponse.builder().success(false).message(e.getMessage()).build());
+            return ResponseEntity
+                    .ok(UpdateTaskCompletionResponse.builder().success(false).message(e.getMessage()).build());
         }
     }
 
     @PostMapping("/addTask")
-    public ResponseEntity<CompleteRequestResponse> addTask(@RequestParam @NotBlank String name,
+    public ResponseEntity<AddTaskCompletionResponse> addTask(@RequestParam @NotBlank String name,
             @RequestParam @NotBlank String description) {
 
         ToDoTask task = taskListService.addTask(name, description);
 
         return new ResponseEntity<>(
-                CompleteRequestResponse.builder().success(true)
-                        .message("Task " + task.getUuid() + " added successfully").build(),
+                AddTaskCompletionResponse.builder().taskId(task.getUuid())
+                        .message("Task " + task.getName() + " added successfully.").build(),
                 HttpStatusCode.valueOf(HttpStatus.CREATED.value()));
 
     }

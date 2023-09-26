@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class CompleteRequestResponse {
+public class UpdateTaskCompletionResponse {
 
     private boolean success;
     private String message;

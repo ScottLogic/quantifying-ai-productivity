@@ -1,13 +1,13 @@
 package com.scottlogic.quantifying.ai.model.web;
 
 import java.time.Instant;
-import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-public class ToDoTask implements java.io.Serializable{
+public class ToDoTask implements java.io.Serializable {
 
-    public static ToDoTask UNKNOWN_TASK = new ToDoTask(UUID.fromString("00000000-0000-0000-0000-000000000000"), "Unknown Task", "Unknown Task", Instant.EPOCH, null, false);
+    public static ToDoTask UNKNOWN_TASK = new ToDoTask(UUID.fromString("00000000-0000-0000-0000-000000000000"),
+            "Unknown Task", "Unknown Task", Instant.EPOCH, null, false);
 
     private UUID uuid;
 
@@ -70,14 +70,11 @@ public class ToDoTask implements java.io.Serializable{
         return complete;
     }
 
-    public void setCompleted(OffsetDateTime offsetDateTime) {
-        this.completed = offsetDateTime;
+    public void setCompleted(Instant completed) {
+        this.completed = completed;
     }
 
     public void setComplete(boolean complete) {
         this.complete = complete;
-        if (complete) {
-            setCompleted(Instant.now());
-        }
     }
 }
