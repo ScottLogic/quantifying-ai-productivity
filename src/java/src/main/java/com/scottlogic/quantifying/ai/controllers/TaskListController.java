@@ -1,10 +1,24 @@
 package com.scottlogic.quantifying.ai.controllers;
 
-import com.scottlogic.quantifying.ai.model.web.*;
-import com.scottlogic.quantifying.ai.services.TaskListService;
-import org.springframework.web.bind.annotation.*;
+import java.util.List;
+import java.util.UUID;
 
-import java.util.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.scottlogic.quantifying.ai.model.web.CompleteRequestResponse;
+import com.scottlogic.quantifying.ai.model.web.ToDoTask;
+import com.scottlogic.quantifying.ai.services.TaskListService;
+
+import jakarta.validation.constraints.NotBlank;
 
 @RestController
 @RequestMapping("todo")
@@ -17,8 +31,48 @@ public class TaskListController {
     }
 
     @GetMapping("")
-    public List<ToDoTask> getAllTasks() {
-        return taskListService.getToDoTaskList();
+    public List<ToDoTask> getAllTasks(@RequestParam(required = false) Boolean isComplete) {
+        if (isComplete == null) {
+            return taskListService.getAllTasks();
+        } else {
+            return taskListService.getFilteredTasksByCompletion(isComplete);
+        }
+    }
+
+    @GetMapping("/{completed}")
+    public List<ToDoTask> getTaskByCompleted(@PathVariable boolean isComplete) {
+        return taskListService.getFilteredTasksByCompletion(isComplete);
+    }
+
+    @GetMapping("/{uuid}")
+    public ToDoTask getTaskByUUID(@PathVariable UUID uuid) {
+        return taskListService.getToDoTaskById(uuid);
+    }
+
+    @PutMapping("/completed/{uuid}")
+    public ResponseEntity<CompleteRequestResponse> setTaskAsCompleted(@PathVariable UUID uuid) {
+
+        try {
+            taskListService.markTaskComplete(uuid);
+            return ResponseEntity
+                    .ok(CompleteRequestResponse.builder().success(true).message("This task has now been completed")
+                            .build());
+        } catch (Exception e) {
+            return ResponseEntity.ok(CompleteRequestResponse.builder().success(false).message(e.getMessage()).build());
+        }
+    }
+
+    @PostMapping("/addTask")
+    public ResponseEntity<CompleteRequestResponse> addTask(@RequestParam @NotBlank String name,
+            @RequestParam @NotBlank String description) {
+
+        ToDoTask task = taskListService.addTask(name, description);
+
+        return new ResponseEntity<>(
+                CompleteRequestResponse.builder().success(true)
+                        .message("Task " + task.getUuid() + " added successfully").build(),
+                HttpStatusCode.valueOf(HttpStatus.CREATED.value()));
+
     }
 
 }

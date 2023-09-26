@@ -1,6 +1,7 @@
 package com.scottlogic.quantifying.ai.model.web;
 
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -69,8 +70,8 @@ public class ToDoTask implements java.io.Serializable{
         return complete;
     }
 
-    public void setCompleted(Instant completed) {
-        this.completed = completed;
+    public void setCompleted(OffsetDateTime offsetDateTime) {
+        this.completed = offsetDateTime;
     }
 
     public void setComplete(boolean complete) {
