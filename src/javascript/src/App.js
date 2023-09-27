@@ -24,6 +24,13 @@ const loadTasksFromFile = () => {
     });
 };
 
+// Validates uuids are in the correct format of xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.
+const validateTaskUuid = (uuid) => {
+    const uuidRegex = /^[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}$/i;
+    return uuidRegex.test(uuid);
+};
+
+
 // Load tasks from the file when the server starts
 loadTasksFromFile();
 
@@ -39,7 +46,6 @@ app.get('/todo', (req, res) => {
 });
 
 // A GET endpoint that uses a uuid as a path parameter to return the task with the supplied uuid from the list of tasks.
-// A valid uuid is a string of 36 characters, with 4 dashes in the format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.
 // If an invalid uuid is supplied the endpoint will return a 400 Bad Request error.
 // If the uuid is valid but not present return the following JSON response: {
 //     "uuid": "00000000-0000-0000-0000-000000000000",
@@ -51,8 +57,11 @@ app.get('/todo', (req, res) => {
 // }
 app.get('/todo/:uuid', (req, res) => {
     const { uuid } = req.params;
-    if (uuid.length !== 36) {
-        res.status(400).send('Invalid uuid');
+    if (!validateTaskUuid(uuid)) {
+        res.status(400).json({
+            success: false,
+            message: `Invalid uuid ${uuid}`
+        });
         return;
     }
     const task = tasks.find(task => task.uuid === uuid);
@@ -60,12 +69,42 @@ app.get('/todo/:uuid', (req, res) => {
         res.json(task);
     } else {
         res.json({
-            uuid: '00000000-0000-0000-0000-000000000000',
+            uuid: uuid,
             name: 'Unknown Task',
             description: 'Unknown Task',
             created: '1970-01-01T00:00:00.000Z',
             completed: null,
             complete: false
+        });
+    }
+});
+
+// Add a new PUT endpoint to update an existing task.
+// The endpoint should accept a valid uuid as a path parameter to mark the task with the supplied uuid as complete.
+// The completed field should be set to the current date and time and the complete field should be set to true.
+// The body of the response should contain a success boolean and a message string.
+// If the uuid is valid uuid but not found return a 200 with message "Task not found".
+app.put('/todo/completed/:uuid', (req, res) => {
+    const { uuid } = req.params;
+    if (!validateTaskUuid(uuid)) {
+        res.status(400).json({
+            success: false,
+            message: `Invalid uuid ${uuid}`
+        });
+        return;
+    }
+    const task = tasks.find(task => task.uuid === uuid);
+    if (task) {
+        task.completed = new Date().toISOString();
+        task.complete = true;
+        res.json({
+            success: true,
+            message: `Task ${uuid} updated`
+        });
+    } else {
+        res.json({
+            success: false,
+            message: `Task ${uuid} not found`
         });
     }
 });
