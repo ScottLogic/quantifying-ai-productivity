@@ -27,9 +27,15 @@ const loadTasksFromFile = () => {
 // Load tasks from the file when the server starts
 loadTasksFromFile();
 
-// Get all tasks
+// Change the existing GET endpoint to accept an optional boolean parameter named complete. The returned list of tasks should be filtered based on the value given for the parameter, if supplied.
 app.get('/todo', (req, res) => {
-    res.json(tasks);
+    const { complete } = req.query;
+    if (complete === 'true' || complete === 'false') {
+        const filteredTasks = tasks.filter(task => task.complete.toString() === complete);
+        res.json(filteredTasks);
+    } else {
+        res.json(tasks);
+    }
 });
 
 app.listen(8080, () => console.log('Example app listening on port 8080!'));
