@@ -109,5 +109,35 @@ app.put('/todo/completed/:uuid', (req, res) => {
     }
 });
 
+// Adds a new POST endpoint to create a new task taking the name and description in the body of the request.
+// Create a uuid that passes our validation, the created field should be set to the current date and time.
+// The completed and complete fields should be set to null and false respectively.
+// The success response should be a 201 that contains a success boolean and a message string.
+app.post('/todo', (req, res) => {
+    const { name, description } = req.body;
+    const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+        // eslint-disable-next-line no-bitwise
+        const r = Math.random() * 16 | 0;
+        // eslint-disable-next-line no-bitwise
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+    const created = new Date().toISOString();
+    const completed = null;
+    const complete = false;
+    const newTask = {
+        uuid,
+        name,
+        description,
+        created,
+        completed,
+        complete
+    };
+    tasks.push(newTask);
+    res.status(201).json({
+        success: true,
+        message: `Task ${uuid} created`
+    });
+});
 
 app.listen(8080, () => console.log('Example app listening on port 8080!'));
