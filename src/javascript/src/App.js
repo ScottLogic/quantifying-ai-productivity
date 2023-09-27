@@ -38,4 +38,37 @@ app.get('/todo', (req, res) => {
     }
 });
 
+// A GET endpoint that uses a uuid as a path parameter to return the task with the supplied uuid from the list of tasks.
+// A valid uuid is a string of 36 characters, with 4 dashes in the format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.
+// If an invalid uuid is supplied the endpoint will return a 400 Bad Request error.
+// If the uuid is valid but not present return the following JSON response: {
+//     "uuid": "00000000-0000-0000-0000-000000000000",
+//     "name": "Unknown Task",
+//     "description": "Unknown Task",
+//     "created": "1970-01-01T00:00:00.000Z",
+//     "completed": null,
+//     "complete": false
+// }
+app.get('/todo/:uuid', (req, res) => {
+    const { uuid } = req.params;
+    if (uuid.length !== 36) {
+        res.status(400).send('Invalid uuid');
+        return;
+    }
+    const task = tasks.find(task => task.uuid === uuid);
+    if (task) {
+        res.json(task);
+    } else {
+        res.json({
+            uuid: '00000000-0000-0000-0000-000000000000',
+            name: 'Unknown Task',
+            description: 'Unknown Task',
+            created: '1970-01-01T00:00:00.000Z',
+            completed: null,
+            complete: false
+        });
+    }
+});
+
+
 app.listen(8080, () => console.log('Example app listening on port 8080!'));
