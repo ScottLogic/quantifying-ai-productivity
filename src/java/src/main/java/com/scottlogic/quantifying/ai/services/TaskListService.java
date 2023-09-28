@@ -41,6 +41,7 @@ public class TaskListService {
 
     public List<ToDoTask> getFilteredTasksByCompletion(Boolean isComplete) {
         if (isComplete) {
+            System.out.println("SENDING BACK COMPLETED");
             return toDoTaskList.stream().filter(task -> task.isComplete()).toList();
         } else if (!isComplete)
             return toDoTaskList.stream().filter(task -> !task.isComplete()).toList();
@@ -50,20 +51,16 @@ public class TaskListService {
     }
 
     public ToDoTask getToDoTaskById(UUID uuid) {
-        if (uuid != null) {
-            return toDoTaskList.stream().filter(t -> t.getUuid().equals(uuid)).findFirst().get();
-        } else {
-            return ToDoTask.UNKNOWN_TASK;
-        }
+        return toDoTaskList.stream().filter(t -> t.getUuid().equals(uuid)).findFirst().orElse(ToDoTask.UNKNOWN_TASK);
     }
 
     public void markTaskComplete(UUID id) {
         ToDoTask toDoTask = getToDoTaskById(id);
 
         if (id != null && toDoTask != null || toDoTask.getName().equals(ToDoTask.UNKNOWN_TASK.getName())) {
-            throw new RuntimeException("Task was not found");
+            throw new RuntimeException("Task not found.");
         } else if (toDoTask.isComplete()) {
-            throw new RuntimeException("Task already is already complete");
+            throw new RuntimeException("Task already marked complete.");
         }
         toDoTask.setCompleted(Instant.now());
         toDoTask.setComplete(true);

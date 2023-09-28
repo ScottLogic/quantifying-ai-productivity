@@ -1,6 +1,8 @@
 
 package com.scottlogic.quantifying.ai.model.web;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Builder;
@@ -11,8 +13,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class UpdateTaskCompletionResponse {
+public class CompletionResponse {
 
+    private UUID taskId;
     private boolean success;
     private String message;
 
