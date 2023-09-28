@@ -69,7 +69,7 @@ app.get('/todo/:uuid', (req, res) => {
         res.json(task);
     } else {
         res.json({
-            uuid: uuid,
+            uuid: '00000000-0000-0000-0000-000000000000',
             name: 'Unknown Task',
             description: 'Unknown Task',
             created: '1970-01-01T00:00:00.000Z',
@@ -84,6 +84,7 @@ app.get('/todo/:uuid', (req, res) => {
 // The completed field should be set to the current date and time and the complete field should be set to true.
 // The body of the response should contain a success boolean and a message string.
 // If the uuid is valid uuid but not found return a 200 with message "Task not found".
+// A completed task should not be able to be marked as complete again.
 app.put('/todo/completed/:uuid', (req, res) => {
     const { uuid } = req.params;
     if (!validateTaskUuid(uuid)) {
@@ -95,26 +96,43 @@ app.put('/todo/completed/:uuid', (req, res) => {
     }
     const task = tasks.find(task => task.uuid === uuid);
     if (task) {
+        if (task.complete) {
+            res.json({
+                success: false,
+                message: `Task already marked complete.`
+            });
+            return;
+        }
         task.completed = new Date().toISOString();
         task.complete = true;
         res.json({
             success: true,
-            message: `Task ${uuid} updated`
+            message: `This task has now been completed.`
         });
     } else {
         res.json({
             success: false,
-            message: `Task ${uuid} not found`
+            message: `Task not found.`
         });
     }
 });
 
-// Adds a new POST endpoint to create a new task taking the name and description in the body of the request.
+// Adds a new POST endpoint to create a new task taking the name and description in the body of the request or query parameters.
 // Create a uuid that passes our validation, the created field should be set to the current date and time.
 // The completed and complete fields should be set to null and false respectively.
 // The success response should be a 201 that contains a success boolean and a message string.
-app.post('/todo', (req, res) => {
-    const { name, description } = req.body;
+// If the name or description are not supplied return a 400 Bad Request error.
+app.post('/todo/addTask', (req, res) => {
+    const { name: bodyName, description: bodyDescription } = req.body;
+    const name = bodyName || req.query.name;
+    const description = bodyDescription || req.query.description;
+    if (!name || !description) {
+        res.status(400).json({
+            success: false,
+            message: `Name and description are required.`
+        });
+        return;
+    }
     const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
         // eslint-disable-next-line no-bitwise
         const r = Math.random() * 16 | 0;
@@ -136,7 +154,8 @@ app.post('/todo', (req, res) => {
     tasks.push(newTask);
     res.status(201).json({
         success: true,
-        message: `Task ${uuid} created`
+        message: `Task ${name} added successfully.`,
+        taskId: uuid
     });
 });
 
