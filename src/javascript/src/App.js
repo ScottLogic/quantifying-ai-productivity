@@ -64,4 +64,70 @@ app.get('/todo/:uuid', (req, res) => {
     }
 });
 
+
+// Load static ToDoList data
+let todoList = require('../../static_data/ToDoList.json');
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.json());
+
+app.put('/todo/completed/:uuid', (req, res) => {
+  const uuid = req.params.uuid;
+
+  // Check if the provided UUID is valid
+  if (!isValidUUID(uuid)) {
+    return res.status(400).json({
+      timestamp: new Date().toISOString(),
+      status: 400,
+      error: 'Bad Request',
+      path: req.path
+    });
+  }
+
+  const task = todoList.find(task => task.uuid === uuid);
+
+  if (!task) {
+    return res.status(200).json({
+      success: false,
+      message: 'Task not found.'
+    });
+  }
+
+  if (task.complete) {
+    return res.status(200).json({
+      success: false,
+      message: 'Task already marked complete.'
+    });
+  }
+
+  // Mark the task as complete
+  task.completed = new Date().toISOString();
+  task.complete = true;
+
+  // Save the updated task list
+  saveUpdatedTodoList(todoList);
+
+  return res.status(200).json({
+    success: true,
+    message: 'This task has now been completed.'
+  });
+});
+
+function isValidUUID(uuid) {
+  // Very basic UUID validation - checks for the UUID format
+  const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+  return uuidRegex.test(uuid);
+}
+
+function saveUpdatedTodoList(updatedTodoList) {
+  // Assuming you have a function to save the updated todo list
+  // You can replace this with your actual function to save the updated list
+  console.log('Updated ToDoList:', updatedTodoList);
+}
+
+app.use((req, res) => {
+  res.status(404).send('Not Found');
+});
+
+
 app.listen(8080, () => console.log('Example app listening on port 8080!'));
