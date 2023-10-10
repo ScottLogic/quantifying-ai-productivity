@@ -27,9 +27,16 @@ const loadTasksFromFile = () => {
 // Load tasks from the file when the server starts
 loadTasksFromFile();
 
-// Get all tasks
+// Get all tasks with optional 'complete' filter
 app.get('/todo', (req, res) => {
-    res.json(tasks);
+    const { complete } = req.query;
+    
+    if (complete === 'true' || complete === 'false') {
+        const filteredTasks = tasks.filter(task => task.complete === (complete === 'true'));
+        res.json(filteredTasks);
+    } else {
+        res.json(tasks);
+    }
 });
 
 app.listen(8080, () => console.log('Example app listening on port 8080!'));
