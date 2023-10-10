@@ -39,4 +39,29 @@ app.get('/todo', (req, res) => {
     }
 });
 
+const { v4: uuidv4, validate: validateUUID } = require('uuid');
+
+// Assuming 'tasks' is an array of tasks
+
+// GET endpoint to get a specific task by UUID
+app.get('/todo/:uuid', (req, res) => {
+    const { uuid } = req.params;
+
+    // Check if the UUID is valid
+    if (!validateUUID(uuid)) {
+        return res.status(400).json({ error: 'Invalid UUID format.' });
+    }
+
+    // Find the task with the given UUID
+    const task = tasks.find(task => task.uuid === uuid);
+
+    if (task) {
+        // Task with the given UUID found
+        res.json(task);
+    } else {
+        // Task with the given UUID not found
+        res.status(404).json({ message: 'UNKNOWN_TASK' });
+    }
+});
+
 app.listen(8080, () => console.log('Example app listening on port 8080!'));
