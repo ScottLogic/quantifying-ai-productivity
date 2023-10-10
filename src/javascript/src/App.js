@@ -130,4 +130,49 @@ app.use((req, res) => {
 });
 
 
+// POST endpoint to create a new task
+app.post('/todo/addTask', (req, res) => {
+    const { name, description } = req.query;
+
+    // Check if both name and description are provided
+    if (!name || !description) {
+        return res.status(400).json({ error: 'Both name and description are required.' });
+    }
+
+    // Generate a new UUID for the task
+    const newTaskUUID = uuidv4();
+
+    // Create a new task object
+    const newTask = {
+        uuid: newTaskUUID,
+        name,
+        description,
+        createdTimestamp: new Date().toISOString(),
+        completed: false,
+        completedTimestamp: null
+    };
+
+    // Add the new task to the tasks array
+    tasks.push(newTask);
+
+    // Save the updated tasks to the JSON file
+    fs.writeFile(tasksFilePath, JSON.stringify(tasks, null, 2), (err) => {
+        if (err) {
+            console.error('Error writing tasks file:', err);
+            return res.status(500).json({ error: 'Internal server error.' });
+        }
+
+        // Respond with the new task UUID and a success message
+        res.status(201).json({
+            taskId: newTaskUUID,
+            message: `Task "${name}" added successfully.`
+        });
+    });
+});
+
+app.use((req, res) => {
+    res.status(404).send('Not Found');
+});
+
+
 app.listen(8080, () => console.log('Example app listening on port 8080!'));
