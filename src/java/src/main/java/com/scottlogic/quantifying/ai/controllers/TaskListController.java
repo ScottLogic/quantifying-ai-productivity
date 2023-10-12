@@ -1,5 +1,6 @@
 package com.scottlogic.quantifying.ai.controllers;
 
+import com.scottlogic.quantifying.ai.model.web.TaskUpdate;
 import com.scottlogic.quantifying.ai.model.web.ToDoTask;
 import com.scottlogic.quantifying.ai.services.TaskListService;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,15 @@ public class TaskListController {
     public ToDoTask getTaskByUUID(@PathVariable String uuid) {
         try {
             return taskListService.getToDoTaskByUUID(uuid);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/completed/{uuid}")
+    public TaskUpdate putTaskUpdate(@PathVariable String uuid) {
+        try {
+            return taskListService.markTaskComplete(uuid);
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }

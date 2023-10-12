@@ -52,4 +52,20 @@ public class TaskListService {
             .orElse(ToDoTask.UNKNOWN_TASK);
     }
 
+    public TaskUpdate markTaskComplete(String id) throws IllegalArgumentException {
+        var task = getToDoTaskByUUID(id);
+
+        if(task.equals(ToDoTask.UNKNOWN_TASK)) {
+            return new TaskUpdate(false, "Task not found.");
+        }
+
+        if(task.isComplete()) {
+            return new TaskUpdate(false, "Task already marked complete.");
+        }
+
+        task.setCompleted(Instant.now());
+        task.setComplete(true);
+        return new TaskUpdate(true, "This task has now been completed.");
+    }
+
 }
