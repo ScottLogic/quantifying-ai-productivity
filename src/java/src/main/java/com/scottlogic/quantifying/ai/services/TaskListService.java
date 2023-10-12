@@ -3,6 +3,7 @@ package com.scottlogic.quantifying.ai.services;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.scottlogic.quantifying.ai.model.web.TaskCreated;
 import com.scottlogic.quantifying.ai.model.web.TaskUpdate;
 import com.scottlogic.quantifying.ai.model.web.ToDoTask;
 import jakarta.annotation.PostConstruct;
@@ -66,6 +67,12 @@ public class TaskListService {
         task.setCompleted(Instant.now());
         task.setComplete(true);
         return new TaskUpdate(true, "This task has now been completed.");
+    }
+
+    public TaskCreated createTask(String name, String description) {
+        var task = new ToDoTask(name, description);
+        toDoTaskList.add(task);
+        return new TaskCreated(task.getUuid().toString(), String.format("Task %s added successfully.", name));
     }
 
 }

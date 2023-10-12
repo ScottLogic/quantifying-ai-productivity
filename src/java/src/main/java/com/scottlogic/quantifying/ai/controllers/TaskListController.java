@@ -1,12 +1,15 @@
 package com.scottlogic.quantifying.ai.controllers;
 
+import com.scottlogic.quantifying.ai.model.web.TaskApiError;
+import com.scottlogic.quantifying.ai.model.web.TaskCreated;
 import com.scottlogic.quantifying.ai.model.web.TaskUpdate;
 import com.scottlogic.quantifying.ai.model.web.ToDoTask;
 import com.scottlogic.quantifying.ai.services.TaskListService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Instant;
 import java.util.List;
 
 @RestController
@@ -29,20 +32,33 @@ public class TaskListController {
 
     @GetMapping("/{uuid}")
     public ToDoTask getTaskByUUID(@PathVariable String uuid) {
-        try {
-            return taskListService.getToDoTaskByUUID(uuid);
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
+        return taskListService.getToDoTaskByUUID(uuid);
     }
 
     @PutMapping("/completed/{uuid}")
     public TaskUpdate putTaskUpdate(@PathVariable String uuid) {
-        try {
-            return taskListService.markTaskComplete(uuid);
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        return taskListService.markTaskComplete(uuid);
+    }
+
+    @PostMapping("/addTask")
+    @ResponseStatus(HttpStatus.CREATED)
+    public TaskCreated addTask(@RequestParam String name, @RequestParam String description) {
+        if (name.isBlank() || description.isBlank()) {
+            throw new IllegalArgumentException();
         }
+        return taskListService.createTask(name, description);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalArgumentException.class)
+    public TaskApiError handleError(HttpServletRequest request) {
+        String path;
+        if (request.getQueryString() == null) {
+            path = String.format("%s", request.getRequestURI());
+        } else {
+            path = String.format("%s?%s", request.getRequestURI(), request.getQueryString());
+        }
+        return new TaskApiError(Instant.now(), HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), path);
     }
 
 }
