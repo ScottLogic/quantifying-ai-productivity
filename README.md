@@ -2,29 +2,68 @@
 
 The aim of this experiment is to gain an understanding of the productivity gains that are possible when using generative AI technologies to aid with development and testing work.
 
+## This is the code race branch of the project
+
+This branch is intended to introduce more control to the experiment. Participants should develop the web server in JavaScript (nodejs). The treatment group should use [ChatGPT](https://chat.openai.com/) to aid development. If you have GitHub Copilot installed, disable it before beginning development. The control group should develop as usual and should not use any generative AI tooling, regular sources of information such as Google and StackOverflow are fine. You should know if you are in the control group, so ask if you aren't sure.
+
+The aim is to develop the web server so that the entire suite of Cypress tests, 15 tests in total, all pass on a fresh run of the web server.
+
+Make sure you have completed the following pre-requisite steps before you begin the development task. You should only record the time taken to implement the web server, time taken to complete the pre-requisite steps should not be included in the implementation time.
+
+### Install nodejs
+
+[Download](https://nodejs.org/en/download) and install nodejs.
+
+### Run the skeleton web server
+
+Follow the instructions in `src\javascript\README.md`. Once the server is running you should see:
+```
+Example app listening on port 8080!
+```
+
+Leave the skeleton server running while you complete the next steps.
+
+### Install Cypress and run the Cypress test suite
+
+The Cypress test suite contains fifteen tests that should all pass when the web service implementation is complete. To use Cypress first [download](https://nodejs.org/en/download) and install nodejs. Once installed, open a new terminal, change directory into the `test` directory and run:
+```
+npm install
+npx cypress open
+```
+
+Once Cypress opens, click on `E2E Testing` and select a browser (eg. Chrome). On the next screen you can run the tests.
+
+The tests can be also run from the command line:
+```
+npx cypress run
+```
+
+Three tests will pass against the skeleton version of the web server.
+
+### Install Postman and import the Postman test collection
+
+[Download](https://www.postman.com/downloads/) and install Postman. After opening Postman, sign-in or register an account. You can then import the Postman collection by clicking `Import`. The `postmanCollection.json` file can be found under the `test\postman` folder.
+
+The Postman suite is intended as an aid for development and testing.
+
 ### A note on repository branches
-
-A cloned repository will default to the `main` branch. This branch contains a development solution in three languages, C#, Java and JavaScript, a suite of Cypress API tests and a suite of Postman API tests. 
-
-If you wish to develop the web server you should checkout the `start-here-dev` branch. This contains a skeleton web service implementation in three languages, C#, Java and JavaScript, a suite of Cypress API tests and a suite of Postman API tests.
-
-If you wish to implement the API tests you should checkout the `start-here-test` branch. This contains a development solution in three languages, C#, Java and JavaScript, a skeleton suite of Cypress API tests and a suite of Postman API tests.
-```
-git checkout <start-here-dev|start-here-test>
-```
 
 You should create your own branch to work on, commit your code and push it to the repository on your branch. We may wish to analyse the code that the generative AI helped produce as part of the outcomes of this experiment.
 ```
 git checkout -b <new-branch-name>
 ```
 
+### Using ChatGPT
+
+You should register for ChatGPT if you have not done so previously. You should save your chat history with ChatGPT. We may wish to analyse the prompts entered into ChatGPT to achieve success.
+
 ## Developer task - Development of a simple web service
 
-The development task is to implement a web service that provides endpoints to manage a to do list. The choice of implementation language is at your discretion. Skeleton implementations have been provided in C#, Java and JavaScript on the `start-here-dev` branch under the `src` directory. It is also valid to start completely from scratch if you wish.
+The development task is to implement a web service that provides endpoints to manage a to do list, using [ChatGPT](https://chat.openai.com/) to complete the development in the shortest time possible. The choice of implementation language is JavaScript. A skeleton implementation has been provided in JavaScript under the `src\javascript` directory. The implementation is considered complete when the suite of fifteen Cypress tests all pass.
 
-No guidance is provided as to the use of generative AI tools in completing the implementation of the web server. It is valid to implement a solution using generative AI and consider the experience and productivity gains as a standalone activity. It is also valid to implement a solution without using generative AI and then revert to the skeleton code and re-implement a solution using generative AI to compare the experience and the time taken for each implementation.
+For this version of the experiment we are interested in the speed of implementation that can be achieved using generative AI technology to develop code.
 
-We are interested in all aspects of the development experience, not just the amount of time saved by using code generated by the AI tool.
+You should begin with the skeleton application code open in an IDE and with ChatGPT open in a browser window. Start timing the implementation time when you begin making changes to the code and record how long it took to implement the complete web server.
 
 ### Static data
 
@@ -58,9 +97,9 @@ The server data will be initialised with a list containing three tasks:
 ]
 ```
 
-The intial GET endpoint returns the list of tasks held by the server. If you are starting from scratch you need to implement this endpoint before continuing.
+The intial GET endpoint returns the list of tasks held by the server.
 
-The data above is stored in the file `quantifying-ai/static_data/ToDoList.json` within the project. Feel free to copy and paste it into the implementation, or load the data from the file.
+The data above is stored in the file `quantifying-ai/static_data/ToDoList.json` within the project. The static data is loaded into the skeleton implementation from the file.
 
 ### Changes required
 
@@ -226,51 +265,7 @@ http://localhost:8080/todo/addTask?name=Name returns HTTP status 400 Bad Request
 
 ### Testing the web service
 
-You can test your web service implementation using Postman and Cypress test suites.
-
-#### Postman
-
-To test using the Postman collection, first [download](https://www.postman.com/downloads/) and install Postman. After opening Postman, sign-in or register an account. You can then import the Postman collection by clicking `Import`. The `postmanCollection.json` file can be found under the `test\postman` folder.
-
-The Postman suite is intended as an aid for development and testing.
-
-#### Cypress
-
-The Cypress test suite contains fifteen tests that should all pass when the web service implementation is complete. To use Cypress first [download](https://nodejs.org/en/download) and install nodejs. Once installed, open a new terminal, change directory into the `test` directory and run:
-```
-npm install
-npx cypress open
-```
-
-Once Cypress opens, click on `E2E Testing` and select a browser (eg. Chrome). On the next screen you can run the tests.
-
-The tests can be also run from the command line:
-```
-npx cypress run
-```
-
-## Tester task - Development of API tests
-
-The testing task is to implement API tests using any generative AI model, such as ChatGPT, Google Bard, etc. A skeleton framework has been provided in Cypress on the `start-here-test` branch under the `test/cypress/e2e/api-tests` directory. It is also valid to start completely from scratch if you wish. See the above for details of the four web service API endpoints.
-
-Start the web service in the language of your choice and make sure it is running on localhost:8080. Instructions about starting each of the web service implementations is in the `README` files in the respective source folders, e.g. `quantifying-ai/src/javascript/README.md`.
-
-To use Cypress first [download](https://nodejs.org/en/download) and install nodejs. To start Cypress, open a new terminal, change directory into the `quantifying-ai/test` directory, and type:
-```
-npm install
-npx cypress open
-```
-
-This will open a Cypress browser. Select 'E2E testing', choose a browser (e.g. Chrome) and 'Start E2E Testing...'
-
-The tests found in `test/cypress/e2e` will appear. To run, click on your test suite, e.g. `todoAppAPI.cy.js`
-
-You can add tests to this file, or create a new test suite.
-
-You can also run tests headlessly:
-```
-npx cypress run
-```
+You can test your web service implementation using Postman and Cypress test suites. The implementation is considered complete when the suite of fifteen Cypress tests all pass.
 
 ### More information
 
