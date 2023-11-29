@@ -6,11 +6,11 @@ The aim of this experiment is to gain an understanding of the productivity gains
 
 A cloned repository will default to the `main` branch. This branch contains a development solution in three languages, C#, Java and JavaScript, a suite of Cypress API tests and a suite of Postman API tests. 
 
-If you wish to develop the web server you should checkout the `start-here-dev` branch. This contains a skeleton web service implementation in three languages, C#, Java and JavaScript, a suite of Cypress API tests and a suite of Postman API tests.
+If you wish to develop the web server you should checkout the `start-here-dev` branch. This contains a skeleton web service implementation in three languages, C#, Java and JavaScript, a suite of Cypress API tests and a suite of Postman API tests. If you wish to do the code race version of the development task then you need the `start-here-code-race` branch.
 
 If you wish to implement the API tests you should checkout the `start-here-test` branch. This contains a development solution in three languages, C#, Java and JavaScript, a skeleton suite of Cypress API tests and a suite of Postman API tests.
 ```
-git checkout <start-here-dev|start-here-test>
+git checkout <start-here-dev|start-here-test|start-here-code-race>
 ```
 
 You should create your own branch to work on, commit your code and push it to the repository on your branch. We may wish to analyse the code that the generative AI helped produce as part of the outcomes of this experiment.
