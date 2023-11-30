@@ -10,6 +10,15 @@ The aim is to develop the web server so that the entire suite of Cypress tests, 
 
 Make sure you have completed the following pre-requisite steps before you begin the development task. You should only record the time taken to implement the web server, time taken to complete the pre-requisite steps should not be included in the implementation time.
 
+### Clone the repository and checkout the code race branch
+
+To clone the repository and checkout the code race branch run:
+```
+git clone https://github.com/ScottLogic/quantifying-ai.git
+cd quantifying-ai
+git checkout start-here-code-race
+```
+
 ### Install nodejs
 
 [Download](https://nodejs.org/en/download) and install nodejs.
