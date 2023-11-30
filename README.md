@@ -63,7 +63,7 @@ The development task is to implement a web service that provides endpoints to ma
 
 For this version of the experiment we are interested in the speed of implementation that can be achieved using generative AI technology to develop code.
 
-You should begin with the skeleton application code open in an IDE and with ChatGPT open in a browser window. Start timing the implementation time when you begin making changes to the code and record how long it took to implement the complete web server.
+You should begin with the skeleton application code open in an IDE and with ChatGPT open in a browser window. Start timing when you have completed the pre-requesites and record how long it took to implement the complete web server.
 
 ### Static data
 
