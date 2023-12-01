@@ -276,6 +276,12 @@ http://localhost:8080/todo/addTask?name=Name returns HTTP status 400 Bad Request
 
 You can test your web service implementation using Postman and Cypress test suites. The implementation is considered complete when the suite of fifteen Cypress tests all pass.
 
-### More information
+## Feedback form
+
+When you have completed the implementation, please fill in the [Code Race Feedback Form](https://docs.google.com/forms/d/e/1FAIpQLSc74Jt4HX_BQ3Rw5J6scuBhfjB7ZYxm9AlvDo-3AhpwJs1jqQ/viewform?usp=sf_link).
+
+If you are in the control group, please fill in the [Code Race Feedback Form - Control](https://docs.google.com/forms/d/e/1FAIpQLSflTAvfSY1Ni2hVhqAss7mDD1PqMCMy-OZIbszplTzq2LoQeA/viewform?usp=sf_link).
+
+## More information
 
 For more detailed information check the [Quantifying Generative AI](https://scottlogic.atlassian.net/l/cp/C5VDmLC5) pages on Confluence.
