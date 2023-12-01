@@ -280,7 +280,7 @@ You can test your web service implementation using Postman and Cypress test suit
 
 When you have completed the implementation, please fill in the [Code Race Feedback Form](https://docs.google.com/forms/d/e/1FAIpQLSc74Jt4HX_BQ3Rw5J6scuBhfjB7ZYxm9AlvDo-3AhpwJs1jqQ/viewform?usp=sf_link).
 
-If you are in the control group, please fill in the [Code Race Feedback Form - Control](https://docs.google.com/forms/d/e/1FAIpQLSflTAvfSY1Ni2hVhqAss7mDD1PqMCMy-OZIbszplTzq2LoQeA/viewform?usp=sf_link).
+If you are in the control group, please fill in the [Code Race Feedback Form - Control](https://docs.google.com/forms/d/e/1FAIpQLSeB0ly3jyNxo0hc44tCesU1Fxm6kMIiY6c0PCkxqlTRyNWU1w/viewform?usp=sf_link).
 
 ## More information
 
