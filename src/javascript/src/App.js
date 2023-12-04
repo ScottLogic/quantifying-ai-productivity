@@ -26,22 +26,34 @@ const loadTasksFromFile = () => {
 
 // Load tasks from the file when the server starts
 loadTasksFromFile();
-console.log("hi!!!");
 
-// Get all tasks
-app.get('/todo', (req, res) => {
-    res.json(tasks);
-});
-
-// Get completed tasks
-app.get('/test', (req, res) => {
+// Returns tasks filtered on "complete" property. Argument defines if true or false
+const returnTaskWithComplete = (bool) => {
     let completedTasks = [];
     for (i in tasks) {
-        if ('complete' in tasks[i] && tasks[i].complete === false) {
+        if ('complete' in tasks[i] && tasks[i].complete === bool) {
             completedTasks.push(tasks[i]);
         }
     }
-    res.json(completedTasks);
+    return completedTasks;
+};
+
+// Get tasks. Handles ?complete parameter
+app.get('/todo', (req, res) => {
+    switch(req.query.complete) {
+        case "true":
+            console.log("was true");
+            res.json(returnTaskWithComplete(true));
+            break;
+        case "false":
+            console.log("was false");
+            res.json(returnTaskWithComplete(false));
+            break;
+        default:
+            console.log("was nada");
+            res.json(tasks);
+            break;
+    }
 });
 
 app.listen(8080, () => console.log('Example app listening on port 8080!'));
