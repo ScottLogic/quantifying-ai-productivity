@@ -60,8 +60,16 @@ const UNKNOWN_TASK = {
 const uuidSchema = z.string().uuid();
 
 function findTask(tasks, id) {
-  console.log({ tasks, id });
   return tasks.find((task) => task.uuid === id) ?? UNKNOWN_TASK;
+}
+
+function createError(status, path) {
+  return {
+    timestamp: new Date().toISOString(),
+    status: status,
+    error: "Bad Request",
+    path: path,
+  };
 }
 
 app.get("/todo/:id", (req, res) => {
@@ -72,12 +80,45 @@ app.get("/todo/:id", (req, res) => {
 
     res.json(task);
   } else {
-    res.status(400).json({
-      timestamp: new Date().toISOString(),
-      status: 400,
-      error: "Bad Request",
-      path: req.path,
-    });
+    res.status(400).json(createError(400, req.path));
+  }
+});
+
+function createCompletedResponse(success, message) {
+  return {
+    success: success,
+    message,
+  };
+}
+
+function completeTask(tasks, id) {
+  return tasks.map((task) => {
+    if (task.uuid === id) {
+      task.complete = true;
+    }
+    return task;
+  });
+}
+
+app.put("/todo/completed/:id", (req, res) => {
+  const id = req.params.id;
+  const result = uuidSchema.safeParse(id);
+  if (result.success) {
+    const task = findTask(tasks, id);
+    if (task === UNKNOWN_TASK) {
+      return res.json(createCompletedResponse(false, "Task not found."));
+    } else if (task.complete) {
+      return res.json(
+        createCompletedResponse(false, "Task already marked complete.")
+      );
+    } else {
+      completeTask(tasks, id);
+      return res.json(
+        createCompletedResponse(true, "This task has now been completed.")
+      );
+    }
+  } else {
+    res.status(400).json(createError(400, req.path));
   }
 });
 
