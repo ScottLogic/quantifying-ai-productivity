@@ -87,6 +87,7 @@ const getBadRequestResponseWithTimestamp = (requestPath) => {
 // Get task by UUID parsed
 app.get('/todo/:uuid', (req, res) => {
     if (!validUuidRegex.test(req.params.uuid)) {
+        res.status(400);
         res.json(getBadRequestResponseWithTimestamp(req.originalUrl))
         return;
     }
@@ -119,6 +120,7 @@ let taskNotFoundObject = {
 // Mark task as completed
 app.put('/todo/completed/:uuid', (req, res) => {
     if (!validUuidRegex.test(req.params.uuid)) {
+        res.status(400);
         res.json(getBadRequestResponseWithTimestamp(req.originalUrl))
         return;
     }
@@ -163,6 +165,7 @@ const createNewTask = (name, desc) => {
 // Add new task to ToDoList
 app.post('/todo/addTask', (req, res) => {
     if (!req.query.name || !req.query.description) {
+        res.status(400);
         res.json(getBadRequestResponseWithTimestamp(req.originalUrl))
         return;
     }
@@ -173,6 +176,7 @@ app.post('/todo/addTask', (req, res) => {
         "taskId": newTask.uuid,
         "message": `Task ${newTask.name} added successfully.`
     }
+    res.status(201);
     res.json(taskCreatedObject);
 });
 
