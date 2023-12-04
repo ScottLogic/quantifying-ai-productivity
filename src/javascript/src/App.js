@@ -27,7 +27,7 @@ const loadTasksFromFile = () => {
 // Load tasks from the file when the server starts
 loadTasksFromFile();
 
-// Returns tasks filtered on "complete" property. Argument defines if true or false
+// Returns tasks filtered on "complete" property.
 const returnTaskWithComplete = (bool) => {
     let completedTasks = [];
     for (i in tasks) {
