@@ -6,8 +6,12 @@ const app = express();
 app.use(express.json());
 
 const tasksFilePath = path.join(__dirname, '../../static_data', 'ToDoList.json');
+const unknownTaskFilePath = path.join(__dirname, '../../static_data', 'unknownTask.json');
+const badRequestFilePath = path.join(__dirname, '../../static_data', 'badRequestBody.json');
 
 let tasks = [];
+let unknownTask = [];
+let badRequestBody = [];
 
 // Load tasks from the JSON file
 const loadTasksFromFile = () => {
@@ -20,6 +24,31 @@ const loadTasksFromFile = () => {
             tasks = JSON.parse(data);
         } catch (error) {
             console.error('Error parsing tasks JSON:', error);
+            return;
+        }
+    });
+    fs.readFile(unknownTaskFilePath, 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error reading tasks file:', err);
+            return;
+        }
+        try {
+            unknownTask = JSON.parse(data);
+        } catch (error) {
+            console.error('Error parsing tasks JSON:', error);
+            return;
+        }
+    });
+    fs.readFile(badRequestFilePath, 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error reading tasks file:', err);
+            return;
+        }
+        try {
+            badRequestBody = JSON.parse(data);
+        } catch (error) {
+            console.error('Error parsing tasks JSON:', error);
+            return;
         }
     });
 };
@@ -53,8 +82,22 @@ app.get('/todo', (req, res) => {
     }
 });
 
+const validUuidRegex = new RegExp(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
+
+// Returns bad request body with up to date timestamp
+const getBadRequestResponseWithTimestamp = () => {
+    let response = badRequestBody;
+    response.timestamp = new Date();
+    return response;
+};
+
 // Get task by UUID parsed
 app.get('/todo/:uuid', (req, res) => {
+    if (!validUuidRegex.test(req.params.uuid)) {
+        res.json(getBadRequestResponseWithTimestamp())
+        return;
+    }
+
     let taskNotFound = true;
     for (i in tasks) {
         if ('uuid' in tasks[i] && tasks[i].uuid === req.params.uuid) {
@@ -63,7 +106,7 @@ app.get('/todo/:uuid', (req, res) => {
         }
     }
     if (taskNotFound) {
-        res.status(404).send('Task ' + req.params.uuid + ' was not found')
+        res.json(unknownTask);
     }
 });
 

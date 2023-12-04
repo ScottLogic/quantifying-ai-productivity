@@ -1,0 +1,5 @@
+{
+    "status": 400,
+    "error": "Bad Request",
+    "path": "/todo/invalid-uuid"
+}
