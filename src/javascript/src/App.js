@@ -104,32 +104,47 @@ app.get('/todo/:uuid', (req, res) => {
     }
 });
 
-let completedObject = {
+let taskCompletedObject = {
     "success": true,
     "message": "This task has now been completed."
+}
+let taskAlreadyCompletedObject = {
+    "success": false,
+    "message": "Task already marked complete."
+}
+let taskNotFoundObject = {
+    "success": false,
+    "message": "Task not found."
 }
 
 // Mark task as completed
 app.put('/todo/completed/:uuid', (req, res) => {
-
     if (!validUuidRegex.test(req.params.uuid)) {
-        res.json(getBadRequestResponseWithTimestamp())
+        res.json(getBadRequestResponseWithTimestamp(req.path))
         return;
     }
 
     let taskNotFound = true;
     for (i in tasks) {
         if ('uuid' in tasks[i] && tasks[i].uuid === req.params.uuid) {
-            console.log("in app.put");
             taskNotFound = false;
-            tasks[i].completed = new Date();
-            tasks[i].complete = true;
-            
-            res.json(completedObject);
+
+            if (tasks[i].completed === null) {
+                tasks[i].completed = new Date();
+                tasks[i].complete = true;
+                res.json(taskCompletedObject);
+                return;
+            }
+
+            if (tasks[i].complete === true) {
+                res.json(taskAlreadyCompletedObject);
+                return;
+            }
         }
     }
     if (taskNotFound) {
-        res.json(unknownTask);
+        res.json(taskNotFoundObject);
+        return;
     }
 });
 
