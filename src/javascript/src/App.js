@@ -148,4 +148,7 @@ app.put('/todo/completed/:uuid', (req, res) => {
     }
 });
 
+// Add new task to ToDoList
+
+
 app.listen(8080, () => console.log('Example app listening on port 8080!'));
