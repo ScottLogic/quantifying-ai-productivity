@@ -26,6 +26,15 @@ const loadTasksFromFile = () => {
     });
 };
 
+// Save tasks to the JSON file
+const saveTasksToFile = () => {
+    fs.writeFile(tasksFilePath, JSON.stringify(tasks, null, 2), 'utf8', err => {
+        if (err) {
+            console.error('Error writing tasks file:', err);
+        }
+    });
+};
+
 // Load tasks from the file when the server starts
 loadTasksFromFile();
 
@@ -69,6 +78,54 @@ app.get('/todo/:uuid', (req, res) => {
             created: '1970-01-01T00:00:00.000Z',
             completed: null,
             complete: false,
+        });
+    }
+});
+
+// Mark a task as complete
+app.put('/todo/completed/:uuid', (req, res) => {
+    const requestedUUID = req.params.uuid;
+
+    // Validate the UUID format
+    if (!validate(requestedUUID)) {
+        return res.status(400).json({
+            timestamp: new Date().toISOString(),
+            status: 400,
+            error: 'Bad Request',
+            path: req.originalUrl,
+        });
+    }
+
+    // Find the task with the given UUID
+    const foundTaskIndex = tasks.findIndex(task => task.uuid === requestedUUID);
+
+    if (foundTaskIndex !== -1) {
+        const foundTask = tasks[foundTaskIndex];
+
+        // Check if the task is already completed
+        if (foundTask.complete) {
+            return res.json({
+                success: false,
+                message: 'Task already marked complete.',
+            });
+        }
+
+        // Mark the task as complete
+        foundTask.completed = new Date().toISOString();
+        foundTask.complete = true;
+
+        // Save tasks to the file
+        saveTasksToFile();
+
+        res.json({
+            success: true,
+            message: 'This task has now been completed.',
+        });
+    } else {
+        // If the UUID is valid but not associated with a todo, return UNKNOWN_TASK
+        res.json({
+            success: false,
+            message: 'Task not found.',
         });
     }
 });
