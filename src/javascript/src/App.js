@@ -1,6 +1,8 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const { v4: uuidv4 } = require('uuid');
+const validate = require('uuid-validate');
 
 const app = express();
 app.use(express.json());
@@ -37,6 +39,38 @@ app.get('/todo', (req, res) => {
     });
 
     res.json(filteredTodos);
+});
+
+// Get a specific task by UUID
+app.get('/todo/:uuid', (req, res) => {
+    const requestedUUID = req.params.uuid;
+
+    // Validate the UUID format
+    if (!validate(requestedUUID)) {
+        return res.status(400).json({
+            timestamp: new Date().toISOString(),
+            status: 400,
+            error: 'Bad Request',
+            path: req.originalUrl,
+        });
+    }
+
+    // Find the task with the given UUID
+    const foundTask = tasks.find(task => task.uuid === requestedUUID);
+
+    if (foundTask) {
+        res.json(foundTask);
+    } else {
+        // If the UUID is valid but not associated with a todo, return UNKNOWN_TASK
+        res.json({
+            uuid: '00000000-0000-0000-0000-000000000000',
+            name: 'Unknown Task',
+            description: 'Unknown Task',
+            created: '1970-01-01T00:00:00.000Z',
+            completed: null,
+            complete: false,
+        });
+    }
 });
 
 app.listen(8080, () => console.log('Example app listening on port 8080!'));
