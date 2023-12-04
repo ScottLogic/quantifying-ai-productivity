@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require('uuid');
 const { timeStamp } = require('console');
 const express = require('express');
 const fs = require('fs');
@@ -45,7 +46,7 @@ app.get('/todo/:uuid?', (req, res) => {
             timestamp: new Date().valueOf(),
             message: "Bad Request", 
             status: 400,
-            path: "/todo/invalid-uuid"
+            path: req.originalUrl
           });
     } else {
         const requestedTask = tasks.filter((task) => task.uuid.toString() == req.params.uuid)
@@ -66,6 +67,68 @@ app.get('/todo/:uuid?', (req, res) => {
     }
 });
 
+app.put('/todo/completed/:uuid?', (req, res) => {
+    if (req.params.uuid == undefined || !uuidPattern.test(req.params.uuid)){
+        res.status(400).json({ 
+            timestamp: new Date(),
+            error: "Bad Request", 
+            status: 400,
+            path: req.originalUrl
+          });
+    } else {
+        const taskCompletedIndex = tasks.findIndex((task) => task.uuid.toString() == req.params.uuid)
+        if (taskCompletedIndex == -1) {
+            res.status(200).json({
+                success: false,
+                message: "Task not found."
+            })
+        } else {
+            if (tasks[taskCompletedIndex].complete == true){
+                res.status(200).json({
+                    success: false,
+                    message: "Task already marked complete."
+                })  
+            }
+            else {
+                tasks[taskCompletedIndex].completed = new Date();
+                tasks[taskCompletedIndex].complete = true;
+
+                res.status(200).json({
+                    success: true,
+                    message: "This task has now been completed."
+                })  
+            }
+        }
+    }
+});
+
+
+app.post('/todo/addTask/', (req, res) => {
+
+    if (req.query.name == undefined ||req.query.name == "" || req.query.description == undefined|| req.query.description == ""){
+        res.status(400).json({
+            timestamp: new Date(),
+            status: 400,
+            error: "Bad Request",
+            path: req.originalUrl
+        })
+    } else {
+        const newTask = {
+            uuid: uuidv4(),
+            name: req.query.name,
+            description: req.query.description,
+            created: new Date(),
+            completed: null,
+            complete: false
+        }
+        tasks.push(newTask);
+        res.status(201).json({
+            taskId: newTask.uuid,
+            message: "Task " + newTask.name + " added successfully."
+        })
+    }
+
+});
 
 
 app.listen(8080, () => console.log('Example app listening on port 8080!'));
