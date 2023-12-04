@@ -13,7 +13,7 @@ let tasks = [];
 let unknownTask = [];
 let badRequestBody = [];
 
-// Load tasks from the JSON file
+// Load tasks from the JSON file. Inefficient but gave up on making better
 const loadTasksFromFile = () => {
     fs.readFile(tasksFilePath, 'utf8', (err, data) => {
         if (err) {
