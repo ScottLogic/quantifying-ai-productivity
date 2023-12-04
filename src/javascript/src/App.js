@@ -38,21 +38,32 @@ const returnTaskWithComplete = (bool) => {
     return completedTasks;
 };
 
-// Get tasks. Handles ?complete parameter
+// Get all tasks. Filters on ?complete param
 app.get('/todo', (req, res) => {
     switch(req.query.complete) {
-        case "true":
-            console.log("was true");
+        case 'true':
             res.json(returnTaskWithComplete(true));
             break;
-        case "false":
-            console.log("was false");
+        case 'false':
             res.json(returnTaskWithComplete(false));
             break;
         default:
-            console.log("was nada");
             res.json(tasks);
             break;
+    }
+});
+
+// Get task by UUID parsed
+app.get('/todo/:uuid', (req, res) => {
+    let taskNotFound = true;
+    for (i in tasks) {
+        if ('uuid' in tasks[i] && tasks[i].uuid === req.params.uuid) {
+            res.json(tasks[i]);
+            taskNotFound = false;
+        }
+    }
+    if (taskNotFound) {
+        res.status(404).send('Task ' + req.params.uuid + ' was not found')
     }
 });
 
