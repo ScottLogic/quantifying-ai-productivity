@@ -80,7 +80,7 @@ app.get("/todo/:id", (req, res) => {
 
     res.json(task);
   } else {
-    res.status(400).json(createError(400, req.path));
+    res.status(400).json(createError(400, req.originalUrl));
   }
 });
 
@@ -95,6 +95,7 @@ function completeTask(tasks, id) {
   return tasks.map((task) => {
     if (task.uuid === id) {
       task.complete = true;
+      task.completed = new Date().toISOString();
     }
     return task;
   });
@@ -118,8 +119,40 @@ app.put("/todo/completed/:id", (req, res) => {
       );
     }
   } else {
-    res.status(400).json(createError(400, req.path));
+    res.status(400).json(createError(400, req.originalUrl));
   }
+});
+
+function createTask({ name, description }) {
+  return {
+    uuid: crypto.randomUUID(),
+    created: new Date().toISOString(),
+    completed: null,
+    complete: false,
+    name,
+    description,
+  };
+}
+
+const addTaskSchema = z.object({
+  name: z.string().min(1),
+  description: z.string().min(1),
+});
+
+app.post("/todo/addTask", (req, res) => {
+  const result = addTaskSchema.safeParse(req.query);
+
+  if (!result.success) {
+    return res.status(400).json(createError(400, req.originalUrl));
+  }
+
+  const task = createTask(result.data);
+  tasks.push(task);
+
+  res.status(201).json({
+    taskId: task.uuid,
+    message: `Task ${task.name} added successfully.`,
+  });
 });
 
 app.listen(8080, () => console.log("Example app listening on port 8080!"));
