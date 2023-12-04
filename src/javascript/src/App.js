@@ -39,18 +39,6 @@ const loadTasksFromFile = () => {
             return;
         }
     });
-    fs.readFile(badRequestFilePath, 'utf8', (err, data) => {
-        if (err) {
-            console.error('Error reading tasks file:', err);
-            return;
-        }
-        try {
-            badRequestBody = JSON.parse(data);
-        } catch (error) {
-            console.error('Error parsing tasks JSON:', error);
-            return;
-        }
-    });
 };
 
 // Load tasks from the file when the server starts
@@ -85,16 +73,22 @@ app.get('/todo', (req, res) => {
 const validUuidRegex = new RegExp(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
 
 // Returns bad request body with up to date timestamp
-const getBadRequestResponseWithTimestamp = () => {
-    let response = badRequestBody;
+const getBadRequestResponseWithTimestamp = (requestPath) => {
+    let response = {
+        "timestamp": null,
+        "status": 400,
+        "error": "Bad Request",
+        "path": null
+    }
     response.timestamp = new Date();
+    response.path = requestPath;
     return response;
 };
 
 // Get task by UUID parsed
 app.get('/todo/:uuid', (req, res) => {
     if (!validUuidRegex.test(req.params.uuid)) {
-        res.json(getBadRequestResponseWithTimestamp())
+        res.json(getBadRequestResponseWithTimestamp(req.path))
         return;
     }
 
@@ -103,6 +97,35 @@ app.get('/todo/:uuid', (req, res) => {
         if ('uuid' in tasks[i] && tasks[i].uuid === req.params.uuid) {
             res.json(tasks[i]);
             taskNotFound = false;
+        }
+    }
+    if (taskNotFound) {
+        res.json(unknownTask);
+    }
+});
+
+let completedObject = {
+    "success": true,
+    "message": "This task has now been completed."
+}
+
+// Mark task as completed
+app.put('/todo/completed/:uuid', (req, res) => {
+
+    if (!validUuidRegex.test(req.params.uuid)) {
+        res.json(getBadRequestResponseWithTimestamp())
+        return;
+    }
+
+    let taskNotFound = true;
+    for (i in tasks) {
+        if ('uuid' in tasks[i] && tasks[i].uuid === req.params.uuid) {
+            console.log("in app.put");
+            taskNotFound = false;
+            tasks[i].completed = new Date();
+            tasks[i].complete = true;
+            
+            res.json(completedObject);
         }
     }
     if (taskNotFound) {
