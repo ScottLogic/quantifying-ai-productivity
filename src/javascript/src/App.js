@@ -122,25 +122,22 @@ app.put('/todo/completed/:uuid', (req, res) => {
     }
 });
 
-// Create a new task
 app.post('/todo/addTask', (req, res) => {
     const { name, description } = req.query;
 
-    // Check if both name and description are provided
-    if (!name || !description) {
+    // Check if both name and description are provided and not empty
+    if (!name || !description || name.trim() === '' || description.trim() === '') {
         return res.status(400).json({
             timestamp: new Date().toISOString(),
             status: 400,
             error: 'Bad Request',
-            message: 'Both name and description parameters are required.',
-            path: req.path
+            message: 'Both name and description parameters are required and cannot be empty.',
+            path: req.originalUrl  // Use req.originalUrl to include query parameters in the path
         });
     }
 
-    // Generate a random UUID for the new task
     const taskId = uuidv4();
 
-    // Create a new task object
     const newTask = {
         uuid: taskId,
         name: name,
@@ -150,7 +147,6 @@ app.post('/todo/addTask', (req, res) => {
         complete: false
     };
 
-    // Add the new task to the tasks array
     tasks.push(newTask);
 
     return res.status(201).json({
