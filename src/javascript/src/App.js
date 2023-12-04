@@ -6,84 +6,94 @@ const { z } = require("zod");
 const app = express();
 app.use(express.json());
 
+const { TaskRepo, UNKNOWN_TASK_ID } = require("./TaskRepository");
+
+/// Init
 const tasksFilePath = path.join(
   __dirname,
   "../../static_data",
   "ToDoList.json"
 );
 
-let tasks = [];
-
 // Load tasks from the JSON file
 const loadTasksFromFile = () => {
-  fs.readFile(tasksFilePath, "utf8", (err, data) => {
-    if (err) {
-      console.error("Error reading tasks file:", err);
-      return;
-    }
-    try {
-      tasks = JSON.parse(data);
-    } catch (error) {
-      console.error("Error parsing tasks JSON:", error);
-    }
-  });
+  return JSON.parse(fs.readFileSync(tasksFilePath, "utf8"));
 };
 
 // Load tasks from the file when the server starts
-loadTasksFromFile();
+const taskRepo = new TaskRepo(loadTasksFromFile());
 
-function filterCompleteTasks(tasks, isComplete) {
-  const completeAsBool = isComplete === "true" ? true : false;
-  return tasks.filter((task) => task.complete === completeAsBool);
-}
-
+/// Routes
 // Get all tasks
 app.get("/todo", (req, res) => {
-  const complete_value = req.query.complete;
+  const complete = req.query.complete;
 
-  if (complete_value === "false" || complete_value === "true") {
-    res.json(filterCompleteTasks(tasks, complete_value));
+  if (complete === "false" || complete === "true") {
+    const completeAsBool = complete === "true";
+    res.json(taskRepo.getComplete(completeAsBool));
   } else {
-    res.json(tasks);
+    res.json(taskRepo.getAll());
   }
 });
-
-const UNKNOWN_TASK = {
-  uuid: "00000000-0000-0000-0000-000000000000",
-  name: "Unknown Task",
-  description: "Unknown Task",
-  created: "1970-01-01T00:00:00.000Z",
-  completed: null,
-  complete: false,
-};
-
-const uuidSchema = z.string().uuid();
-
-function findTask(tasks, id) {
-  return tasks.find((task) => task.uuid === id) ?? UNKNOWN_TASK;
-}
-
-function createError(status, path) {
-  return {
-    timestamp: new Date().toISOString(),
-    status: status,
-    error: "Bad Request",
-    path: path,
-  };
-}
 
 app.get("/todo/:id", (req, res) => {
-  const id = req.params.id;
-  const result = uuidSchema.safeParse(id);
-  if (result.success) {
-    const task = findTask(tasks, id);
+  const result = uuidSchema.safeParse(req.params.id);
+  if (!result.success) {
+    return errorResponse(res, 400, req.originalUrl);
+  }
 
-    res.json(task);
+  const task = taskRepo.getById(result.data);
+  return res.json(task);
+});
+
+app.put("/todo/completed/:id", (req, res) => {
+  const result = uuidSchema.safeParse(req.params.id);
+  if (!result.success) {
+    return errorResponse(res, 400, req.originalUrl);
+  }
+
+  const uuid = result.data;
+  const task = taskRepo.getById(uuid);
+
+  if (task.uuid === UNKNOWN_TASK_ID) {
+    return res.json(createCompletedResponse(false, "Task not found."));
+  }
+
+  if (task.complete) {
+    return res.json(
+      createCompletedResponse(false, "Task already marked complete.")
+    );
   } else {
-    res.status(400).json(createError(400, req.originalUrl));
+    taskRepo.completeTask(uuid);
+    return res.json(
+      createCompletedResponse(true, "This task has now been completed.")
+    );
   }
 });
 
+app.post("/todo/addTask", (req, res) => {
+  const result = addTaskSchema.safeParse(req.query);
+
+  if (!result.success) {
+    return errorResponse(res, 400, req.originalUrl);
+  }
+
+  const task = taskRepo.createTask(result.data);
+
+  res.status(201).json({
+    taskId: task.uuid,
+    message: `Task ${task.name} added successfully.`,
+  });
+});
+
+/// Schemas
+const uuidSchema = z.string().uuid();
+const addTaskSchema = z.object({
+  name: z.string().min(1),
+  description: z.string().min(1),
+});
+
+/// response helpers
 function createCompletedResponse(success, message) {
   return {
     success: success,
@@ -91,68 +101,13 @@ function createCompletedResponse(success, message) {
   };
 }
 
-function completeTask(tasks, id) {
-  return tasks.map((task) => {
-    if (task.uuid === id) {
-      task.complete = true;
-      task.completed = new Date().toISOString();
-    }
-    return task;
+function errorResponse(res, statusCode, path) {
+  return res.status(statusCode).json({
+    timestamp: new Date().toISOString(),
+    status: statusCode,
+    error: "Bad Request",
+    path: path,
   });
 }
-
-app.put("/todo/completed/:id", (req, res) => {
-  const id = req.params.id;
-  const result = uuidSchema.safeParse(id);
-  if (result.success) {
-    const task = findTask(tasks, id);
-    if (task === UNKNOWN_TASK) {
-      return res.json(createCompletedResponse(false, "Task not found."));
-    } else if (task.complete) {
-      return res.json(
-        createCompletedResponse(false, "Task already marked complete.")
-      );
-    } else {
-      completeTask(tasks, id);
-      return res.json(
-        createCompletedResponse(true, "This task has now been completed.")
-      );
-    }
-  } else {
-    res.status(400).json(createError(400, req.originalUrl));
-  }
-});
-
-function createTask({ name, description }) {
-  return {
-    uuid: crypto.randomUUID(),
-    created: new Date().toISOString(),
-    completed: null,
-    complete: false,
-    name,
-    description,
-  };
-}
-
-const addTaskSchema = z.object({
-  name: z.string().min(1),
-  description: z.string().min(1),
-});
-
-app.post("/todo/addTask", (req, res) => {
-  const result = addTaskSchema.safeParse(req.query);
-
-  if (!result.success) {
-    return res.status(400).json(createError(400, req.originalUrl));
-  }
-
-  const task = createTask(result.data);
-  tasks.push(task);
-
-  res.status(201).json({
-    taskId: task.uuid,
-    message: `Task ${task.name} added successfully.`,
-  });
-});
 
 app.listen(8080, () => console.log("Example app listening on port 8080!"));
