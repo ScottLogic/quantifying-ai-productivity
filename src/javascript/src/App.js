@@ -62,7 +62,7 @@ app.get('/todo/:uuid?', (req, res) => {
 
             )
         }else {
-            res.json(requestedTask)
+            res.json(requestedTask[0])
         }
     }
 });
