@@ -1,3 +1,4 @@
+const { randomUUID } = require('crypto');
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -7,11 +8,9 @@ app.use(express.json());
 
 const tasksFilePath = path.join(__dirname, '../../static_data', 'ToDoList.json');
 const unknownTaskFilePath = path.join(__dirname, '../../static_data', 'unknownTask.json');
-const badRequestFilePath = path.join(__dirname, '../../static_data', 'badRequestBody.json');
 
 let tasks = [];
 let unknownTask = [];
-let badRequestBody = [];
 
 // Load tasks from the JSON file. Inefficient but gave up on making better
 const loadTasksFromFile = () => {
@@ -88,7 +87,7 @@ const getBadRequestResponseWithTimestamp = (requestPath) => {
 // Get task by UUID parsed
 app.get('/todo/:uuid', (req, res) => {
     if (!validUuidRegex.test(req.params.uuid)) {
-        res.json(getBadRequestResponseWithTimestamp(req.path))
+        res.json(getBadRequestResponseWithTimestamp(req.originalUrl))
         return;
     }
 
@@ -120,7 +119,7 @@ let taskNotFoundObject = {
 // Mark task as completed
 app.put('/todo/completed/:uuid', (req, res) => {
     if (!validUuidRegex.test(req.params.uuid)) {
-        res.json(getBadRequestResponseWithTimestamp(req.path))
+        res.json(getBadRequestResponseWithTimestamp(req.originalUrl))
         return;
     }
 
@@ -148,7 +147,33 @@ app.put('/todo/completed/:uuid', (req, res) => {
     }
 });
 
-// Add new task to ToDoList
+// Creates new Task
+const createNewTask = (name, desc) => {
+    let newTask = {
+        "uuid": randomUUID(),
+        "name": name,
+        "description": desc,
+        "created": new Date(),
+        "completed": null,
+        "complete": false
+    }
+    return newTask;
+};
 
+// Add new task to ToDoList
+app.post('/todo/addTask', (req, res) => {
+    if (!req.query.name || !req.query.description) {
+        res.json(getBadRequestResponseWithTimestamp(req.originalUrl))
+        return;
+    }
+
+    let newTask = createNewTask(req.query.name, req.query.description);
+    tasks.push(newTask);
+    let taskCreatedObject = {
+        "taskId": newTask.uuid,
+        "message": `Task ${newTask.name} added successfully.`
+    }
+    res.json(taskCreatedObject);
+});
 
 app.listen(8080, () => console.log('Example app listening on port 8080!'));
