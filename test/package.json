@@ -9,6 +9,7 @@
   "author": "Scott Logic",
   "license": "ISC",
   "dependencies": {
-    "cypress": "^12.17.1"
+    "cypress": "^12.17.1",
+    "uuid": "^9.0.1"
   }
 }
