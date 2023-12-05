@@ -107,10 +107,9 @@ const markTaskAsComplete = async (req, res) => {
             task.completed = new Date().toISOString();
             task.complete = true;
 
-            // Save the updated tasks to the file
+            // Save the updated tasks
             const taskIndex = tasks.findIndex(task => task.uuid === requestedUuid);
             tasks[taskIndex] = task
-            // await fs.writeFile(tasksFilePath, JSON.stringify(tasks, null, 2), 'utf8');
 
             return res.status(200).json({ success: true, message: 'This task has now been completed.' });
         } else {
@@ -159,7 +158,6 @@ const addTask = (req, res) => {
     return res.status(201).json(response);
 };
 
-// Get all tasks
 app.get('/todo', getAllTasks);
 app.get('/todo/:uuid', getTaskByUuid);
 app.put('/todo/completed/:uuid', markTaskAsComplete);
