@@ -54,9 +54,20 @@ let tasks = [
   },
 ];
 
-// Get all tasks
+// Get all tasks or filter by completion status
 app.get("/todo", (req, res) => {
-  res.json(tasks);
+  const { complete } = req.query;
+
+  // If complete parameter is provided
+  if (complete !== undefined) {
+    const iscomplete = complete.toLowerCase() === "true"; // Check if complete parameter is 'true'
+
+    const filteredTasks = tasks.filter((task) => task.complete === iscomplete);
+    res.json(filteredTasks);
+  } else {
+    // If complete parameter is not provided, return all tasks
+    res.json(tasks);
+  }
 });
 
 app.listen(8080, () => console.log("Example app listening on port 8080!"));
