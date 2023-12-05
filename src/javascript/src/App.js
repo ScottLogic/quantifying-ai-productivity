@@ -1,6 +1,7 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
+const { v4: uuidv4, validate: uuidValidate } = require("uuid");
 
 const app = express();
 app.use(express.json());
@@ -67,6 +68,53 @@ app.get("/todo", (req, res) => {
   } else {
     // If complete parameter is not provided, return all tasks
     res.json(tasks);
+  }
+});
+
+// // Get a task by UUID
+// app.get('/todo/:uuid', (req, res) => {
+//     const { uuid } = req.params;
+
+//     // Find the task with the specified UUID
+//     const foundTask = tasks.find(task => task.uuid === uuid);
+
+//     if (foundTask) {
+//         res.json(foundTask);
+//     } else {
+//         res.status(404).json({ error: 'Task not found' });
+//     }
+// });
+
+// Get a task by UUID or return error for invalid UUID
+app.get("/todo/:uuid", (req, res) => {
+  const { uuid } = req.params;
+
+  // Validate the UUID format
+  if (!uuidValidate(uuid)) {
+    return res.status(400).json({
+      timestamp: new Date().toISOString(),
+      status: 400,
+      error: "Bad Request",
+      path: `/todo/${uuid}`,
+    });
+  }
+
+  // Find the task with the specified UUID
+  const foundTask = tasks.find((task) => task.uuid === uuid);
+
+  if (foundTask) {
+    res.json(foundTask);
+  } else {
+    // Return a pre-defined task if the supplied UUID is not found
+    const unknownTask = {
+      uuid: "00000000-0000-0000-0000-000000000000",
+      name: "Unknown Task",
+      description: "Unknown Task",
+      created: "1970-01-01T00:00:00.000Z",
+      completed: null,
+      complete: false,
+    };
+    res.json(unknownTask);
   }
 });
 
