@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "uuid": "^9.0.1"
+  }
+}
