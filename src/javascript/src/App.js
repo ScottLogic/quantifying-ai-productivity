@@ -124,6 +124,42 @@ app.put('/todo/completed/:uuid', (req, res) => {
     }
 });
 
+app.post('/todo/addTask', (req, res) => {
+    const { name, description } = req.query;
+
+    // Check if both name and description parameters are provided
+    if (!name || !description) {
+        return res.status(400).json({
+            timestamp: new Date().toISOString(),
+            status: 400,
+            error: 'Bad Request',
+            message: 'Name and description are required fields.',
+            path: req.path
+        });
+    }
+
+    // Generate a random UUID for the new task
+    const newTaskUuid = uuidv4();
+
+    // Create a new task object
+    const newTask = {
+        uuid: newTaskUuid,
+        name: name,
+        description: description,
+        created: new Date().toISOString(),
+        completed: null,
+        complete: false
+    };
+
+    // Add the new task to the tasks array
+    tasks.push(newTask);
+
+    // Respond with success message and the UUID of the new task
+    return res.status(201).json({
+        taskId: newTaskUuid,
+        message: `Task ${name} added successfully.`
+    });
+});
 
 
 
