@@ -71,20 +71,6 @@ app.get("/todo", (req, res) => {
   }
 });
 
-// // Get a task by UUID
-// app.get('/todo/:uuid', (req, res) => {
-//     const { uuid } = req.params;
-
-//     // Find the task with the specified UUID
-//     const foundTask = tasks.find(task => task.uuid === uuid);
-
-//     if (foundTask) {
-//         res.json(foundTask);
-//     } else {
-//         res.status(404).json({ error: 'Task not found' });
-//     }
-// });
-
 // Get a task by UUID or return error for invalid UUID
 app.get("/todo/:uuid", (req, res) => {
   const { uuid } = req.params;
@@ -115,6 +101,48 @@ app.get("/todo/:uuid", (req, res) => {
       complete: false,
     };
     res.json(unknownTask);
+  }
+});
+
+// PUT endpoint to mark task as completed by UUID
+app.put("/todo/completed/:uuid", (req, res) => {
+  const { uuid } = req.params;
+
+  // Validate the UUID format
+  if (!uuidValidate(uuid)) {
+    return res.status(400).json({
+      timestamp: new Date().toISOString(),
+      status: 400,
+      error: "Bad Request",
+      path: `/todo/completed/${uuid}`,
+    });
+  }
+
+  // Find the task with the specified UUID
+  const foundTaskIndex = tasks.findIndex((task) => task.uuid === uuid);
+
+  if (foundTaskIndex !== -1) {
+    // Check if the task is already completed
+    if (tasks[foundTaskIndex].complete) {
+      return res.status(200).json({
+        success: false,
+        message: "Task already marked complete.",
+      });
+    }
+
+    // Update the task as completed
+    tasks[foundTaskIndex].complete = true;
+    tasks[foundTaskIndex].completed = new Date().toISOString();
+
+    return res.status(200).json({
+      success: true,
+      message: "This task has now been completed.",
+    });
+  } else {
+    return res.status(200).json({
+      success: false,
+      message: "Task not found.",
+    });
   }
 });
 
