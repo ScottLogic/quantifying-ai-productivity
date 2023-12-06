@@ -146,4 +146,40 @@ app.put("/todo/completed/:uuid", (req, res) => {
   }
 });
 
+// POST endpoint to add a new task
+app.post("/todo/addTask", (req, res) => {
+  const { name, description } = req.query;
+
+  // Check if either name and description are not provided
+  if (!name || !description) {
+    return res.status(400).json({
+      timestamp: new Date().toISOString(),
+      status: 400,
+      error: "Bad Request",
+      message: "Please provide both name and description parameters.",
+    });
+  }
+
+  // Generate a new UUID for the task
+  const newTaskUUID = uuidv4();
+
+  // Create a new task object
+  const newTask = {
+    uuid: newTaskUUID,
+    name: name || "Unnamed Task",
+    description: description || "No description provided",
+    created: new Date().toISOString(),
+    completed: null,
+    complete: false,
+  };
+
+  // Add the new task to the tasks array
+  tasks.push(newTask);
+
+  res.status(201).json({
+    taskId: newTaskUUID,
+    message: `Task ${name || "Unnamed Task"} added successfully.`,
+  });
+});
+
 app.listen(8080, () => console.log("Example app listening on port 8080!"));
